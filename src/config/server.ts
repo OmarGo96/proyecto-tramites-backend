@@ -15,7 +15,7 @@ import cors from 'cors';
 class Server {
     private app: Application;
     private port: string;
-    private server: https.Server | http.Server
+    public server: https.Server | http.Server
     private routes: Routes = new Routes();
     static database: Database = new Database()
 
@@ -69,4 +69,4 @@ class Server {
     }
 }
 
-export default Server;
+export default new Server().server
