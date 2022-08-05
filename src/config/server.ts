@@ -1,5 +1,6 @@
 // tslint:disable-next-line:no-var-requires
-require('dotenv').config()
+//require('dotenv').config()
+require('dotenv').config({ path: '/root/envs/proyecto-tramites-backend/.env' }) 
 import express, { Application } from 'express';
 import Relationship from './relationships';
 import { Routes } from "../routes/routes";
@@ -11,11 +12,11 @@ import https from 'https';
 import http from 'http';
 import cors from 'cors';
 
-class Server {
-    private app: Application;
-    private port: string;
-    private server: https.Server | http.Server
-    private routes: Routes = new Routes();
+class App {
+    public app: Application;
+    public port: string;
+    public server: https.Server | http.Server
+    public routes: Routes = new Routes();
     static database: Database = new Database()
 
     constructor() {
@@ -23,12 +24,12 @@ class Server {
         this.securityProtocol();
         this.config();
         this.database();
-        this.server = https.createServer(this.app);
+        //this.server = https.createServer(this.app);
         this.port = process.env.LISTEN_PORT || '8001';
         this.routes.routes(this.app);
     }
 
-    private config() { // configuración inicial del servidor
+    private config(): void { // configuración inicial del servidor
         Relationship.init();
 
         // CORS
@@ -63,9 +64,9 @@ class Server {
     }
 
     private async database() {
-        const connection = await Server.database.connection()
+        const connection = await App.database.connection()
         console.log(connection.message)
     }
 }
 
-export default Server;
+export default new App().server
