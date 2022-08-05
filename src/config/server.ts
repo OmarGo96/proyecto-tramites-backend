@@ -1,9 +1,9 @@
 // tslint:disable-next-line:no-var-requires
 require('dotenv').config()
-import express, {Application} from 'express';
+import express, { Application } from 'express';
 import Relationship from './relationships';
-import {Routes} from "../routes/routes";
-import {Database} from './database';
+import { Routes } from "../routes/routes";
+import { Database } from './database';
 import bodyParser from 'body-parser';
 import fs from 'fs'
 import fileUpload from 'express-fileupload'
@@ -46,7 +46,13 @@ class Server {
         if (process.env.MODE === 'dev') {
             this.server = http.createServer(this.app);
         } else {
-            console.log('Configurando Security Protocol para modo de producción...');
+            var privateKey = fs.readFileSync(process.env.PRIVATE_SSL, 'utf8')
+            var certificate = fs.readFileSync(process.env.CERTIFICATE_SSL, 'utf8')
+            var cabundle = fs.readFileSync(process.env.CABUNDLE_SSL, 'utf8')
+
+            var credentials = { key: privateKey, cert: certificate, ca: cabundle }
+
+            this.server = https.createServer(credentials, this.app)
         }
     }
 
