@@ -1,0 +1,29 @@
+import * as sequelize from 'sequelize'
+import { Op } from 'sequelize'
+import { database } from '../config/database'
+import { ServicioModel } from '../models/servicio.model'
+import { DocumentacionServicioModel } from '../models/documentos_servicio.model'
+import { AreaModel } from '../models/area.model'
+import {EstatusSolicitudModel} from "../models/estatus_solicitud.model";
+import {EstatusServicioModel} from "../models/estatus_servicio.model";
+
+export class EstatusesQueries {
+
+    public async getEstatuses(id: any) {
+        try {
+            const estatuses = await EstatusServicioModel.findAll({
+                where: {
+                    servicio_id: id
+                },
+                include: [
+                    { model: EstatusSolicitudModel, as: 'EstatusSolicitud'}
+                ]
+            });
+            return { ok: true, estatuses }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
+}
