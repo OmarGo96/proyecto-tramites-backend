@@ -96,6 +96,8 @@ export class ServicioController {
         const serviceUuid = req.params.uuid == null ? null : validator.isEmpty(req.params.uuid) ?
             errors.push({message: 'Favor de proporcionar el uuid del servicio.'}) : req.params.uuid
 
+        console.log(serviceUuid);
+
         const findedService = await ServicioController.servicioQueries.findServicioByUUID({
             uuid: serviceUuid
         })
