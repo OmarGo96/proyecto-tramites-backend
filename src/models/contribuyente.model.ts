@@ -14,7 +14,7 @@ export class ContribuyenteModel extends Model{
     public edad!: number
     public fechaAlta!: string
     public fechaBaja!: string
-    public codigoActivacion!: string
+    public codigo_activacion!: string
     public restablecerPassword!: string
     public cambioPassword!: number
     public activo!: number

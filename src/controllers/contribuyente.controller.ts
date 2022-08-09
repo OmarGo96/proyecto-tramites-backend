@@ -239,7 +239,7 @@ export class ContribuyenteController {
             email,
             subject: 'Alta de cuenta',
             template: 'activation',
-            codigo_activacion: createContribuyente.contribuyente.codigoActivacion
+            codigo_activacion: createContribuyente.contribuyente.codigo_activacion
         })
 
         /* const options = {
@@ -309,7 +309,7 @@ export class ContribuyenteController {
         const restablecerPassword = moment().unix()
 
         const restoreRequest = await ContribuyenteController.contribuyenteQueries.restoreRequest({
-            restablecerPassword,
+            restablecer_password: restablecerPassword,
             id: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.id : false
         })
 
@@ -328,7 +328,7 @@ export class ContribuyenteController {
             email,
             subject: 'Restablecer mi cuenta',
             template: 'reset',
-            restablecer_password: findContribuyenteByEmail.contribuyente.restablecerPassword
+            restablecer_password: restablecerPassword
         })
 
         /* const options = {
@@ -470,7 +470,7 @@ export class ContribuyenteController {
             email,
             subject: 'Activar mi cuenta',
             template: 'activation',
-            codigo_activacion: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.codigoActivacion : false
+            codigo_activacion: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.codigo_activacion : false
         })
 
         if (sendEmail.ok === false) {
@@ -672,7 +672,7 @@ export class ContribuyenteController {
                 const options = {
                     data: {
                         'email': contribuyente.email,
-                        'code': contribuyente.codigoActivacion
+                        'code': contribuyente.codigo_activacion
                     },
                     url: 'http://144.126.219.159/delivery/api/mail/activation',
                     method: 'POST'
