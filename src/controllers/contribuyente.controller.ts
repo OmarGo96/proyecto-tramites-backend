@@ -57,7 +57,7 @@ export class ContribuyenteController {
         }
         /** Verificamos que el contribuyente no haya sido dado de alta anteriormente */
         const findContribuyenteByCodAct = await ContribuyenteController.contribuyenteQueries.findContribuyenteByCodAct({
-            codigoActivacion
+            codigo_activacion: codigoActivacion
         })
 
         if (findContribuyenteByCodAct.ok === false) {
@@ -221,7 +221,7 @@ export class ContribuyenteController {
             edad,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             codigo_activacion: moment().unix(),
-            activo: 1,
+            activo: 0,
         })
 
         if (createContribuyente.ok === false) {
@@ -240,7 +240,9 @@ export class ContribuyenteController {
             subject: 'Alta de cuenta',
             template: 'activation',
             codigo_activacion: createContribuyente.contribuyente.codigo_activacion
-        })
+        });
+
+        console.log(sendEmail);
 
         /* const options = {
             data: {
