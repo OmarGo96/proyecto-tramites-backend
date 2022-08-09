@@ -5,8 +5,8 @@ import moment from 'moment'
 
 export class Mailer {
 
-    private transporter
-    private hbsConfig
+    private transporter: any = null
+    private hbsConfig: any = null
 
     constructor() {
         this.transporter = nodemailer.createTransport({

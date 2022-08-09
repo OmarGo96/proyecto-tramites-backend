@@ -16,6 +16,7 @@ import {DocumentacionController} from '../controllers/documentacion.controller';
 import {DocumentosSolicitudController} from '../controllers/documentos-solicitud.controller';
 import {EstatusesController} from '../controllers/estatuses.controller';
 import {MensajeController} from "../controllers/mensaje.controller";
+import {ExampleController} from "../controllers/example.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
@@ -38,6 +39,7 @@ export class Routes {
     public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
     public estatusesController: EstatusesController = new EstatusesController();
     public mensajeController: MensajeController = new MensajeController();
+    public exampleController: ExampleController = new ExampleController();
     /*
 
     public testController: TestController = new TestController();
@@ -125,5 +127,8 @@ export class Routes {
         // Routes for solicitudes history
         app.route('/api/solicitud/history/:id').get(this.solicitudController.history);
         app.route('/api/solicitud/messages/:id').get(this.solicitudController.messages);
+
+        /* app.route('/api/example/mail/activation').get(this.exampleController.mailActivation);
+        app.route('/api/example/mail/reset').get(this.exampleController.mailReset); */
     }
 }

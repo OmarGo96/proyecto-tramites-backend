@@ -1,12 +1,12 @@
 import * as bcrypt from 'bcrypt';
 import * as validator from 'validator';
 import moment from 'moment';
-import {Request, Response} from 'express';
-import {v4 as uuidv4} from 'uuid';
-import {Log} from '../helpers/logs';
-import {Mailer} from '../helpers/mailer';
-import {Axios} from '../helpers/axios';
-import {ContribuyenteQueries} from '../queries/contribuyente.query';
+import { Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import { Log } from '../helpers/logs';
+import { Mailer } from '../helpers/mailer';
+import { Axios } from '../helpers/axios';
+import { ContribuyenteQueries } from '../queries/contribuyente.query';
 
 export class ContribuyenteController {
     static salt = bcrypt.genSaltSync(Number(process.env.NO_SALT));
@@ -23,9 +23,9 @@ export class ContribuyenteController {
         })
 
         if (findContribuyenteById.ok === false) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteById.contribuyente == null) {
-            errors.push({message: 'El contribuyente proporcionado no se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El contribuyente proporcionado no se encuentra dado de alta en el sistema.' })
         }
 
         if (errors.length > 0) {
@@ -46,7 +46,7 @@ export class ContribuyenteController {
         const errors = []
 
         const codigoActivacion = req.params.codigo_activacion == null ? null : validator.isEmpty(req.params.codigo_activacion) ?
-            errors.push({message: 'Favor de proporcionar el código de activación'}) :
+            errors.push({ message: 'Favor de proporcionar el código de activación' }) :
             req.params.codigo_activacion
 
         if (errors.length > 0) {
@@ -61,11 +61,11 @@ export class ContribuyenteController {
         })
 
         if (findContribuyenteByCodAct.ok === false) {
-            errors.push({message: 'Existen problemas al momento de verificar si el código esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el código esta dado de alta.' })
         } else if (findContribuyenteByCodAct.contribuyente === null) {
-            errors.push({message: 'El codigo proporcionado no se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El codigo proporcionado no se encuentra dado de alta en el sistema.' })
         } else if (findContribuyenteByCodAct.contribuyente && findContribuyenteByCodAct.contribuyente.activo !== 0) {
-            errors.push({message: 'El codigo proporcionado ya no es valido.'})
+            errors.push({ message: 'El codigo proporcionado ya no es valido.' })
         }
 
         if (errors.length > 0) {
@@ -80,7 +80,7 @@ export class ContribuyenteController {
         })
 
         if (activeContribuyente.ok === false) {
-            errors.push({message: 'Existen problemas al momento de activar su cuenta, favor de ponerse en contacto con soporte.'})
+            errors.push({ message: 'Existen problemas al momento de activar su cuenta, favor de ponerse en contacto con soporte.' })
         }
 
         if (errors.length > 0) {
@@ -109,34 +109,34 @@ export class ContribuyenteController {
         const errors = [];
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) === true ?
-            errors.push({message: 'Favor de proporcionar su nombre'}) : body.nombre
+            errors.push({ message: 'Favor de proporcionar su nombre' }) : body.nombre
 
         const apellidos: string = body.apellidos == null || validator.isEmpty(body.apellidos) === true ?
-            errors.push({message: 'Favor de proporcionar su(s) apellidos.'}) : body.apellidos
+            errors.push({ message: 'Favor de proporcionar su(s) apellidos.' }) : body.apellidos
 
         const email: string = body.email == null || validator.isEmpty(body.email) === true ?
-            errors.push({message: 'Favor de proporcionar su email.'}) : body.email
+            errors.push({ message: 'Favor de proporcionar su email.' }) : body.email
 
         const reEmail: string = body.re_email == null || validator.isEmpty(body.re_email) === true ?
-            errors.push({message: 'Favor de proporcionar la confirmación del email.'}) : body.re_email
+            errors.push({ message: 'Favor de proporcionar la confirmación del email.' }) : body.re_email
 
         const password: string = body.password == null || validator.isEmpty(body.password) === true ?
-            errors.push({message: 'Favor de proporcionar su contraseña.'}) : body.password
+            errors.push({ message: 'Favor de proporcionar su contraseña.' }) : body.password
 
         const rePassword: string = body.re_password == null || validator.isEmpty(body.re_password) === true ?
-            errors.push({message: 'Favor de confirmar su contraseña.'}) : body.re_password
+            errors.push({ message: 'Favor de confirmar su contraseña.' }) : body.re_password
 
         const telefono: string = body.telefono == null || validator.isEmpty(body.telefono) === true ?
-            errors.push({message: 'Favor de proporcionar su teléfono.'}) : body.telefono
+            errors.push({ message: 'Favor de proporcionar su teléfono.' }) : body.telefono
 
         const telefonoReferencia: string = body.telefono_referencia == null || validator.isEmpty(body.telefono_referencia) === true ?
-            errors.push({message: 'Favor de proporcionar su teléfono de referencia.'}) : body.telefono_referencia
+            errors.push({ message: 'Favor de proporcionar su teléfono de referencia.' }) : body.telefono_referencia
 
         const genero: string = body.genero == null || validator.isEmpty(body.genero) === true ?
-            errors.push({message: 'Favor de proporcionar su género.'}) : body.genero
+            errors.push({ message: 'Favor de proporcionar su género.' }) : body.genero
 
         const edad: string = body.edad == null || validator.isEmpty(body.edad) === true ?
-            errors.push({message: 'Favor de proporcionar su rango de edad.'}) : body.edad
+            errors.push({ message: 'Favor de proporcionar su rango de edad.' }) : body.edad
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
@@ -148,43 +148,43 @@ export class ContribuyenteController {
         }
 
         if (validator.isEmail(email) === false) {
-            errors.push({message: 'Favor de respetar la nomenclatura del email.'})
+            errors.push({ message: 'Favor de respetar la nomenclatura del email.' })
         }
 
         if (!regex.test(nombre)) {
-            errors.push({message: 'Favor de solo proporcionar letras para el campo nombre'})
+            errors.push({ message: 'Favor de solo proporcionar letras para el campo nombre' })
         }
 
         if (!regex.test(apellidos)) {
-            errors.push({message: 'Favor de solo proporcionar letras para el campo de apellido(s)'})
+            errors.push({ message: 'Favor de solo proporcionar letras para el campo de apellido(s)' })
         }
 
         if (validator.isNumeric(telefono) === false) {
-            errors.push({message: 'Favor de solo proporcionar números para el campo de teléfono'})
+            errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono' })
         }
 
         if (validator.isNumeric(telefonoReferencia) === false) {
-            errors.push({message: 'Favor de solo proporcionar números para el campo de teléfono referencia'})
+            errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono referencia' })
         }
 
         if (genero !== "1" && genero !== "0") {
-            errors.push({message: 'Favor de solo proporcionar un género valido'})
+            errors.push({ message: 'Favor de solo proporcionar un género valido' })
         }
 
         if (edad !== "1" && edad !== "2" && edad !== "3") {
-            errors.push({message: 'Favor de solo proporcionar un rango de edad valido'})
+            errors.push({ message: 'Favor de solo proporcionar un rango de edad valido' })
         }
 
         if ((Array.from(password).length < 5)) {
-            errors.push({message: 'La contraseña debe tener al menos 5 dígitos'})
+            errors.push({ message: 'La contraseña debe tener al menos 5 dígitos' })
         }
 
         if (password !== rePassword) {
-            errors.push({message: 'La contraseñas proporcionadas no coinciden'})
+            errors.push({ message: 'La contraseñas proporcionadas no coinciden' })
         }
 
         if (email !== reEmail) {
-            errors.push({message: 'Los correos electrónicos proporcionados no coinciden'})
+            errors.push({ message: 'Los correos electrónicos proporcionados no coinciden' })
         }
 
         if (errors.length > 0) {
@@ -194,12 +194,12 @@ export class ContribuyenteController {
             })
         }
 
-        const findContribuyenteByEmail = await ContribuyenteController.contribuyenteQueries.findContribuyenteByEmail({email})
+        const findContribuyenteByEmail = await ContribuyenteController.contribuyenteQueries.findContribuyenteByEmail({ email })
 
         if (findContribuyenteByEmail.ok === false) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByEmail.contribuyente != null) {
-            errors.push({message: 'El email proporcionado ya se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El email proporcionado ya se encuentra dado de alta en el sistema.' })
         }
 
         if (errors.length > 0) {
@@ -225,7 +225,7 @@ export class ContribuyenteController {
         })
 
         if (createContribuyente.ok === false) {
-            errors.push({message: 'Existen problemas al momento de dar de alta su cuenta, intente más tarde'})
+            errors.push({ message: 'Existen problemas al momento de dar de alta su cuenta, intente más tarde' })
         }
 
         if (errors.length > 0) {
@@ -235,14 +235,14 @@ export class ContribuyenteController {
             })
         }
 
-        /* let sendEmail = await ContribuyenteController.mailer.send({
+        let sendEmail = await ContribuyenteController.mailer.send({
             email,
             subject: 'Alta de cuenta',
             template: 'activation',
-            codigo_activacion: createContribuyente.contribuyente.codigo_activacion
-        }) */
+            codigo_activacion: createContribuyente.contribuyente.codigoActivacion
+        })
 
-        const options = {
+        /* const options = {
             data: {
                 'email': email,
                 'code': createContribuyente.contribuyente ? createContribuyente.contribuyente.codigoActivacion : false
@@ -251,7 +251,7 @@ export class ContribuyenteController {
             method: 'POST'
         }
 
-        const sendEmail = await ContribuyenteController.axios.getResponse(options)
+        const sendEmail = await ContribuyenteController.axios.getResponse(options) */
 
         const createLogContribuyente = await ContribuyenteController.log.contribuyente({
             contribuyente_id: createContribuyente.contribuyente ? createContribuyente.contribuyente.id : false,
@@ -273,7 +273,7 @@ export class ContribuyenteController {
         const body = req.body;
 
         const email: string = body.email == null || validator.isEmpty(body.email) === true ?
-            errors.push({message: 'Favor de proporcionar su email.'}) : body.email
+            errors.push({ message: 'Favor de proporcionar su email.' }) : body.email
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -283,7 +283,7 @@ export class ContribuyenteController {
         }
 
         if (validator.isEmail(email) === false) {
-            errors.push({message: 'Favor de respetar la nomenclatura del email.'})
+            errors.push({ message: 'Favor de respetar la nomenclatura del email.' })
         }
         if (errors.length > 0) {
             return res.status(400).json({
@@ -291,12 +291,12 @@ export class ContribuyenteController {
                 errors
             })
         }
-        const findContribuyenteByEmail = await ContribuyenteController.contribuyenteQueries.findContribuyenteByEmail({email})
+        const findContribuyenteByEmail = await ContribuyenteController.contribuyenteQueries.findContribuyenteByEmail({ email })
 
         if (findContribuyenteByEmail.ok === false) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByEmail.contribuyente == null) {
-            errors.push({message: 'El email proporcionado no esta dado de alta en el sistema.'})
+            errors.push({ message: 'El email proporcionado no esta dado de alta en el sistema.' })
         }
 
         if (errors.length > 0) {
@@ -314,7 +314,7 @@ export class ContribuyenteController {
         })
 
         if (restoreRequest.ok === false) {
-            errors.push({message: 'Existen problemas al momento de realizar la solicitud de restauración de contraseña.'})
+            errors.push({ message: 'Existen problemas al momento de realizar la solicitud de restauración de contraseña.' })
         }
 
         if (errors.length > 0) {
@@ -324,14 +324,14 @@ export class ContribuyenteController {
             })
         }
 
-        /* let sendEmail = await ContribuyenteController.mailer.send({
+        let sendEmail = await ContribuyenteController.mailer.send({
             email,
             subject: 'Restablecer mi cuenta',
             template: 'reset',
-            restablecer_password
-        }) */
+            restablecer_password: findContribuyenteByEmail.contribuyente.restablecerPassword
+        })
 
-        const options = {
+        /* const options = {
             data: {
                 'email': email,
                 'code': restablecerPassword
@@ -340,7 +340,7 @@ export class ContribuyenteController {
             method: 'POST'
         }
 
-        const sendEmail = await ContribuyenteController.axios.getResponse(options)
+        const sendEmail = await ContribuyenteController.axios.getResponse(options) */
 
         const createLogContribuyente = await ContribuyenteController.log.contribuyente({
             contribuyente_id: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.id : false,
@@ -362,13 +362,13 @@ export class ContribuyenteController {
         const body = req.body;
 
         const codigo: string = body.codigo == null || validator.isEmpty(body.codigo) == true ?
-            errors.push({message: 'Favor de proporcionar su codigo.'}) : body.codigo
+            errors.push({ message: 'Favor de proporcionar su codigo.' }) : body.codigo
 
         const password: string = body.password == null || validator.isEmpty(body.password) == true ?
-            errors.push({message: 'Favor de proporcionar su nueva contraseña.'}) : body.password
+            errors.push({ message: 'Favor de proporcionar su nueva contraseña.' }) : body.password
 
         const rePassword: string = body.re_password == null || validator.isEmpty(body.re_password) == true ?
-            errors.push({message: 'Favor de proporcionar la confirmación de la contraseña.'}) : body.re_password
+            errors.push({ message: 'Favor de proporcionar la confirmación de la contraseña.' }) : body.re_password
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -378,7 +378,7 @@ export class ContribuyenteController {
         }
 
         if (password !== rePassword) {
-            errors.push({message: 'Las contraseñas proporcionadas no coinciden.'})
+            errors.push({ message: 'Las contraseñas proporcionadas no coinciden.' })
         }
 
         if (errors.length > 0) {
@@ -393,11 +393,11 @@ export class ContribuyenteController {
         })
 
         if (findContribuyenteByCambioPassword.ok === false) {
-            errors.push({message: 'Existen problemas al momento de verificar si el código esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el código esta dado de alta.' })
         } else if (findContribuyenteByCambioPassword.contribuyente == null) {
-            errors.push({message: 'El codigo proporcionado no se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El codigo proporcionado no se encuentra dado de alta en el sistema.' })
         } else if (findContribuyenteByCambioPassword.contribuyente.cambioPassword !== 1) {
-            errors.push({message: 'Usted no ha solicitado hacer un cambio de contraseña, favor de ponerse en contacto con el administrador.'})
+            errors.push({ message: 'Usted no ha solicitado hacer un cambio de contraseña, favor de ponerse en contacto con el administrador.' })
         }
 
         if (errors.length > 0) {
@@ -413,7 +413,7 @@ export class ContribuyenteController {
         })
 
         if (changePassword.ok === false) {
-            errors.push({message: 'Existen problemas al momento de cambiar su contraseña.'})
+            errors.push({ message: 'Existen problemas al momento de cambiar su contraseña.' })
         }
 
         const createLogContribuyente = await ContribuyenteController.log.contribuyente({
@@ -433,7 +433,7 @@ export class ContribuyenteController {
     public async forward(req: Request, res: Response) {
         const body = req.body;
         const errors = [];
-        const email: string = body.email === null || validator.isEmpty(body.email) === true ? errors.push({message: 'Favor de proporcionar su email.'}) : body.email
+        const email: string = body.email === null || validator.isEmpty(body.email) === true ? errors.push({ message: 'Favor de proporcionar su email.' }) : body.email
         if (errors.length > 0) {
             return res.status(400).json({
                 ok: false,
@@ -441,7 +441,7 @@ export class ContribuyenteController {
             })
         }
         if (validator.isEmail(email) === false) {
-            errors.push({message: 'Favor de respetar la nomenclatura del email.'})
+            errors.push({ message: 'Favor de respetar la nomenclatura del email.' })
         }
         if (errors.length > 0) {
             return res.status(400).json({
@@ -449,14 +449,14 @@ export class ContribuyenteController {
                 errors
             })
         }
-        const findContribuyenteByEmail = await ContribuyenteController.contribuyenteQueries.findContribuyenteByEmail({email})
+        const findContribuyenteByEmail = await ContribuyenteController.contribuyenteQueries.findContribuyenteByEmail({ email })
 
         if (findContribuyenteByEmail.ok === false) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByEmail.contribuyente == null) {
-            errors.push({message: 'El email proporcionado no se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El email proporcionado no se encuentra dado de alta en el sistema.' })
         } else if (findContribuyenteByEmail.contribuyente.activo != 0) {
-            errors.push({message: 'Su cuenta ya se encuentra activa.'})
+            errors.push({ message: 'Su cuenta ya se encuentra activa.' })
         }
 
         if (errors.length > 0) {
@@ -474,7 +474,7 @@ export class ContribuyenteController {
         })
 
         if (sendEmail.ok === false) {
-            errors.push({message: 'Existen problemas al momento de reeenviar el correo, intente más tarde.'})
+            errors.push({ message: 'Existen problemas al momento de reeenviar el correo, intente más tarde.' })
         }
 
         if (errors.length > 0) {
@@ -495,17 +495,17 @@ export class ContribuyenteController {
         const errors = [];
 
         const contribuyenteUuid = req.params.contribuyente_uuid == null ? null : validator.isEmpty(req.params.contribuyente_uuid) ?
-            errors.push({message: 'Favor de proporcionar al contribuyente'}) :
+            errors.push({ message: 'Favor de proporcionar al contribuyente' }) :
             req.params.contribuyente_uuid
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) ?
-            errors.push({message: 'Favor de proporcionar su nombre'}) : body.nombre
+            errors.push({ message: 'Favor de proporcionar su nombre' }) : body.nombre
 
         const apellidos: string = body.apellidos == null || validator.isEmpty(body.apellidos) ?
-            errors.push({message: 'Favor de proporcionar su(s) apellidos.'}) : body.apellidos
+            errors.push({ message: 'Favor de proporcionar su(s) apellidos.' }) : body.apellidos
 
         const email: string = body.email == null || validator.isEmpty(body.email) ?
-            errors.push({message: 'Favor de proporcionar su email.'}) : body.email
+            errors.push({ message: 'Favor de proporcionar su email.' }) : body.email
 
         const password: string = body.password == null || validator.isEmpty(body.password) ?
             null : body.password
@@ -514,7 +514,7 @@ export class ContribuyenteController {
             null : body.re_password
 
         const telefono: string = body.telefono == null || validator.isEmpty(body.telefono) ?
-            errors.push({message: 'Favor de proporcionar su teléfono.'}) : body.telefono
+            errors.push({ message: 'Favor de proporcionar su teléfono.' }) : body.telefono
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
@@ -526,27 +526,27 @@ export class ContribuyenteController {
         }
 
         if (!validator.isEmail(email)) {
-            errors.push({message: 'Favor de respetar la nomenclatura del email.'})
+            errors.push({ message: 'Favor de respetar la nomenclatura del email.' })
         }
 
         if (!regex.test(nombre)) {
-            errors.push({message: 'Favor de solo proporcionar letras para el campo nombre'})
+            errors.push({ message: 'Favor de solo proporcionar letras para el campo nombre' })
         }
 
         if (!regex.test(apellidos)) {
-            errors.push({message: 'Favor de solo proporcionar letras para el campo de apellido(s)'})
+            errors.push({ message: 'Favor de solo proporcionar letras para el campo de apellido(s)' })
         }
 
         if (!validator.isNumeric(telefono)) {
-            errors.push({message: 'Favor de solo proporcionar números para el campo de teléfono'})
+            errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono' })
         }
 
         if (password != null && (Array.from(password).length < 5)) {
-            errors.push({message: 'La contraseña debe tener al menos 5 dígitos'})
+            errors.push({ message: 'La contraseña debe tener al menos 5 dígitos' })
         }
 
         if (password != null && password !== rePassword) {
-            errors.push({message: 'La contraseñas proporcionadas no coinciden'})
+            errors.push({ message: 'La contraseñas proporcionadas no coinciden' })
         }
 
         if (errors.length > 0) {
@@ -562,9 +562,9 @@ export class ContribuyenteController {
         })
 
         if (!findContribuyenteByUUID.ok) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByUUID.contribuyente === null) {
-            errors.push({message: 'El contribuyente proporcionado no se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El contribuyente proporcionado no se encuentra dado de alta en el sistema.' })
         }
 
         if (errors.length > 0) {
@@ -584,7 +584,7 @@ export class ContribuyenteController {
         })
 
         if (!updateContribuyente.ok) {
-            errors.push({message: 'Existen problemas al momento de actualizar la información del cliente.'})
+            errors.push({ message: 'Existen problemas al momento de actualizar la información del cliente.' })
         }
 
         const createLogContribuyente = await ContribuyenteController.log.contribuyente({
@@ -606,7 +606,7 @@ export class ContribuyenteController {
         const errors = [];
 
         const contribuyenteUuid = req.params.contribuyente_uuid == null ? null : validator.isEmpty(req.params.contribuyente_uuid) ?
-            errors.push({message: 'Favor de proporcionar al contribuyente'}) :
+            errors.push({ message: 'Favor de proporcionar al contribuyente' }) :
             req.params.contribuyente_uuid
 
         if (errors.length > 0) {
@@ -622,9 +622,9 @@ export class ContribuyenteController {
         })
 
         if (!findContribuyenteByUUID.ok) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByUUID.contribuyente === null) {
-            errors.push({message: 'El contribuyente proporcionado no se encuentra dado de alta en el sistema.'})
+            errors.push({ message: 'El contribuyente proporcionado no se encuentra dado de alta en el sistema.' })
         }
 
         if (errors.length > 0) {
@@ -641,7 +641,7 @@ export class ContribuyenteController {
         })
 
         if (!dropContribuyente.ok) {
-            errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
+            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         }
         if (errors.length > 0) {
             return res.status(400).json({
