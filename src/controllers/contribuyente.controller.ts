@@ -242,8 +242,6 @@ export class ContribuyenteController {
             codigo_activacion: createContribuyente.contribuyente.codigo_activacion
         });
 
-        console.log(sendEmail);
-
         /* const options = {
             data: {
                 'email': email,
