@@ -69,8 +69,8 @@ export class DocumentacionController {
         const tipoDocumento: string = body.tipo_documento == null || validator.isEmpty(body.tipo_documento) ?
             errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.tipo_documento;
 
-        const vigenciaInicial: string = body.vigencia_inicial == null || validator.isEmpty(body.vigencia_inicial) ?
-            errors.push({ message: 'Favor de proporcionar la vigencia inicial' }) : body.vigencia_inicial;
+        /*const vigenciaInicial: string = body.vigencia_inicial == null || validator.isEmpty(body.vigencia_inicial) ?
+            errors.push({ message: 'Favor de proporcionar la vigencia inicial' }) : body.vigencia_inicial;*/
 
         const vigenciaFinal: string = body.vigencia_final == null || validator.isEmpty(body.vigencia_final) ?
             errors.push({ message: 'Favor de proporcionar la vigencia final' }) : body.vigencia_final;
@@ -125,7 +125,6 @@ export class DocumentacionController {
             url: uploadFile.nameFile,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             tipo_documento: tipoDocumento,
-            vigencia_inicial: moment(vigenciaInicial).format('YYYY-MM-DD HH:mm:ss'),
             vigencia_final: moment(vigenciaFinal).format('YYYY-MM-DD HH:mm:ss'),
             aprobado: 1
         })
