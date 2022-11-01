@@ -7,13 +7,14 @@ import { RequerimientoQueries } from '../queries/requerimiento.query'
 import { DocumentacionQueries } from '../queries/documentacion.query'
 import { Log } from '../helpers/logs'
 import { File } from '../helpers/files'
-import {DocumentoSolicitudQueries} from "../queries/documento-solicitud.query";
+import {DocumentoSolicitudRequisitoQueries} from "../queries/documento-solicitud-requisito.query";
+import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 
-export class DocumentosSolicitudController {
+export class DocumentosSolicitudRequistoController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
-    static documentoSolicitudQueries: DocumentoSolicitudQueries = new DocumentoSolicitudQueries()
+    static documentoSolicitudRequistoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static log: Log = new Log()
     static file: File = new File()
@@ -42,7 +43,7 @@ export class DocumentosSolicitudController {
             })
         }
 
-        const createDocumento = await DocumentosSolicitudController.documentoSolicitudQueries.create({
+        const createDocumento = await DocumentosSolicitudRequistoController.documentoSolicitudRequistoQueries.create({
             documentacion_id: documentacionId,
             solicitudes_id: solicitudId,
             requisito_id: requisitoId,
@@ -58,7 +59,7 @@ export class DocumentosSolicitudController {
         }
 
         /** Creamos el log del usuario */
-        const createLogContribuyente = await DocumentosSolicitudController.log.contribuyente({
+        const createLogContribuyente = await DocumentosSolicitudRequistoController.log.contribuyente({
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento',

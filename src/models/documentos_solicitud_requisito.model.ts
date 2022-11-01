@@ -1,15 +1,16 @@
 import { Model, DataTypes } from 'sequelize'
 import { database } from '../config/database'
 
-export class DocumentosSolicitudModel extends Model{
+export class DocumentosSolicitudRequisitoModel extends Model{
     public id!: number
     public documentacionId!: number
     public solicitudesId!: number
+    public requistoId!: number
     public fechaAlta!: string
     public estaus!: number
 }
 
-DocumentosSolicitudModel.init({
+DocumentosSolicitudRequisitoModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -33,5 +34,5 @@ DocumentosSolicitudModel.init({
 }, {
     sequelize: database,
     timestamps: false,
-    tableName: 'documento_solicitud'
+    tableName: 'documento_solicitud_requisito'
 })

@@ -4,7 +4,7 @@ import {AdministratorAreaModel} from '../models/administrator_area.model'
 import {RequisitoModel} from "../models/requisito.model";
 import {RequisitoServiciosModel} from "../models/requisitos_servicios.model";
 import {DocumentacionServicioModel} from "../models/documentos_servicio.model";
-import {DocumentosSolicitudModel} from "../models/documentos_solicitud.model";
+import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 import {DocumentacionModel} from "../models/documentacion.model";
 
 export class RequisitosServiciosQueries {
@@ -81,7 +81,7 @@ export class RequisitosServiciosQueries {
                         model: RequisitoModel, as: 'Requisito',
                         include: [
                             {
-                                model: DocumentosSolicitudModel, as: 'Documento',
+                                model: DocumentosSolicitudRequisitoModel, as: 'Documento',
                                 include: [
                                     {model: DocumentacionModel, as: 'Documentacion'}
                                 ]

@@ -8,7 +8,7 @@ import {EstatusServicioModel} from '../models/estatus_servicio.model'
 import {ContribuyenteModel} from '../models/contribuyente.model'
 import {MensajeModel} from '../models/mensaje.model'
 import {BitacoraSolicitudModel} from '../models/bitacora_solicitud.model'
-import {DocumentosSolicitudModel} from "../models/documentos_solicitud.model";
+import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 import moment from "moment";
 
 export class SolicitudQueries {
@@ -23,7 +23,7 @@ export class SolicitudQueries {
                 },
                 include: [
                     {
-                        model: DocumentosSolicitudModel, as: 'DocumentosSolicitud',
+                        model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
@@ -94,7 +94,7 @@ export class SolicitudQueries {
                 include: [
                     {model: ServicioModel, as: 'Servicio'},
                     {
-                        model: DocumentosSolicitudModel, as: 'DocumentosSolicitud',
+                        model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]

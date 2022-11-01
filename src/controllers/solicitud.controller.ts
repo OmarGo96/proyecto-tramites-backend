@@ -9,7 +9,7 @@ import {DocumentacionQueries} from '../queries/documentacion.query'
 import {AdministradorAreaQueries} from '../queries/administrador_area.query'
 import {TransaccionQueries} from '../queries/transaccion.query'
 import {RequisitosServiciosQueries} from "../queries/requisitos-servicios.query";
-import {DocumentoSolicitudQueries} from '../queries/documento-solicitud.query';
+import {DocumentoSolicitudRequisitoQueries} from '../queries/documento-solicitud-requisito.query';
 
 import {Log} from '../helpers/logs'
 import {File} from '../helpers/files'
@@ -22,7 +22,7 @@ export class SolicitudController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static contribuyenteQueries: ContribuyenteQueries = new ContribuyenteQueries()
     static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
-    static documentoSolicitudQueries: DocumentoSolicitudQueries = new DocumentoSolicitudQueries()
+    static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static requisitosServiciosQueries: RequisitosServiciosQueries = new RequisitosServiciosQueries()
     static administradorAreaQueries: AdministradorAreaQueries = new AdministradorAreaQueries()

@@ -5,7 +5,7 @@ import { SolicitudQueries } from '../queries/solicitud.query'
 import { ServicioQueries } from '../queries/servicio.query'
 import { RequerimientoQueries } from '../queries/requerimiento.query'
 import { DocumentacionQueries } from '../queries/documentacion.query'
-import { DocumentoSolicitudQueries } from '../queries/documento-solicitud.query'
+import { DocumentoSolicitudRequisitoQueries } from '../queries/documento-solicitud-requisito.query'
 import { Log } from '../helpers/logs'
 import { File } from '../helpers/files'
 
@@ -14,7 +14,7 @@ export class DocumentacionController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
-    static documentoSolicitudQueries: DocumentoSolicitudQueries = new DocumentoSolicitudQueries()
+    static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static log: Log = new Log()
     static file: File = new File()
 
@@ -231,7 +231,7 @@ export class DocumentacionController {
         }
 
         /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
-        const findDocumentacionById = await DocumentacionController.documentoSolicitudQueries.findDocumentacionById({ id: documentacionId });
+        const findDocumentacionById = await DocumentacionController.documentoSolicitudRequisitoQueries.findDocumentacionById({ id: documentacionId });
 
         if (!findDocumentacionById.ok) {
             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' });
@@ -246,7 +246,7 @@ export class DocumentacionController {
             })
         }
 
-        const changeStatus = await DocumentacionController.documentoSolicitudQueries.changeStatus({
+        const changeStatus = await DocumentacionController.documentoSolicitudRequisitoQueries.changeStatus({
             id: documentacionId,
             estatus
         })
