@@ -75,7 +75,6 @@ export class DocumentacionQueries {
                     url: data.url,
                     fecha_alta: data.fecha_alta,
                     tipo_documento: data.tipo_documento,
-                    vigencia_inicial: data.vigencia_inicial,
                     vigencia_final: data.vigencia_final,
                     aprobado: data.aprobado
                 }

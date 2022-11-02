@@ -79,14 +79,6 @@ export class RequisitosServiciosQueries {
                 include: [
                     {
                         model: RequisitoModel, as: 'Requisito',
-                        include: [
-                            {
-                                model: DocumentosSolicitudRequisitoModel, as: 'Documento',
-                                include: [
-                                    {model: DocumentacionModel, as: 'Documentacion'}
-                                ]
-                            },
-                        ]
                     },
                 ]
             })

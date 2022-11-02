@@ -96,8 +96,6 @@ export class ServicioController {
         const serviceUuid = req.params.uuid == null ? null : validator.isEmpty(req.params.uuid) ?
             errors.push({message: 'Favor de proporcionar el uuid del servicio.'}) : req.params.uuid
 
-        console.log(serviceUuid);
-
         const findedService = await ServicioController.servicioQueries.findServicioByUUID({
             uuid: serviceUuid
         })
@@ -360,6 +358,9 @@ export class ServicioController {
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) ?
             errors.push({message: 'Favor de proporcionar el nombre del servicio/trámite'}) : body.nombre
 
+        const clave: string = body.clave == null || validator.isEmpty(body.clave) === true ?
+            errors.push({message: 'Favor de proporcionar la clave del servicio/trámite'}) : body.clave
+
         const descripcion: string = body.descripcion == null || validator.isEmpty(body.descripcion) ?
             errors.push({message: 'Favor de proporcionar una descripción'}) : body.descripcion
 
@@ -439,6 +440,7 @@ export class ServicioController {
         const updateArea = await ServicioController.servicioQueries.update({
             id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
             nombre,
+            clave,
             descripcion,
             costo,
             vigencia,
