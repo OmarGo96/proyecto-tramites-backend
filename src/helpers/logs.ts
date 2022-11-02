@@ -41,6 +41,7 @@ export class Log {
                 solicitud_id: data.solicitud_id,
                 fecha_alta: data.fecha_alta,
                 administradores_id: data.administradores_id,
+                contribuyente_id: data.contribuyente_id,
                 estatus_solicitud_id: data.estatus_solicitud_id,
                 comentario: data.comentario
             })

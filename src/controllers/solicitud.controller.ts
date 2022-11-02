@@ -325,7 +325,7 @@ export class SolicitudController {
 
         const errors = [];
 
-        const contribuyenteId: any = (req.body.contribuyenteId) ? req.body.contribuyenteId : null
+        const contribuyenteId: any = (req.body.contribuyente_id) ? req.body.contribuyente_id : null
 
         const solicitudId: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id) ?
             errors.push({message: 'Favor de proporcionar la solicitud al cual se le cambiara el estatus'}) : body.solicitud_id
@@ -361,17 +361,17 @@ export class SolicitudController {
             })
         }
 
-        if (estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
+        if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
             && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
             && estatus !== "12") {
             errors.push({ message: 'El estatus proporcionado no es valido' })
         }
 
-        if (estatus !== '2' && contribuyenteId != null) {
+        if (estatus !== '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
         }
 
-        if (estatus === '2' && contribuyenteId == null) {
+        if (estatus === '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
         }
 
@@ -522,7 +522,7 @@ export class SolicitudController {
                 ip: req.connection.remoteAddress,
                 fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
             })
-        } else if (estatus !== '2') {
+        } else if (estatus !== '2' && contribuyenteId == null) {
             const createLogAdministrador = await SolicitudController.log.administrador({
                 administrador_id: req.body.administradorId || false,
                 navegador: req.headers['user-agent'],
@@ -572,7 +572,8 @@ export class SolicitudController {
         const createLogSolicitud = await SolicitudController.log.solicitud({
             solicitud_id: solicitudId,
             estatus_solicitud_id: estatus,
-            administradores_id: req.body.administradorId,
+            administradores_id: req.body.administradorId || false,
+            contribuyente_id: (contribuyenteId) ? contribuyenteId : null,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             // @ts-ignore
             comentario: message
