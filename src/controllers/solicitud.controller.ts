@@ -83,7 +83,8 @@ export class SolicitudController {
 
         /** Buscamos los requisitos necesarios para el tramite y los damos de alta en la documentación */
         const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
-            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false
+            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
+            solicitud_id: createSolicitud.solicitud.id
         });
 
         if (!findRequisitosByServicio.ok) {
@@ -205,7 +206,8 @@ export class SolicitudController {
         const serviceId = findSolicitudesByContribuyente.solicitud.Servicio.id;
 
         const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
-            servicio_id: serviceId
+            servicio_id: serviceId,
+            solicitud_id: solicitudId
         });
 
         if (!findRequisitosByServicio.ok) {
@@ -274,7 +276,8 @@ export class SolicitudController {
         const serviceId = finSolicitudDetalle.solicitud.Servicio.id;
 
         const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
-            servicio_id: serviceId
+            servicio_id: serviceId,
+            solicitud_id: solicitudId
         });
 
         if (!findRequisitosByServicio.ok) {
