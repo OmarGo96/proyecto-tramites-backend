@@ -121,6 +121,7 @@ export class SolicitudController {
             solicitud_id: createSolicitud.solicitud ? createSolicitud.solicitud.id : false,
             estatus_solicitud_id: 1,
             administradores_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.Area.administradores_id : false,
+            contribuyente_id,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             comentario: 'El contribuyente creo una nueva solicitud'
         })
@@ -350,7 +351,7 @@ export class SolicitudController {
 
         if (!findSolicitudById.ok) {
             errors.push({message: 'Existen problemas al momento de obtener la solicitud proporcionada.'})
-        } else if (findSolicitudById.solicitud == null) {
+        } else if (findSolicitudById.solicitud === null) {
             errors.push({message: 'La solicitud proporcionada no existe.'})
         }
 
@@ -361,19 +362,20 @@ export class SolicitudController {
             })
         }
 
+        // Se valida que el estatus que se esta proporcionando sea valido
         if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
             && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
             && estatus !== "12") {
             errors.push({ message: 'El estatus proporcionado no es valido' })
         }
 
-        if (estatus !== '2' && contribuyenteId !== null) {
+        /*if (estatus !== '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
         }
 
         if (estatus === '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
-        }
+        }*/
 
         /*if (estatus === '5' && motivoRechazo == null ||
             estatus === '6' && motivoRechazo == null ||
@@ -514,7 +516,7 @@ export class SolicitudController {
         }
 
 
-        if (estatus === '2' || estatus === '1') {
+        if (estatus === '1' || estatus === '2') {
             const createLogContribuyente = await SolicitudController.log.contribuyente({
                 contribuyente_id: contribuyenteId,
                 navegador: req.headers['user-agent'],
@@ -524,7 +526,7 @@ export class SolicitudController {
             })
         } else if (estatus !== '2' && contribuyenteId == null) {
             const createLogAdministrador = await SolicitudController.log.administrador({
-                administrador_id: req.body.administradorId || false,
+                administrador_id: req.body.administrador_id || null,
                 navegador: req.headers['user-agent'],
                 accion: 'El administrador cambio el estatus de la solicitud a ' + estatus,
                 ip: req.connection.remoteAddress,
@@ -572,16 +574,14 @@ export class SolicitudController {
         const createLogSolicitud = await SolicitudController.log.solicitud({
             solicitud_id: solicitudId,
             estatus_solicitud_id: estatus,
-            administradores_id: req.body.administradorId || false,
+            administrador_id: req.body.administradorId || null,
             contribuyente_id: (contribuyenteId) ? contribuyenteId : null,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            // @ts-ignore
             comentario: message
         });
 
         return res.status(200).json({
             ok: true,
-            // @ts-ignore
             message
         })
     }

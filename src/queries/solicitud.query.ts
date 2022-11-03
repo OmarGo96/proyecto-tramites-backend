@@ -129,6 +129,13 @@ export class SolicitudQueries {
     public async changeStatus(data: any) {
 
         let toUpdate = {}
+        if (data.estatus_solicitud_id === '1') {
+            toUpdate = {
+                estatus_solicitud_id: data.estatus_solicitud_id,
+                comentario: data.comentario
+            }
+        }
+
         if (data.estatus_solicitud_id === '2') {
             toUpdate = {
                 estatus_solicitud_id: data.estatus_solicitud_id,
@@ -165,17 +172,6 @@ export class SolicitudQueries {
                 motivo_rechazo: null
             }
         }
-
-        /*const toUpdate = {
-            id: data.id,
-            estatus_solicitud_id: data.estatus_solicitud_id,
-            fecha_envio: data.fecha_envio,
-            fecha_recepcion: data.fecha_recepcion,
-            fecha_final: data.fecha_final,
-            fecha_rechazo: data.fecha_rechazo,
-            motivo_rechazo: data.motivo_rechazo,
-            comentario: data.comentario
-        }*/
         try {
             const solicitud = await SolicitudModel.update(toUpdate, {
                 where: {

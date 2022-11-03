@@ -19,7 +19,7 @@ BitacoraSolicitudModel.init({
     solicitud_id: {
         type: DataTypes.INTEGER
     },
-    administradores_id: {
+    administrador_id: {
         type: DataTypes.INTEGER
     },
     contribuyente_id: {

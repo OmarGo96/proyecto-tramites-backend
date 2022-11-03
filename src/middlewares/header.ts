@@ -117,12 +117,12 @@ export class CheckHeaders {
             const userType = cryptr.decrypt(decoded.userType);
             if (userType === 'contribuyente') {
                 const contribuyenteId = cryptr.decrypt(decoded.contribuyenteId)
-                req.body.contribuyenteId = contribuyenteId
+                req.body.contribuyente_id = contribuyenteId
             }
 
             if (userType === 'administrador') {
                 const administratorId = cryptr.decrypt(decoded.administradorId)
-                req.body.administradorId = administratorId
+                req.body.administrador_id = administratorId
             }
 
 
