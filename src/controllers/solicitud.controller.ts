@@ -9,7 +9,7 @@ import {DocumentacionQueries} from '../queries/documentacion.query'
 import {AdministradorAreaQueries} from '../queries/administrador_area.query'
 import {TransaccionQueries} from '../queries/transaccion.query'
 import {RequisitosServiciosQueries} from "../queries/requisitos-servicios.query";
-import {DocumentoSolicitudQueries} from '../queries/documento-solicitud.query';
+import {DocumentoSolicitudRequisitoQueries} from '../queries/documento-solicitud-requisito.query';
 
 import {Log} from '../helpers/logs'
 import {File} from '../helpers/files'
@@ -22,7 +22,7 @@ export class SolicitudController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static contribuyenteQueries: ContribuyenteQueries = new ContribuyenteQueries()
     static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
-    static documentoSolicitudQueries: DocumentoSolicitudQueries = new DocumentoSolicitudQueries()
+    static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static requisitosServiciosQueries: RequisitosServiciosQueries = new RequisitosServiciosQueries()
     static administradorAreaQueries: AdministradorAreaQueries = new AdministradorAreaQueries()
@@ -83,7 +83,8 @@ export class SolicitudController {
 
         /** Buscamos los requisitos necesarios para el tramite y los damos de alta en la documentación */
         const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
-            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false
+            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
+            solicitud_id: createSolicitud.solicitud.id
         });
 
         if (!findRequisitosByServicio.ok) {
@@ -120,6 +121,7 @@ export class SolicitudController {
             solicitud_id: createSolicitud.solicitud ? createSolicitud.solicitud.id : false,
             estatus_solicitud_id: 1,
             administradores_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.Area.administradores_id : false,
+            contribuyente_id,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             comentario: 'El contribuyente creo una nueva solicitud'
         })
@@ -205,7 +207,8 @@ export class SolicitudController {
         const serviceId = findSolicitudesByContribuyente.solicitud.Servicio.id;
 
         const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
-            servicio_id: serviceId
+            servicio_id: serviceId,
+            solicitud_id: solicitudId
         });
 
         if (!findRequisitosByServicio.ok) {
@@ -274,7 +277,8 @@ export class SolicitudController {
         const serviceId = finSolicitudDetalle.solicitud.Servicio.id;
 
         const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
-            servicio_id: serviceId
+            servicio_id: serviceId,
+            solicitud_id: solicitudId
         });
 
         if (!findRequisitosByServicio.ok) {
@@ -322,7 +326,7 @@ export class SolicitudController {
 
         const errors = [];
 
-        const contribuyenteId: any = (req.body.contribuyenteId) ? req.body.contribuyenteId : null
+        const contribuyenteId: any = (req.body.contribuyente_id) ? req.body.contribuyente_id : null
 
         const solicitudId: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id) ?
             errors.push({message: 'Favor de proporcionar la solicitud al cual se le cambiara el estatus'}) : body.solicitud_id
@@ -347,7 +351,7 @@ export class SolicitudController {
 
         if (!findSolicitudById.ok) {
             errors.push({message: 'Existen problemas al momento de obtener la solicitud proporcionada.'})
-        } else if (findSolicitudById.solicitud == null) {
+        } else if (findSolicitudById.solicitud === null) {
             errors.push({message: 'La solicitud proporcionada no existe.'})
         }
 
@@ -358,19 +362,20 @@ export class SolicitudController {
             })
         }
 
-        if (estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
+        // Se valida que el estatus que se esta proporcionando sea valido
+        if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
             && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
             && estatus !== "12") {
             errors.push({ message: 'El estatus proporcionado no es valido' })
         }
 
-        if (estatus !== '2' && contribuyenteId != null) {
+        /*if (estatus !== '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
         }
 
-        if (estatus === '2' && contribuyenteId == null) {
+        if (estatus === '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
-        }
+        }*/
 
         /*if (estatus === '5' && motivoRechazo == null ||
             estatus === '6' && motivoRechazo == null ||
@@ -511,7 +516,7 @@ export class SolicitudController {
         }
 
 
-        if (estatus === '2' || estatus === '1') {
+        if (estatus === '1' || estatus === '2') {
             const createLogContribuyente = await SolicitudController.log.contribuyente({
                 contribuyente_id: contribuyenteId,
                 navegador: req.headers['user-agent'],
@@ -519,9 +524,9 @@ export class SolicitudController {
                 ip: req.connection.remoteAddress,
                 fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
             })
-        } else if (estatus !== '2') {
+        } else if (estatus !== '2' && contribuyenteId == null) {
             const createLogAdministrador = await SolicitudController.log.administrador({
-                administrador_id: req.body.administradorId || false,
+                administrador_id: req.body.administrador_id || null,
                 navegador: req.headers['user-agent'],
                 accion: 'El administrador cambio el estatus de la solicitud a ' + estatus,
                 ip: req.connection.remoteAddress,
@@ -569,15 +574,14 @@ export class SolicitudController {
         const createLogSolicitud = await SolicitudController.log.solicitud({
             solicitud_id: solicitudId,
             estatus_solicitud_id: estatus,
-            administradores_id: req.body.administradorId,
+            administrador_id: req.body.administradorId || null,
+            contribuyente_id: (contribuyenteId) ? contribuyenteId : null,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            // @ts-ignore
             comentario: message
         });
 
         return res.status(200).json({
             ok: true,
-            // @ts-ignore
             message
         })
     }

@@ -13,7 +13,7 @@ import {PagoController} from '../controllers/pago.controller';
 import {LicenciaController} from '../controllers/licencia.controller';
 import {SolicitudController} from '../controllers/solicitud.controller';
 import {DocumentacionController} from '../controllers/documentacion.controller';
-import {DocumentosSolicitudController} from '../controllers/documentos-solicitud.controller';
+import {DocumentosSolicitudRequistoController} from '../controllers/documentos-solicitud-requisito.controller';
 import {EstatusesController} from '../controllers/estatuses.controller';
 import {MensajeController} from "../controllers/mensaje.controller";
 import {ExampleController} from "../controllers/example.controller";
@@ -36,7 +36,7 @@ export class Routes {
     public licenciaController: LicenciaController = new LicenciaController();
     public solicitudController: SolicitudController = new SolicitudController();
     public documentacionController: DocumentacionController = new DocumentacionController();
-    public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
+    public documentosSolicitudRequisitoController: DocumentosSolicitudRequistoController = new DocumentosSolicitudRequistoController();
     public estatusesController: EstatusesController = new EstatusesController();
     public mensajeController: MensajeController = new MensajeController();
     public exampleController: ExampleController = new ExampleController();
@@ -101,7 +101,8 @@ export class Routes {
         // Routes for documentacion methods
         app.route('/api/documentacion').post(CheckHeaders.validateJWTContribuyente, this.documentacionController.attachFile)
         app.route('/api/documentacion').get(CheckHeaders.validateJWTContribuyente, this.documentacionController.index)
-        app.route('/api/documentos-solcicitud').post(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudController.attachFile)
+        app.route('/api/documentos-solcicitud').post(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.attachFile)
+        app.route('/api/documentos-solicitud-requisito/:documento_solicitud_requisito_id').put(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.updateDocumentoSolicitudRequisito)
         app.route('/api/archivo_documentacion/:documentacion_id').get(/*CheckHeaders.validateJWTByTypeUser, */this.documentacionController.getFile)
         app.route('/api/cambiar_estatus_documentacion/:documentacion_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.changeStatus)
         // Routes for tipo documentos methods

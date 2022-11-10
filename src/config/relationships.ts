@@ -17,7 +17,7 @@ import {ServicioModel} from '../models/servicio.model'
 import {RequisitoServiciosModel} from "../models/requisitos_servicios.model";
 import {DocumentacionModel} from "../models/documentacion.model";
 import {TiposDocumentosModel} from "../models/tipos-documentos.model";
-import {DocumentosSolicitudModel} from '../models/documentos_solicitud.model';
+import {DocumentosSolicitudRequisitoModel} from '../models/documentos_solicitud_requisito.model';
 import {SolicitudModel} from "../models/solicitud.model";
 import { EstatusSolicitudModel } from '../models/estatus_solicitud.model'
 // import { EstatusServicioModel } from '../models/estatus_servicio.model'
@@ -60,10 +60,10 @@ export default class Relationship {
         EstatusServicioModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'EstatusSolicitud' })
         // ServicioModel.hasMany(EstatusServicioModel, { foreignKey: 'servicio_id' })
 
-        DocumentosSolicitudModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
-        RequisitoModel.hasOne(DocumentosSolicitudModel, {foreignKey:'requisito_id', as: 'Documento'})
+        DocumentosSolicitudRequisitoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
+        RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})
 
-        SolicitudModel.hasMany(DocumentosSolicitudModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitud'})
+        SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
 

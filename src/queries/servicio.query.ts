@@ -235,6 +235,7 @@ export class ServicioQueries {
         try {
             const servicio = await ServicioModel.update({
                 nombre: data.nombre,
+                clave: data.clave,
                 descripcion: data.descripcion,
                 costo: data.costo,
                 vigencia: data.vigencia,

@@ -8,7 +8,7 @@ import {EstatusServicioModel} from '../models/estatus_servicio.model'
 import {ContribuyenteModel} from '../models/contribuyente.model'
 import {MensajeModel} from '../models/mensaje.model'
 import {BitacoraSolicitudModel} from '../models/bitacora_solicitud.model'
-import {DocumentosSolicitudModel} from "../models/documentos_solicitud.model";
+import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 import moment from "moment";
 
 export class SolicitudQueries {
@@ -23,7 +23,7 @@ export class SolicitudQueries {
                 },
                 include: [
                     {
-                        model: DocumentosSolicitudModel, as: 'DocumentosSolicitud',
+                        model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
@@ -94,7 +94,7 @@ export class SolicitudQueries {
                 include: [
                     {model: ServicioModel, as: 'Servicio'},
                     {
-                        model: DocumentosSolicitudModel, as: 'DocumentosSolicitud',
+                        model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
@@ -129,6 +129,13 @@ export class SolicitudQueries {
     public async changeStatus(data: any) {
 
         let toUpdate = {}
+        if (data.estatus_solicitud_id === '1') {
+            toUpdate = {
+                estatus_solicitud_id: data.estatus_solicitud_id,
+                comentario: data.comentario
+            }
+        }
+
         if (data.estatus_solicitud_id === '2') {
             toUpdate = {
                 estatus_solicitud_id: data.estatus_solicitud_id,
@@ -165,17 +172,6 @@ export class SolicitudQueries {
                 motivo_rechazo: null
             }
         }
-
-        /*const toUpdate = {
-            id: data.id,
-            estatus_solicitud_id: data.estatus_solicitud_id,
-            fecha_envio: data.fecha_envio,
-            fecha_recepcion: data.fecha_recepcion,
-            fecha_final: data.fecha_final,
-            fecha_rechazo: data.fecha_rechazo,
-            motivo_rechazo: data.motivo_rechazo,
-            comentario: data.comentario
-        }*/
         try {
             const solicitud = await SolicitudModel.update(toUpdate, {
                 where: {

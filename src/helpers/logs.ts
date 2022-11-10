@@ -40,7 +40,8 @@ export class Log {
             const log = await BitacoraSolicitudModel.create({
                 solicitud_id: data.solicitud_id,
                 fecha_alta: data.fecha_alta,
-                administradores_id: data.administradores_id,
+                administrador_id: data.administrador_id,
+                contribuyente_id: data.contribuyente_id,
                 estatus_solicitud_id: data.estatus_solicitud_id,
                 comentario: data.comentario
             })

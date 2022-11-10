@@ -5,6 +5,7 @@ export class BitacoraSolicitudModel extends Model {
     public id!: number
     public solicitudId!: number
     public administradoresId!: number
+    public contribuyenteId!: number
     public fechaAlta!: string
     public estatusSolicitudId!: number
 }
@@ -18,7 +19,10 @@ BitacoraSolicitudModel.init({
     solicitud_id: {
         type: DataTypes.INTEGER
     },
-    administradores_id: {
+    administrador_id: {
+        type: DataTypes.INTEGER
+    },
+    contribuyente_id: {
         type: DataTypes.INTEGER
     },
     fecha_alta: {
