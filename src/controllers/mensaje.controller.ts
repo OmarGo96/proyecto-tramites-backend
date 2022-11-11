@@ -140,7 +140,7 @@ export class MensajeController {
 
         return res.status(200).json({
             ok: true,
-            message: "Se ha dado de alta el mensaje"
+            message: "Mensaje enviado correctamente"
         })
     }
 
