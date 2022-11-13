@@ -1,5 +1,5 @@
-import { Op } from 'sequelize'
-import { AreaModel } from '../models/area.model'
+import {Op, where} from 'sequelize'
+import {AreaModel} from '../models/area.model'
 import {AdministratorAreaModel} from "../models/administrator_area.model";
 import {ServicioModel} from "../models/servicio.model";
 
@@ -7,7 +7,7 @@ export class AreaQueries {
     public async getAreas(data: any) {
         let query: any
 
-        if(data.auth === true){
+        if (data.auth === true) {
             query = {
                 attributes: [
                     'uuid', 'nombre', 'descripcion', 'responsable', 'telefono', 'extension',
@@ -19,10 +19,13 @@ export class AreaQueries {
                 include: [
                     {
                         model: ServicioModel, as: 'Servicio',
-                    }
+                        where: {
+                            activo: 1
+                        }
+                    },
                 ]
             }
-        }else{
+        } else {
             query = {
                 attributes: [
                     'uuid', 'nombre', 'descripcion', 'responsable', 'telefono', 'extension',
@@ -37,6 +40,9 @@ export class AreaQueries {
                 include: [
                     {
                         model: ServicioModel, as: 'Servicio',
+                        where: {
+                            activo: 1
+                        }
                     }
                 ]
             }
@@ -44,10 +50,10 @@ export class AreaQueries {
 
         try {
             const areas = await AreaModel.findAll(query)
-            return { ok: true, areas }
+            return {ok: true, areas}
         } catch (e) {
             console.log(e)
-            return { ok: false }
+            return {ok: false}
         }
     }
 
@@ -67,10 +73,10 @@ export class AreaQueries {
                 activo: 1,
                 ubicacion: data.ubicacion
             })
-            return { ok: true, area }
-        } catch(e){
+            return {ok: true, area}
+        } catch (e) {
             console.log(e);
-            return { ok: false }
+            return {ok: false}
         }
     }
 
@@ -81,10 +87,10 @@ export class AreaQueries {
                     uuid: data.uuid
                 }
             })
-            return { ok: true, area }
+            return {ok: true, area}
         } catch (e) {
             console.log(e)
-            return { ok: false }
+            return {ok: false}
         }
     }
 
@@ -95,10 +101,10 @@ export class AreaQueries {
                     nombre: data.nombre
                 }
             })
-            return { ok: true, area }
+            return {ok: true, area}
         } catch (e) {
             console.log(e)
-            return { ok: false }
+            return {ok: false}
         }
     }
 
@@ -119,10 +125,10 @@ export class AreaQueries {
                     id: data.id
                 }
             })
-            return { ok: true, area }
+            return {ok: true, area}
         } catch (e) {
             console.log(e)
-            return { ok: false }
+            return {ok: false}
         }
     }
 }
