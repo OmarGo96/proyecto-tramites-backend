@@ -82,7 +82,7 @@ export class DocumentacionController {
             })
         }
 
-        if (tipoDocumento !== '0' && tipoDocumento !== '1') {
+        /*if (tipoDocumento !== '0' && tipoDocumento !== '1') {
             errors.push({ message: 'Favor de proporcionar un tipo de documento valido' })
         }
 
@@ -91,7 +91,7 @@ export class DocumentacionController {
                 ok: false,
                 errors
             })
-        }
+        }*/
 
         /*const findDocumentacionById = await DocumentacionController.documentacionQueries.findDocumentacionById({
             id: documentacionId
