@@ -108,6 +108,7 @@ export class Routes {
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
         app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.tiposDocumentosController.store);
+        app.route('/api/documentos_tipos/:documento_tipo_id').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.tiposDocuemntosList)
         // Routes for pago predial
         app.route('/api/claves').post(CheckHeaders.validateJWTContribuyente, this.claveController.store)
         app.route('/api/claves').get(CheckHeaders.validateJWTContribuyente, this.claveController.show)

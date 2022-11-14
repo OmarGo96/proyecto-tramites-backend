@@ -8,11 +8,13 @@ import {TiposDocumentosQueries} from '../queries/tipos-documentos.query';
 import {AreaQueries} from '../queries/area.query';
 import {Log} from '../helpers/logs';
 import {File} from '../helpers/files';
+import {DocumentosTiposQueries} from "../queries/documentos-tipos.query";
 
 export class TiposDocumentosController {
     static areaQueries: AreaQueries = new AreaQueries();
     static servicioQueries: ServicioQueries = new ServicioQueries();
     static tiposDocumentoQueries: TiposDocumentosQueries = new TiposDocumentosQueries();
+    static documentosTiposQueries: DocumentosTiposQueries = new DocumentosTiposQueries();
     static documentoServicioQueries: DocumentoServicioQueries = new DocumentoServicioQueries();
     static log: Log = new Log()
     static file: File = new File();
@@ -114,6 +116,38 @@ export class TiposDocumentosController {
         return res.status(200).json({
             ok: true,
             message: 'Se ha dado de alta el tipo de documento'
+        })
+    }
+
+    public async tiposDocuemntosList(req: Request, res: Response) {
+        const auth = req.body.auth
+        const errors = []
+        const documento_tipo_id = req.params.documento_tipo_id == null ?
+            errors.push({message: 'Favor de proporcionar el id del tipo documento'}) : req.params.documento_tipo_id;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const documentosTipos = await TiposDocumentosController.documentosTiposQueries.getDocumentosTiposByTipoDocumento_id({
+            documento_tipo_id
+        })
+
+        if (!documentosTipos.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de obtener la lista de documentos'}]
+            })
+        }
+
+
+
+        return res.status(200).json({
+            ok: true,
+            documentosTipos: documentosTipos.documentosTipos
         })
     }
 }
