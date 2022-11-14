@@ -283,13 +283,13 @@ export class AdministradorController {
         const apellidos: string = body.apellidos == null || validator.isEmpty(body.apellidos) === true ?
             errors.push({message: 'Favor de proporcionar su(s) apellidos.'}) : body.apellidos
 
-        const rol: string = body.rol == null || validator.isEmpty(body.rol) === true ?
+        const rol: string = body.rol == null || validator.isEmpty(body.rol + '') === true ?
             errors.push({message: 'Favor de proporcionar su rol.'}) : body.rol
 
         const usuario: string = body.usuario == null || validator.isEmpty(body.usuario) === true ?
             errors.push({message: 'Favor de proporcionar el usuario.'}) : body.usuario
 
-        const activo: string = body.activo == null || validator.isEmpty(body.activo) === true ?
+        const activo: string = body.activo == null || validator.isEmpty(body.activo + '') === true ?
             errors.push({message: 'Favor de proporcionar si el usuario esta activo o inactivo'}) : body.activo
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');

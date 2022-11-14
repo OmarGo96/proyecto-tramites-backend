@@ -124,7 +124,6 @@ export class AdministratorQueries {
                 apellidos: data.apellidos,
                 rol: data.rol,
                 usuario: data.usuario,
-                password: data.password,
                 activo: data.activo,
             }, {
                 where: {
