@@ -272,9 +272,6 @@ export class AdministradorController {
     public async update(req: Request, res: Response) {
         const body = req.body;
         const errors = [];
-        let areas: any = [];
-
-        areas = (body.areas == null) ? null : body.areas
 
         const administradorUuid = req.params.administrador_uuid == null ? null : validator.isEmpty(req.params.administrador_uuid) ?
             errors.push({message: 'Favor de proporcionar al administrador'}) :
@@ -289,17 +286,11 @@ export class AdministradorController {
         const rol: string = body.rol == null || validator.isEmpty(body.rol) === true ?
             errors.push({message: 'Favor de proporcionar su rol.'}) : body.rol
 
-        const password: string = body.password == null || validator.isEmpty(body.password) === true ?
-            null : body.password
-
-        const rePassword: string = body.re_password == null || validator.isEmpty(body.re_password) === true ?
-            null : body.re_password
-
         const usuario: string = body.usuario == null || validator.isEmpty(body.usuario) === true ?
             errors.push({message: 'Favor de proporcionar el usuario.'}) : body.usuario
 
         const activo: string = body.activo == null || validator.isEmpty(body.activo) === true ?
-            errors.push({message: 'Favor de proporcionar su teléfono de referencia.'}) : body.activo
+            errors.push({message: 'Favor de proporcionar si el usuario esta activo o inactivo'}) : body.activo
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
@@ -334,18 +325,6 @@ export class AdministradorController {
             errors.push({message: 'Favor de solo proporcionar un valor para el modo activo valido'})
         }
 
-        if (password != null && password !== rePassword) {
-            errors.push({message: 'La contraseñas proporcionadas no coinciden'})
-        }
-
-        if (areas === null || areas.length === 0) {
-            errors.push({message: 'Favor de proporcionar el o las areas en donde participara el usuario'})
-        }
-
-        if (rol === "1" && areas.length > 1) {
-            errors.push({message: 'Para el rol proporcionado solo es posible adjuntarle un área'})
-        }
-
         if (errors.length > 0) {
             return res.status(400).json({
                 ok: false,
@@ -370,17 +349,16 @@ export class AdministradorController {
             })
         }
 
-        const updateContribuyente = await AdministradorController.administradorQueries.update({
+        const updateAdministrador = await AdministradorController.administradorQueries.update({
             nombre,
             apellidos,
             rol,
-            password: (password != null) ? bcrypt.hashSync(password, AdministradorController.salt) : findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.password : false,
             activo,
             usuario,
             id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false
         })
 
-        if (updateContribuyente.ok === false) {
+        if (updateAdministrador.ok === false) {
             errors.push({message: 'Existen problemas al momento de actualizar la información del administrador.'})
         }
 
@@ -391,57 +369,10 @@ export class AdministradorController {
             })
         }
 
-        let multiFindAreaByUUID: any
-        const areasBuscadas: any = []
-
-        if (areas != null && areas.length > 0) {
-            for (const area of areas) {
-                multiFindAreaByUUID = await AdministradorController.areaQueries.findAreaByUUID({uuid: area.uuid})
-
-                if (multiFindAreaByUUID.ok === false) {
-                    errors.push({message: 'Existen problemas al momento de validar el área proporcionada.'})
-                } else if (multiFindAreaByUUID.area == null) {
-                    errors.push({message: 'El área proporcionada no existe.'})
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-                areasBuscadas.push(multiFindAreaByUUID.area)
-            }
-        }
-
-        const inactiveArea = await AdministradorController.administradorAreaQueries.inactive({
-            administrador_id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false
-        });
-
-        if (areas != null && areasBuscadas.length > 0) {
-            for (const area of areasBuscadas) {
-                const createAdministradorArea = await AdministradorController.administradorAreaQueries.create({
-                    administrador_id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false,
-                    area_id: area.id
-                })
-
-                if (createAdministradorArea.ok === false) {
-                    errors.push({message: 'Existen problemas al momento de adjuntar las areas al administrador'})
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-            }
-        }
-
         const createLogAdministrador = await AdministradorController.log.administrador({
             administrador_id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false,
             navegador: req.headers['user-agent'],
-            accion: 'Se ha dado de alta al administrador',
+            accion: 'Se ha modificado la informacion del administrador',
             ip: req.connection.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
