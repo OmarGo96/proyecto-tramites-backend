@@ -8,7 +8,7 @@ export class DocumentosTiposQueries {
         try {
             const documentosTipos = await DocumentosTiposModel.findAll({
                 where: {
-                    tipos_documentos_id: data.tipo_documento_id
+                    tipos_documentos_id: data.documento_tipo_id
                 }
             });
             return {ok: true, documentosTipos}
