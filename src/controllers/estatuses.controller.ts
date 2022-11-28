@@ -44,5 +44,36 @@ export class EstatusesController {
         })
     }
 
+    public async indexByEstatusId(req: Request, res: Response) {
+        const body = req.body
+        const errors = []
+
+        const servicioId = req.params.servicio_id == null ? null : validator.isEmpty(req.params.servicio_id) ?
+            errors.push({message: 'Favor de proporcionar el id de la solicitud'}) : req.params.servicio_id
+
+        const estatusId = req.params.estatus_id == null ? null : validator.isEmpty(req.params.estatus_id) ?
+            errors.push({message: 'Favor de proporcionar el estatus de la solicitud'}) : req.params.estatus_id
+
+        const estatuses = await EstatusesController.estatusesQueries.getEstatusesById(servicioId, estatusId);
+
+        if (!estatuses.ok) {
+            errors.push({message: 'Existen problemas al obtener los estatuses'});
+        } else if (estatuses.estatuses == null) {
+            errors.push({message: 'No se encontraron estatuses'});
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            estatuses: estatuses.estatuses
+        })
+    }
+
 
 }

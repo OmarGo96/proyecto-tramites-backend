@@ -23,6 +23,7 @@ import { EstatusSolicitudModel } from '../models/estatus_solicitud.model'
 // import { EstatusServicioModel } from '../models/estatus_servicio.model'
 import { MensajeModel } from '../models/mensaje.model'
 import {EstatusServicioModel} from "../models/estatus_servicio.model";
+import {CambiaEstatusModel} from "../models/cambia_estatus.model";
 
 export default class Relationship {
     static init() {
@@ -59,6 +60,7 @@ export default class Relationship {
         // EstatusServicioModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
         EstatusServicioModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'EstatusSolicitud' })
         // ServicioModel.hasMany(EstatusServicioModel, { foreignKey: 'servicio_id' })
+        CambiaEstatusModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'EstatusSolicitud' })
 
         DocumentosSolicitudRequisitoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})

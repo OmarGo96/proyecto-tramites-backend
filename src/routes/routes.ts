@@ -91,6 +91,7 @@ export class Routes {
         app.route('/api/todas_solicitudes').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.solicitudController.findOneAdmin)
         app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.index)
+        app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.indexByEstatusId)
         /*app.route('/api/adjuntar_comentario').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.attachComment)
         app.route('/api/eliminar_solicitud/:solicitud_id').delete(CheckHeaders.validateJWTContribuyente, this.solicitudController.delete)
         app.route('/api/pagar_tramite').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pay)

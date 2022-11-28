@@ -7,11 +7,13 @@ import { Log } from '../helpers/logs';
 import { Mailer } from '../helpers/mailer';
 import { Axios } from '../helpers/axios';
 import { ContribuyenteQueries } from '../queries/contribuyente.query';
+import {SmsMangerHelper} from "../helpers/sms-manger.helper";
 
 export class ContribuyenteController {
     static salt = bcrypt.genSaltSync(Number(process.env.NO_SALT));
     static log: Log = new Log()
     static mailer: Mailer = new Mailer()
+    static smsTwilio: SmsMangerHelper = new SmsMangerHelper()
     static contribuyenteQueries: ContribuyenteQueries = new ContribuyenteQueries()
     static axios: Axios = new Axios()
 
@@ -107,6 +109,8 @@ export class ContribuyenteController {
     public async store(req: Request, res: Response) {
         const body = req.body || false;
         const errors = [];
+        const countryCode: string = '+52'
+        const codigo_activacion = moment().unix()
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) === true ?
             errors.push({ message: 'Favor de proporcionar su nombre' }) : body.nombre
@@ -126,8 +130,8 @@ export class ContribuyenteController {
         const rePassword: string = body.re_password == null || validator.isEmpty(body.re_password) === true ?
             errors.push({ message: 'Favor de confirmar su contraseña.' }) : body.re_password
 
-        const telefono: string = body.telefono == null || validator.isEmpty(body.telefono) === true ?
-            errors.push({ message: 'Favor de proporcionar su teléfono.' }) : body.telefono
+        const telefono: string = body.telefono == null || validator.isEmpty(body.telefono+ '') === true ?
+            errors.push({ message: 'Favor de proporcionar su teléfono.' }) :  body.telefono
 
         const telefonoReferencia: string = body.telefono_referencia == null || validator.isEmpty(body.telefono_referencia) === true ?
             errors.push({ message: 'Favor de proporcionar su teléfono de referencia.' }) : body.telefono_referencia
@@ -215,12 +219,12 @@ export class ContribuyenteController {
             apellidos,
             email,
             password: bcrypt.hashSync(password, ContribuyenteController.salt),
-            telefono,
+            telefono: countryCode + telefono,
             telefonoReferencia,
             genero,
             edad,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            codigo_activacion: moment().unix(),
+            codigo_activacion,
             activo: 0,
         })
 
@@ -235,12 +239,9 @@ export class ContribuyenteController {
             })
         }
 
-        let sendEmail = await ContribuyenteController.mailer.send({
-            email,
-            subject: 'Alta de cuenta',
-            template: 'activation',
-            codigo_activacion: createContribuyente.contribuyente.codigo_activacion
-        });
+        const smsMessage = 'Ingresa el siguiente código para activar tu cuenta: ' + codigo_activacion
+
+        const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(countryCode + telefono, smsMessage);
 
         /* const options = {
             data: {
@@ -263,7 +264,7 @@ export class ContribuyenteController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Favor de revisar su correo electrónico para activar su cuenta '
+            message: 'Favor de revisar su celular para activar su cuenta '
         })
     }
 
@@ -324,12 +325,20 @@ export class ContribuyenteController {
             })
         }
 
-        let sendEmail = await ContribuyenteController.mailer.send({
-            email,
-            subject: 'Restablecer mi cuenta',
-            template: 'reset',
-            restablecer_password: restablecerPassword
-        })
+        const smsMessage = 'Ingresa al siguiente link para cambiar tu contraseña: ' + 'http://66.175.238.197/usuario_tramites/restablecer/' + findContribuyenteByEmail.contribuyente.restablecerPassword
+
+        const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
+
+        if (sendSMS.ok === false) {
+            errors.push({ message: 'Existen problemas al momento de enviar link para cambiar contraseña, intente más tarde.' })
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
         /* const options = {
             data: {
@@ -352,7 +361,7 @@ export class ContribuyenteController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha enviado los pasos a seguir para restablecer su contraseña al correo proporcionado'
+            message: 'Se ha enviado los pasos a seguir para restablecer su contraseña'
         })
 
     }
@@ -466,15 +475,12 @@ export class ContribuyenteController {
             })
         }
 
-        const sendEmail = await ContribuyenteController.mailer.send({
-            email,
-            subject: 'Activar mi cuenta',
-            template: 'activation',
-            codigo_activacion: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.codigo_activacion : false
-        })
+        const smsMessage = 'Ingresa el siguiente código para activar tu cuenta: ' + findContribuyenteByEmail.contribuyente.codigo_activacion
 
-        if (sendEmail.ok === false) {
-            errors.push({ message: 'Existen problemas al momento de reeenviar el correo, intente más tarde.' })
+        const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
+
+        if (sendSMS.ok === false) {
+            errors.push({ message: 'Existen problemas al momento de reeenviar el código de activación, intente más tarde.' })
         }
 
         if (errors.length > 0) {
@@ -486,7 +492,7 @@ export class ContribuyenteController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Favor de revisar su correo electrónico para activar su cuenta '
+            message: 'Favor de revisar su celular para activar su cuenta '
         })
     }
 
