@@ -264,6 +264,7 @@ export class ContribuyenteController {
 
         return res.status(200).json({
             ok: true,
+            codigo_activacion,
             message: 'Favor de revisar su celular para activar su cuenta '
         })
     }

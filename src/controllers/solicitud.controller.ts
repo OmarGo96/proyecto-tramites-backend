@@ -366,7 +366,7 @@ export class SolicitudController {
         if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
             && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
             && estatus !== "12") {
-            errors.push({ message: 'El estatus proporcionado no es valido' })
+            errors.push({message: 'El estatus proporcionado no es valido'})
         }
 
         /*if (estatus !== '2' && contribuyenteId !== null) {
@@ -482,7 +482,7 @@ export class SolicitudController {
 
         if (estatus === '3') {
             if (findSolicitudById.solicitud.estatus_solicitud_id !== 2) {
-                errors.push({ message: 'Esta solicitud no tiene permitido cambiar de estatus' })
+                errors.push({message: 'Esta solicitud no tiene permitido cambiar de estatus'})
             }
 
             if (errors.length > 0) {
@@ -611,7 +611,7 @@ export class SolicitudController {
             })
 
             // tslint:disable-next-line:no-shadowed-variable
-            const solicitudes = findAllSolicitudes.solicitudes ||  [''];
+            const solicitudes = findAllSolicitudes.solicitudes || [''];
 
             if (!findAllSolicitudes.ok) {
                 errors.push({message: 'Existen problemas al momento de obtener sus solicitudes.'})
@@ -668,7 +668,7 @@ export class SolicitudController {
 
     }
 
-    public async history(req: Request, res: Response){
+    public async history(req: Request, res: Response) {
         const errors = [];
 
         const solicitudId = req.params.id == null ? null : validator.isEmpty(req.params.id) ?
@@ -695,7 +695,7 @@ export class SolicitudController {
         })
     }
 
-    public async messages(req: Request, res: Response){
+    public async messages(req: Request, res: Response) {
         const errors = [];
 
         const solicitudId = req.params.id == null ? null : validator.isEmpty(req.params.id) ?
@@ -721,6 +721,112 @@ export class SolicitudController {
             mensajes: mensajesDeSolicitud.mensajes
         })
     }
+
+    public async pasecaja(req: Request, res: Response) {
+        /** Obtenemos el id del administrador */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const grupo_tramite_id: string = body.grupo_tramite_id == null || validator.isEmpty(body.grupo_tramite_id + '') ?
+            errors.push({ message: 'Favor de proporcionar el grupo del tramite' }) : body.grupo_tramite_id
+
+        const tramite_id: string = body.tramite_id == null || validator.isEmpty(body.tramite_id + '') ?
+            errors.push({ message: 'Favor de proporcionar el tramite' }) : body.tramite_id
+
+        const importe: string = body.importe == null || validator.isEmpty(body.importe + '') ?
+            errors.push({ message: 'Favor de proporcionar el importe a pagar' }) : body.importe
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const data = {
+            url: process.env.PASE_CAJA_GEN,
+            function: 'daoCreaPaseCajaGenerico',
+            args: {
+                GrupoTramiteId: grupo_tramite_id,
+                TramiteId: tramite_id,
+                parDouImporte: importe
+            }
+        }
+
+        const soap: any = await SolicitudController.soap.request(data)
+
+        if (soap.ok === false) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.message }]
+            })
+        }
+
+        if(!soap.result[0].daoCreaPaseCajaGenericoResult){
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'La clave proporcionada no existe' }]
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            pase_caja: soap.result[0].daoCreaPaseCajaGenericoResult.UrlPaseImpresion
+        })
+    }
+
+    public async linkpago(req: Request, res: Response) {
+        /** Obtenemos el id del administrador */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia) ?
+            errors.push({ message: 'Favor de proporcionar el licencia' }) : body.licencia
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const data = {
+            url: 'http://tesoreria.gobiernodesolidaridad.gob.mx:8081/wsSIGEM/coatl/iServiceUrlIntenciondePagoLicFuncionamiento.svc?singleWsdl',
+            function: 'daoGeneraIntenciondecobro',
+            args: {
+                parStrLicenciaFuncionamiento: licencia,
+                parStrTokenValidate: 'dedededed'
+            }
+        }
+
+        const soap: any = await SolicitudController.soap.request(data)
+
+        if (soap.ok === false) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.message }]
+            })
+        }
+
+        if(!soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro){
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'La clave proporcionada no existe' }]
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            link: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro
+        })
+    }
+
     /*
 
     public async delete(req: Request, res: Response) {
