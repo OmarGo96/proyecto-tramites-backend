@@ -97,6 +97,7 @@ export class ContribuyenteQueries {
         try {
             const contribuyente = await ContribuyenteModel.create({
                 uuid: data.uuid,
+                rfc: data.rfc,
                 nombre: data.nombre,
                 apellidos: data.apellidos,
                 email: data.email,

@@ -4,6 +4,7 @@ import { database } from '../config/database'
 export class ContribuyenteModel extends Model{
     public id!: number
     public uuid!: string
+    public rfc!: string
     public nombre!: string
     public apellidos!: string
     public email!: string
@@ -18,7 +19,6 @@ export class ContribuyenteModel extends Model{
     public restablecerPassword!: string
     public cambioPassword!: number
     public activo!: number
-    public rfc!: string
 }
 
 ContribuyenteModel.init({
@@ -28,6 +28,9 @@ ContribuyenteModel.init({
         primaryKey: true
     },
     uuid: {
+        type: DataTypes.STRING
+    },
+    rfc: {
         type: DataTypes.STRING
     },
     nombre: {
@@ -71,9 +74,6 @@ ContribuyenteModel.init({
     },
     activo: {
         type: DataTypes.INTEGER
-    },
-    rfc: {
-        type: DataTypes.STRING
     },
 }, {
     sequelize: database,

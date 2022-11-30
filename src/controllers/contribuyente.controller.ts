@@ -136,6 +136,9 @@ export class ContribuyenteController {
         const telefonoReferencia: string = body.telefono_referencia == null || validator.isEmpty(body.telefono_referencia) === true ?
             errors.push({ message: 'Favor de proporcionar su teléfono de referencia.' }) : body.telefono_referencia
 
+        const rfc: string = body.rfc == null || validator.isEmpty(body.rfc) === true ?
+            errors.push({ message: 'Favor de proporcionar su RFC.' }) : body.rfc
+
         const genero: string = body.genero == null || validator.isEmpty(body.genero) === true ?
             errors.push({ message: 'Favor de proporcionar su género.' }) : body.genero
 
@@ -221,6 +224,7 @@ export class ContribuyenteController {
             password: bcrypt.hashSync(password, ContribuyenteController.salt),
             telefono: countryCode + telefono,
             telefonoReferencia,
+            rfc,
             genero,
             edad,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),

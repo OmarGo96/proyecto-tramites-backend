@@ -74,7 +74,8 @@ export class RequisitosServiciosQueries {
                     ['id', 'ASC']
                 ],
                 where: {
-                    servicios_id: data.servicio_id
+                    servicios_id: data.servicio_id,
+                    activo: 1
                 },
                 include: [
                     {
