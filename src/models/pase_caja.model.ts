@@ -1,58 +1,70 @@
 import { Model, DataTypes } from 'sequelize'
 import { database } from '../config/database'
 
-export class DocumentacionModel extends Model{
+export class PaseCajaModel extends Model{
     // Declare public properties (one per column in database)
     // Note the ! at the end of each property
     //example:
     public id!: number
-    public tipos_documentos_id!: number
-    public contribuyentes_id!: number
-    public url!: string
+    public solicitud_id!: number
+    public licencias_funcionamiento_id!: number
+    public claves_id!: number
+    public grupo_tramite_id!: number
+    public tramite_id!: number
+    public observaciones!: string
+    public pase_caja!: string
+    public urlPaseImpresion!: string
+    public codigo_error!: string
+    public mensaje_error!: string
     public fecha_alta!: string
-    public tipo_documento!: number
-    public vigencia_inicial!: string
-    public vigencia_final!: string
-    public aprobado!: number
 
 }
 
 // Initialize the class with the properties exactly as they are in the Database.
 // Do not initialize utility columns like timestamps
-DocumentacionModel.init({
+PaseCajaModel.init({
     // Example:
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
     },
-    tipos_documentos_id: {
+    solicitud_id: {
         type: DataTypes.INTEGER
     },
-    contribuyentes_id: {
+    licencias_funcionamiento_id: {
         type: DataTypes.INTEGER
     },
-    url: {
+    claves_id: {
+        type: DataTypes.INTEGER
+    },
+    grupo_tramite_id: {
+        type: DataTypes.INTEGER
+    },
+    tramite_id: {
+        type: DataTypes.INTEGER
+    },
+    observaciones: {
+        type: DataTypes.STRING
+    },
+    pase_caja: {
+        type: DataTypes.STRING
+    },
+    urlPaseImpresion: {
+        type: DataTypes.TEXT
+    },
+    codigo_error: {
+        type: DataTypes.STRING
+    },
+    mensaje_error: {
         type: DataTypes.STRING
     },
     fecha_alta: {
-        type: DataTypes.STRING
-    },
-    tipo_documento: {
-        type: DataTypes.INTEGER
-    },
-    vigencia_inicial: {
-        type: DataTypes.STRING
-    },
-    vigencia_final: {
-        type: DataTypes.STRING
-    },
-    aprobado: {
-        type: DataTypes.INTEGER
+        type: DataTypes.DATE
     },
 }, {
     // Then add the configuration:
     sequelize: database,
     timestamps: false,
-    tableName: 'documentacion'
+    tableName: 'pase_caja'
 })

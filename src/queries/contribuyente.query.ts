@@ -103,7 +103,7 @@ export class ContribuyenteQueries {
                 email: data.email,
                 password: data.password,
                 telefono: data.telefono,
-                telefono_referencia: data.telefono_referencia,
+                // telefono_referencia: data.telefono_referencia,
                 genero: data.genero,
                 edad: data.edad,
                 fecha_alta: data.fecha_alta,

@@ -133,8 +133,8 @@ export class ContribuyenteController {
         const telefono: string = body.telefono == null || validator.isEmpty(body.telefono+ '') === true ?
             errors.push({ message: 'Favor de proporcionar su teléfono.' }) :  body.telefono
 
-        const telefonoReferencia: string = body.telefono_referencia == null || validator.isEmpty(body.telefono_referencia) === true ?
-            errors.push({ message: 'Favor de proporcionar su teléfono de referencia.' }) : body.telefono_referencia
+        // const telefonoReferencia: string = body.telefono_referencia == null || validator.isEmpty(body.telefono_referencia) === true ?
+        //     errors.push({ message: 'Favor de proporcionar su teléfono de referencia.' }) : body.telefono_referencia
 
         const rfc: string = body.rfc == null || validator.isEmpty(body.rfc) === true ?
             errors.push({ message: 'Favor de proporcionar su RFC.' }) : body.rfc
@@ -170,9 +170,9 @@ export class ContribuyenteController {
             errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono' })
         }
 
-        if (validator.isNumeric(telefonoReferencia) === false) {
-            errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono referencia' })
-        }
+        // if (validator.isNumeric(telefonoReferencia) === false) {
+        //     errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono referencia' })
+        // }
 
         if (genero !== "1" && genero !== "0") {
             errors.push({ message: 'Favor de solo proporcionar un género valido' })
@@ -223,7 +223,6 @@ export class ContribuyenteController {
             email,
             password: bcrypt.hashSync(password, ContribuyenteController.salt),
             telefono: countryCode + telefono,
-            telefonoReferencia,
             rfc,
             genero,
             edad,
