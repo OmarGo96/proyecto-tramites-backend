@@ -20,7 +20,7 @@ export class ContribuyenteQueries {
         try {
             const contribuyente = await ContribuyenteModel.findOne({
                 attributes: [
-                    'uuid', 'nombre', 'apellidos', 'email', 'telefono', 'telefono_referencia',
+                    'uuid', 'rfc', 'nombre', 'apellidos', 'email', 'telefono', 'telefono_referencia',
                     'genero'
                 ],
                 where: {

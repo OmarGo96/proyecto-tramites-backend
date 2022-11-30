@@ -15,6 +15,7 @@ import {Log} from '../helpers/logs'
 import {File} from '../helpers/files'
 import {Soap} from '../helpers/soap'
 import {AreaModel} from "../models/area.model";
+import {im} from "mathjs";
 
 
 export class SolicitudController {
@@ -768,7 +769,7 @@ export class SolicitudController {
         if(!soap.result[0].daoCreaPaseCajaGenericoResult){
             return res.status(400).json({
                 ok: false,
-                message: [{ message: 'La clave proporcionada no existe' }]
+                message: [{ message: 'Existen problemas para generar el pase a caja, intente más tarde' }]
             })
         }
 
@@ -779,15 +780,21 @@ export class SolicitudController {
     }
 
     public async linkpago(req: Request, res: Response) {
-        /** Obtenemos el id del administrador */
+        /** Obtenemos el id del contribuyente */
         const contribuyente_id: number = req.body.contribuyente_id
         /** Obtenemos toda la información que nos envia el cliente */
         const body = req.body
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia) ?
-            errors.push({ message: 'Favor de proporcionar el licencia' }) : body.licencia
+        const grupo_tramite_id: number = body.grupo_tramite_id == null || validator.isEmpty(body.grupo_tramite_id + '') ?
+            errors.push({ message: 'Favor de proporcionar el grupo del tramite' }) : Number(body.grupo_tramite_id)
+
+        const tramite_id: number = body.tramite_id == null || validator.isEmpty(body.tramite_id + '') ?
+            errors.push({ message: 'Favor de proporcionar el tramite' }) : Number(body.tramite_id)
+
+        const importe: number = body.importe == null || validator.isEmpty(body.importe + '') ?
+            errors.push({ message: 'Favor de proporcionar el importe a pagar' }) : Number(body.importe)
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -796,12 +803,28 @@ export class SolicitudController {
             })
         }
 
+        const contribuyente = await SolicitudController.contribuyenteQueries.findContribuyenteById({ id: contribuyente_id})
+
+        if (contribuyente.ok === false) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'Existen problemas al momento de generar link de pago, intente más tarde.' }]
+            })
+        }
+        const referencia = moment().unix().toString() + contribuyente_id
+
         const data = {
-            url: 'http://tesoreria.gobiernodesolidaridad.gob.mx:8081/wsSIGEM/coatl/iServiceUrlIntenciondePagoLicFuncionamiento.svc?singleWsdl',
+            url: process.env.INTENTO_COBRO_GEN,
             function: 'daoGeneraIntenciondecobro',
             args: {
-                parStrLicenciaFuncionamiento: licencia,
-                parStrTokenValidate: 'dedededed'
+                parIntGrupoTramiteId: grupo_tramite_id,
+                parIntTramiteId: tramite_id,
+                parStrReferencia: referencia,
+                parDouImporte: importe,
+                parStrTokenValidate: 'token',
+                parStrRFC: contribuyente.contribuyente.rfc,
+                parStrNombreContrib: contribuyente.contribuyente.nombre + ' ' + contribuyente.contribuyente.apellidos,
+                parStrPadronId: ''
             }
         }
 
@@ -817,7 +840,7 @@ export class SolicitudController {
         if(!soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro){
             return res.status(400).json({
                 ok: false,
-                message: [{ message: 'La clave proporcionada no existe' }]
+                message: [{ message: 'Existen problemas para generar el link de pago, intente más tarde.' }]
             })
         }
 
