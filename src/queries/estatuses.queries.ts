@@ -13,9 +13,10 @@ export class EstatusesQueries {
     public async getEstatuses(id: any) {
         try {
             const estatuses = await EstatusServicioModel.findAll({
-                attributes: ['4','5','6','7','8','9','10','11','12'],
                 where: {
-                    servicio_id: id
+                    estatus_solicitud_id: {[Op.in]: [4,5,6,7,8,9,10,11,12]},
+                    servicio_id: id,
+
                 },
                 include: [
                     { model: EstatusSolicitudModel, as: 'EstatusSolicitud'}
