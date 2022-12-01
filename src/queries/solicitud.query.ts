@@ -40,6 +40,35 @@ export class SolicitudQueries {
         }
     }
 
+    public async findSolicitudesByContribuyenteByEstatus(data: any) {
+        try {
+            const solicitudes = await SolicitudModel.findAll({
+                order: [
+                    ['fecha_alta', 'ASC']
+                ],
+                where: {
+                    estatus_solicitud_id: data.estatus,
+                    contribuyente_id: data.contribuyente_id
+                },
+                include: [
+                    {
+                        model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
+                        include: [
+                            {model: DocumentacionModel, as: 'Documentacion'}
+                        ]
+                    },
+                    {model: MensajeModel},
+                    {model: ServicioModel, as: 'Servicio'},
+                    {model: EstatusSolicitudModel, as: 'Estatus'},
+                ]
+            })
+            return {ok: true, solicitudes}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async findAllSolicitudes(data: any) {
         try {
             const solicitudes = await SolicitudModel.findAll({

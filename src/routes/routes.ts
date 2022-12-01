@@ -86,9 +86,11 @@ export class Routes {
         // Routes for solicitudes methods
         app.route('/api/solicitudes').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.store)
         app.route('/api/solicitudes').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.show)
+        app.route('/api/solicitudes/:status').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.showByStatus)
         app.route('/api/solicitud/:id').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.findOne)
         app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pasecaja)
         app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkpago)
+        app.route('/api/solicitud/respuesta_intento_pago').post(this.solicitudController.linkpago)
         app.route('/api/cambiar_solicitud_estatus').post(CheckHeaders.validateJWTByTypeUser, this.solicitudController.changeStatus);
         app.route('/api/todas_solicitudes').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.solicitudController.findOneAdmin)
@@ -111,7 +113,7 @@ export class Routes {
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
         app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.tiposDocumentosController.store);
-        app.route('/api/documentos_tipos/:documento_tipo_id').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.tiposDocuemntosList)
+        app.route('/api/documentos_tipos/:documento_tipo_id').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.tiposDocumentosList)
         // Routes for pago predial
         app.route('/api/claves').post(CheckHeaders.validateJWTContribuyente, this.claveController.store)
         app.route('/api/claves').get(CheckHeaders.validateJWTContribuyente, this.claveController.show)

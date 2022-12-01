@@ -14,8 +14,7 @@ import {DocumentoSolicitudRequisitoQueries} from '../queries/documento-solicitud
 import {Log} from '../helpers/logs'
 import {File} from '../helpers/files'
 import {Soap} from '../helpers/soap'
-import {AreaModel} from "../models/area.model";
-import {im} from "mathjs";
+import {PaseCajaQueries} from "../queries/pase_caja.query";
 
 
 export class SolicitudController {
@@ -25,6 +24,7 @@ export class SolicitudController {
     static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
     static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
+    static paseCajaQueries: PaseCajaQueries = new PaseCajaQueries()
     static requisitosServiciosQueries: RequisitosServiciosQueries = new RequisitosServiciosQueries()
     static administradorAreaQueries: AdministradorAreaQueries = new AdministradorAreaQueries()
     static transaccionQueries: TransaccionQueries = new TransaccionQueries()
@@ -175,6 +175,46 @@ export class SolicitudController {
              }
              solicitudes.push(data)
          })*/
+
+        return res.status(200).json({
+            ok: true,
+            solicitudes: findSolicitudesByContribuyente.solicitudes
+        })
+    }
+
+    public async showByStatus(req: Request, res: Response) {
+        const contribuyente_id: number = req.body.contribuyente_id
+        const errors = [];
+
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+
+        const estatus: any = req.params.status == null || validator.isEmpty(req.params.status + '') ?
+            errors.push({ message: 'Favor de proporcionar el estatus' }) : req.params.status
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const findSolicitudesByContribuyente = await SolicitudController.solicitudQueries.findSolicitudesByContribuyenteByEstatus({
+            contribuyente_id,
+            estatus
+        })
+
+        if (!findSolicitudesByContribuyente.ok) {
+            errors.push({message: 'Existen problemas al momento de obtener sus solicitudes.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
 
         return res.status(200).json({
             ok: true,
@@ -724,12 +764,15 @@ export class SolicitudController {
     }
 
     public async pasecaja(req: Request, res: Response) {
-        /** Obtenemos el id del administrador */
+        /** Obtenemos el id del contribuyente */
         const contribuyente_id: number = req.body.contribuyente_id
         /** Obtenemos toda la información que nos envia el cliente */
         const body = req.body
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
+
+        const solicitud_id: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id + '') ?
+            errors.push({ message: 'Favor de proporcionar la solicitud' }) : body.solicitud_id
 
         const grupo_tramite_id: string = body.grupo_tramite_id == null || validator.isEmpty(body.grupo_tramite_id + '') ?
             errors.push({ message: 'Favor de proporcionar el grupo del tramite' }) : body.grupo_tramite_id
@@ -766,7 +809,23 @@ export class SolicitudController {
             })
         }
 
-        if(!soap.result[0].daoCreaPaseCajaGenericoResult){
+        if(!soap.result[0].daoCreaPaseCajaGenericoResult.UrlPaseImpresion) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para generar el pase a caja, intente más tarde' }]
+            })
+        }
+
+        const pase_caja = await SolicitudController.paseCajaQueries.store({
+            solicitud_id,
+            grupo_tramite_id,
+            tramite_id,
+            urlPaseImpresion: soap.result[0].daoCreaPaseCajaGenericoResult.UrlPaseImpresion,
+            fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
+
+        })
+
+        if (!pase_caja.ok) {
             return res.status(400).json({
                 ok: false,
                 message: [{ message: 'Existen problemas para generar el pase a caja, intente más tarde' }]
@@ -786,6 +845,9 @@ export class SolicitudController {
         const body = req.body
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
+
+        const solicitud_id: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id + '') ?
+            errors.push({ message: 'Favor de proporcionar la solicitud' }) : body.solicitud_id
 
         const grupo_tramite_id: number = body.grupo_tramite_id == null || validator.isEmpty(body.grupo_tramite_id + '') ?
             errors.push({ message: 'Favor de proporcionar el grupo del tramite' }) : Number(body.grupo_tramite_id)
@@ -844,12 +906,34 @@ export class SolicitudController {
             })
         }
 
+        const url_intencion_cobro = await SolicitudController.paseCajaQueries.store({
+            solicitud_id,
+            grupo_tramite_id,
+            tramite_id,
+            referencia,
+            url_intencion_cobro: soap.result[0].daoCreaPaseCajaGenericoResult.UrlPaseImpresion,
+            status: 0,
+            fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
+
+        })
+
+        if (!url_intencion_cobro.ok) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para generar el link de pago, intente más tarde' }]
+            })
+        }
+
+
         return res.status(200).json({
             ok: true,
             link: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro
         })
     }
 
+    public async respuestaIntentoPago(req: Request, res: Response) {
+
+    }
     /*
 
     public async delete(req: Request, res: Response) {

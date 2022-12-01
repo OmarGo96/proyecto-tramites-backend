@@ -119,7 +119,7 @@ export class TiposDocumentosController {
         })
     }
 
-    public async tiposDocuemntosList(req: Request, res: Response) {
+    public async tiposDocumentosList(req: Request, res: Response) {
         const auth = req.body.auth
         const errors = []
         const documento_tipo_id = req.params.documento_tipo_id == null ?
