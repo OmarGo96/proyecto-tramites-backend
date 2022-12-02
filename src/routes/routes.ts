@@ -90,7 +90,7 @@ export class Routes {
         app.route('/api/solicitud/:id').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.findOne)
         app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pasecaja)
         app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkpago)
-        app.route('/api/solicitud/respuesta_intento_pago').post(this.solicitudController.linkpago)
+        app.route('/api/solicitud/respuesta_intento_pago/:referencia').post(this.solicitudController.respuestaIntentoPago)
         app.route('/api/cambiar_solicitud_estatus').post(CheckHeaders.validateJWTByTypeUser, this.solicitudController.changeStatus);
         app.route('/api/todas_solicitudes').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.solicitudController.findOneAdmin)

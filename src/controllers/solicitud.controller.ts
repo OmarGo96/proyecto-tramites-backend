@@ -15,6 +15,7 @@ import {Log} from '../helpers/logs'
 import {File} from '../helpers/files'
 import {Soap} from '../helpers/soap'
 import {PaseCajaQueries} from "../queries/pase_caja.query";
+import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
 
 
 export class SolicitudController {
@@ -25,6 +26,7 @@ export class SolicitudController {
     static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static paseCajaQueries: PaseCajaQueries = new PaseCajaQueries()
+    static urlIntencionCobroQueries: UrlIntencionCobroQueries = new UrlIntencionCobroQueries()
     static requisitosServiciosQueries: RequisitosServiciosQueries = new RequisitosServiciosQueries()
     static administradorAreaQueries: AdministradorAreaQueries = new AdministradorAreaQueries()
     static transaccionQueries: TransaccionQueries = new TransaccionQueries()
@@ -906,7 +908,7 @@ export class SolicitudController {
             })
         }
 
-        const url_intencion_cobro = await SolicitudController.paseCajaQueries.store({
+        const url_intencion_cobro = await SolicitudController.urlIntencionCobroQueries.store({
             solicitud_id,
             grupo_tramite_id,
             tramite_id,
@@ -932,8 +934,60 @@ export class SolicitudController {
     }
 
     public async respuestaIntentoPago(req: Request, res: Response) {
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const paymentResponse = body.paymentResponse;
+
+        const referencia: any = req.params.referencia == null || validator.isEmpty(req.params.referencia + '') ?
+            errors.push({ message: 'Favor de proporcionar la referencia' }) : req.params.referencia
+
+        const findUrlIntentoCobro = await SolicitudController.urlIntencionCobroQueries.findByReference({
+            referencia
+        })
+
+        if (!findUrlIntentoCobro.ok) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para encontrar el intento de pago' }]
+            })
+        } else if (findUrlIntentoCobro.urlIntencionCobro == null) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'No se encontró ningún intento de pago relacionado a la referencia proporcionada.' }]
+            })
+        }
+
+        const processPaymentResponse = await SolicitudController.urlIntencionCobroQueries.update({
+            status: (body.ok === false) ? -1 : 1,
+            codigo_error: body.codigo,
+            mensaje_error: body.menaje
+        }, findUrlIntentoCobro.urlIntencionCobro.id)
+
+        if (!processPaymentResponse.ok) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para actualizar el intento de cobro' }]
+            })
+        }
+
+        if (body.ok) {
+            const updateSolicitud = await SolicitudController.solicitudQueries.changeStatus({
+                estatus_solicitud_id: 11
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha actualizado el estatus del intento de cobro'
+        })
+
+
 
     }
+
     /*
 
     public async delete(req: Request, res: Response) {
