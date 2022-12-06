@@ -242,7 +242,7 @@ export class ContribuyenteController {
             })
         }
 
-        const smsMessage = 'Ingresa el siguiente código para activar tu cuenta: ' + codigo_activacion
+        const smsMessage = 'Ingresa al siguiente link para activar tu cuenta: '+ process.env.PLATAFORMA_WEB + 'activar/' + codigo_activacion
 
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(countryCode + telefono, smsMessage);
 
@@ -479,7 +479,7 @@ export class ContribuyenteController {
             })
         }
 
-        const smsMessage = 'Ingresa el siguiente código para activar tu cuenta: ' + findContribuyenteByEmail.contribuyente.codigo_activacion
+        const smsMessage = 'Ingresa al siguiente link para activar tu cuenta: '+ process.env.PLATAFORMA_WEB + 'activar/' + findContribuyenteByEmail.contribuyente.codigo_activacion
 
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
 
