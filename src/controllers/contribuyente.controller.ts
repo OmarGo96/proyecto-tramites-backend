@@ -242,7 +242,7 @@ export class ContribuyenteController {
             })
         }
 
-        const smsMessage = 'Ingresa al siguiente link para activar tu cuenta: '+ process.env.PLATAFORMA_WEB + 'activar/' + codigo_activacion
+        const smsMessage = 'Ayuntamiento de Solidaridad. Ingresa al siguiente link para activar tu cuenta: '+ process.env.PLATAFORMA_WEB + 'activar/' + codigo_activacion
 
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(countryCode + telefono, smsMessage);
 
@@ -268,7 +268,7 @@ export class ContribuyenteController {
         return res.status(200).json({
             ok: true,
             codigo_activacion,
-            message: 'Favor de revisar su celular para activar su cuenta '
+            message: 'Su cuenta ha sido creada exitosamente, en la brevedad recibirá un mensaje de texto para terminar el proceso de activación, gracias.'
         })
     }
 
@@ -301,7 +301,7 @@ export class ContribuyenteController {
         if (findContribuyenteByEmail.ok === false) {
             errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByEmail.contribuyente == null) {
-            errors.push({ message: 'El email proporcionado no esta dado de alta en el sistema.' })
+            errors.push({ message: 'Si su email se encuentra registrado, recibirá un código para cambio de contraseña' })
         }
 
         if (errors.length > 0) {
@@ -479,7 +479,7 @@ export class ContribuyenteController {
             })
         }
 
-        const smsMessage = 'Ingresa al siguiente link para activar tu cuenta: '+ process.env.PLATAFORMA_WEB + 'activar/' + findContribuyenteByEmail.contribuyente.codigo_activacion
+        const smsMessage = 'Ayuntamiento de Solidaridad. Ingresa al siguiente link para activar tu cuenta: '+ process.env.PLATAFORMA_WEB + 'activar/' + findContribuyenteByEmail.contribuyente.codigo_activacion
 
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
 
