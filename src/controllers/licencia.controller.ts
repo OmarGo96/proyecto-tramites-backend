@@ -78,7 +78,7 @@ export class LicenciaController {
         }
 
         const data = {
-            url: 'http://tesoreria.gobiernodesolidaridad.gob.mx:8081/wsSIGEM/tena/IServiceObtieneLicenciasFuncionamiento.svc?singleWsdl',
+            url: process.env.DATOS_LICENCIA,
             function: 'daoObtieneDatosLicenciaFuncionamientoId',
             args: {
                 // tslint:disable-next-line:radix
@@ -218,7 +218,7 @@ export class LicenciaController {
         }
 
         const data = {
-            url: 'http://tesoreria.gobiernodesolidaridad.gob.mx:8081/wsSIGEM/tena/IServiceObtieneEdoCuentaLicenciaFuncionamiento.svc?singleWsdl',
+            url: process.env.ESTADO_CUENTA_LICENCIA,
             function: 'daoObtienerEdoCuentaLicenciaFuncionamiento',
             args: {
                 parLngLicenciaFuncionamiento: licencia
@@ -287,7 +287,7 @@ export class LicenciaController {
         }
 
         const data = {
-            url: 'http://tesoreria.gobiernodesolidaridad.gob.mx:8081/wsSIGEM/tena/IServiceCreaPaseCajaLicenciaFuncionamiento.svc?singleWsdl',
+            url: process.env.PASE_CAJA_LICENCIA,
             function: 'daoCreaPaseCajaLicenciasFuncionamiento',
             args: {
                 parStrLicenciaFuncionamiento: licencia
@@ -352,7 +352,7 @@ export class LicenciaController {
         }
 
         const data = {
-            url: 'http://tesoreria.gobiernodesolidaridad.gob.mx:8081/wsSIGEM/coatl/iServiceUrlIntenciondePagoLicFuncionamiento.svc?singleWsdl',
+            url: process.env.INTENTO_COBRO_LICENCIA,
             function: 'daoGeneraIntenciondecobro',
             args: {
                 parStrLicenciaFuncionamiento: licencia,

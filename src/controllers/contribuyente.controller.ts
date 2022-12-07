@@ -63,11 +63,11 @@ export class ContribuyenteController {
         })
 
         if (findContribuyenteByCodAct.ok === false) {
-            errors.push({ message: 'Existen problemas al momento de verificar si el código esta dado de alta.' })
+            errors.push({ message: 'Existen problemas al momento de activar cuenta.' })
         } else if (findContribuyenteByCodAct.contribuyente === null) {
-            errors.push({ message: 'El codigo proporcionado no se encuentra dado de alta en el sistema.' })
+            errors.push({ message: 'Si su email se encuentra registrado, recibirá un código para activar cuenta.”' })
         } else if (findContribuyenteByCodAct.contribuyente && findContribuyenteByCodAct.contribuyente.activo !== 0) {
-            errors.push({ message: 'El codigo proporcionado ya no es valido.' })
+            errors.push({ message: 'El código proporcionado ya no es valido.' })
         }
 
         if (errors.length > 0) {
@@ -301,7 +301,7 @@ export class ContribuyenteController {
         if (findContribuyenteByEmail.ok === false) {
             errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByEmail.contribuyente == null) {
-            errors.push({ message: 'Si su email se encuentra registrado, recibirá un código para cambio de contraseña' })
+            errors.push({ message: 'Si su email se encuentra registrado, recibirá un link para el cambio de contraseña' })
         }
 
         if (errors.length > 0) {
@@ -329,7 +329,7 @@ export class ContribuyenteController {
             })
         }
 
-        const smsMessage = 'Ingresa al siguiente link para cambiar tu contraseña: ' + 'http://66.175.238.197/usuario_tramites/restablecer/' + findContribuyenteByEmail.contribuyente.restablecerPassword
+        const smsMessage = 'Ingresa al siguiente link para cambiar tu contraseña: ' + process.env.PLATAFORMA_WEB + 'restablecer/' + findContribuyenteByEmail.contribuyente.restablecerPassword
 
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
 
@@ -365,7 +365,7 @@ export class ContribuyenteController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha enviado los pasos a seguir para restablecer su contraseña'
+            message: 'Su solicitud ha sido creada exitosamente, en la brevedad recibirá un mensaje de texto para terminar el proceso de cambio de contraseña, gracias.'
         })
 
     }
@@ -406,11 +406,11 @@ export class ContribuyenteController {
         })
 
         if (findContribuyenteByCambioPassword.ok === false) {
-            errors.push({ message: 'Existen problemas al momento de verificar si el código esta dado de alta.' })
+            errors.push({ message: 'Existen problemas al momento de cambiar contraseña.' })
         } else if (findContribuyenteByCambioPassword.contribuyente == null) {
-            errors.push({ message: 'El codigo proporcionado no se encuentra dado de alta en el sistema.' })
+            errors.push({ message: 'No es posible hacer el cambio de contraseña.' })
         } else if (findContribuyenteByCambioPassword.contribuyente.cambioPassword !== 1) {
-            errors.push({ message: 'Usted no ha solicitado hacer un cambio de contraseña, favor de ponerse en contacto con el administrador.' })
+            errors.push({ message: 'Si usted no ha solicitado hacer un cambio de contraseña, favor de ponerse en contacto con el administrador.' })
         }
 
         if (errors.length > 0) {
@@ -439,7 +439,7 @@ export class ContribuyenteController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha cambiado su contraseña, favor de iniciar sesión'
+            message: 'Se ha cambiado su contraseña, favor de iniciar sesión.'
         })
     }
 
@@ -467,7 +467,7 @@ export class ContribuyenteController {
         if (findContribuyenteByEmail.ok === false) {
             errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
         } else if (findContribuyenteByEmail.contribuyente == null) {
-            errors.push({ message: 'El email proporcionado no se encuentra dado de alta en el sistema.' })
+            errors.push({ message: 'Si su email se encuentra registrado, recibirá el link para activar su cuenta.' })
         } else if (findContribuyenteByEmail.contribuyente.activo != 0) {
             errors.push({ message: 'Su cuenta ya se encuentra activa.' })
         }
@@ -484,7 +484,7 @@ export class ContribuyenteController {
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
 
         if (sendSMS.ok === false) {
-            errors.push({ message: 'Existen problemas al momento de reeenviar el código de activación, intente más tarde.' })
+            errors.push({ message: 'Existen problemas al momento de reeenviar el link de activación, intente más tarde.' })
         }
 
         if (errors.length > 0) {

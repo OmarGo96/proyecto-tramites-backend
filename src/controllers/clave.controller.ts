@@ -82,7 +82,7 @@ export class ClaveController {
         }
 
         const data = {
-            url: 'https://tesoreria.gobiernodesolidaridad.gob.mx/wsSIGEM/catastro/IServiceObtieneDatosCveCatastral.svc?singleWsdl',
+            url: process.env.DATOS_PREDIAL,
             function: 'daoObtieneDatosPredio',
             args: {
                 parStrCveCatastral: clave
@@ -260,7 +260,7 @@ export class ClaveController {
         }
 
         const data = {
-            url: 'https://tesoreria.gobiernodesolidaridad.gob.mx/wsSIGEM/catastro/IServiceObtieneEdoCuentaPredial.svc?singleWsdl',
+            url: process.env.ESTADO_CUENTA_PREDIAL,
             function: 'daoObtienerEdoCuentaPredial',
             args: {
                 parStrCveCatastral: clave
@@ -362,7 +362,7 @@ export class ClaveController {
         }
 
         const data = {
-            url: 'https://tesoreria.gobiernodesolidaridad.gob.mx/wsSIGEM/catastro/IServiceCreaPaseCajaPredial.svc?singleWsdl',
+            url: process.env.PASE_CAJA_PREDIAL,
             function: 'daoCreaPaseCajaPredial',
             args: {
                 parStrCveCatastral: clave
@@ -443,7 +443,7 @@ export class ClaveController {
         }
 
         const data = {
-            url: 'https://tesoreria.gobiernodesolidaridad.gob.mx/wsSIGEM/coatl/IServiceUrlIntenciondePago.svc?singleWsdl',
+            url: process.env.INTENTO_COBRO_PREDIAL,
             function: 'daoGeneraIntenciondecobro',
             args: {
                 parStrCveCatastral: clave,

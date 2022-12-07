@@ -94,7 +94,8 @@ export class SessionController {
             ok: true,
             token: result ? result.token : false,
             activo: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.activo === 1 ? true : false : false,
-            cambio_password: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.cambioPassword === 1 ? true : false : false
+            cambio_password: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.cambioPassword === 1 ? true : false : false,
+            message: "Inicio de sesión"
         })
     }
 
@@ -161,7 +162,8 @@ export class SessionController {
         return res.status(200).json({
             ok: true,
             token: result ? result.token : false,
-            rol: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.rol : false
+            rol: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.rol : false,
+            message: "Inicio de sesión"
         })
     }
 
