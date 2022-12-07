@@ -65,7 +65,7 @@ export class ContribuyenteController {
         if (findContribuyenteByCodAct.ok === false) {
             errors.push({ message: 'Existen problemas al momento de activar cuenta.' })
         } else if (findContribuyenteByCodAct.contribuyente === null) {
-            errors.push({ message: 'Si su email se encuentra registrado, recibirá un código para activar cuenta.”' })
+            errors.push({ message: 'No es posible activar su cuenta.”' })
         } else if (findContribuyenteByCodAct.contribuyente && findContribuyenteByCodAct.contribuyente.activo !== 0) {
             errors.push({ message: 'El código proporcionado ya no es valido.' })
         }
