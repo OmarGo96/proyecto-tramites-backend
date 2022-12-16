@@ -1,6 +1,6 @@
 // tslint:disable-next-line:no-var-requires
-require('dotenv').config()
-// require('dotenv').config({ path: '/root/envs/proyecto-tramites-backend/.env' })
+//require('dotenv').config()
+require('dotenv').config({ path: '/root/envs/proyecto-tramites-backend/.env' })
 import express, { Application } from 'express';
 import Relationship from './relationships';
 import { Routes } from "../routes/routes";
