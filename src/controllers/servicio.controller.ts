@@ -557,7 +557,7 @@ export class ServicioController {
             if (!updateDocumentacion.ok) {
                 return res.status(400).json({
                     ok: false,
-                    errors: [{message: 'Existen problemas al momento de adjuntar el arcxxxxxxxhivo y actualizar la información.'}]
+                    errors: [{message: 'Existen problemas al momento de adjuntar el archivo y actualizar la información.'}]
                 })
             }
         }
@@ -573,7 +573,7 @@ export class ServicioController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha guardado el docuemnto de forma exitosa'
+            message: 'Se ha guardado el documento de forma exitosa'
         })
     }
 }

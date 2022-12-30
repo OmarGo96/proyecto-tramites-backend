@@ -199,7 +199,6 @@ export class DocumentacionController {
 
     public async changeStatus(req: Request, res: Response) {
         const administrador_id = req.body.administrador_id
-        console.log(req.body);
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
@@ -220,7 +219,7 @@ export class DocumentacionController {
             })
         }
 
-        if (estatus !== '-1' && estatus !== '1') {
+        if (estatus !== '-1' && estatus !== '1' && estatus !== '3') {
             errors.push({ message: 'Favor de proporcionar un estatus valido' })
         }
 

@@ -20,7 +20,6 @@ export class ClaveController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        console.log(contribuyenteId);
         /** Buscamos en la base d edatos si el contribuyente ya tiene adjunto esa clave catastral */
         const findClavesByContribuyente = await ClaveController.claveQueries.findClavesByContribuyente({
             contribuyente_id: contribuyenteId
