@@ -73,6 +73,7 @@ export class DocumentacionQueries {
                     tipos_documentos_id: data.tipos_documentos_id,
                     contribuyentes_id: data.contribuyente_id,
                     url: data.url,
+                    nombre_otro: data.nombre_otro,
                     fecha_alta: data.fecha_alta,
                     tipo_documento: data.tipo_documento,
                     vigencia_final: data.vigencia_final,

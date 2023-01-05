@@ -75,6 +75,9 @@ export class DocumentacionController {
         const vigenciaFinal: string = body.vigencia_final == null || validator.isEmpty(body.vigencia_final) ?
             errors.push({ message: 'Favor de proporcionar la vigencia final' }) : body.vigencia_final;
 
+        const nombreDocumento: string = !body.nombre_documento || validator.isEmpty(body.nombre_documento) ?
+            null: body.nombre_documento;
+
         if (errors.length > 0) {
             return res.status(400).json({
                 ok: false,
@@ -120,9 +123,10 @@ export class DocumentacionController {
         }
 
         const updateDocumentacion = await DocumentacionController.documentacionQueries.attachFile({
-            tipos_documentos_id: parseInt(tiposDocumentoId),
+            tipos_documentos_id: Number(tiposDocumentoId),
             contribuyente_id,
             url: uploadFile.nameFile,
+            nombre_otro: nombreDocumento,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             tipo_documento: tipoDocumento,
             vigencia_final: moment(vigenciaFinal).format('YYYY-MM-DD HH:mm:ss'),

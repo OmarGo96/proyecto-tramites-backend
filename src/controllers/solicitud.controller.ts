@@ -10,13 +10,13 @@ import {AdministradorAreaQueries} from '../queries/administrador_area.query'
 import {TransaccionQueries} from '../queries/transaccion.query'
 import {RequisitosServiciosQueries} from "../queries/requisitos-servicios.query";
 import {DocumentoSolicitudRequisitoQueries} from '../queries/documento-solicitud-requisito.query';
-
 import {Log} from '../helpers/logs'
 import {File} from '../helpers/files'
 import {Soap} from '../helpers/soap'
 import {PaseCajaQueries} from "../queries/pase_caja.query";
 import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
-
+import fs from "fs";
+import AdmZip from "adm-zip";
 
 export class SolicitudController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
@@ -983,6 +983,92 @@ export class SolicitudController {
             ok: true,
             message: 'Se ha actualizado el estatus del intento de cobro'
         })
+
+
+
+    }
+
+    public async downloadDocumentsZip(req: Request, res: Response) {
+        const administrador_id = req.body.administrador_id
+        const errors = [];
+
+        const solicitudId = req.params.id == null ? null : validator.isEmpty(req.params.id) ?
+            errors.push({message: 'Favor de proporcionar la solicitud'}) : req.params.id
+
+        const finSolicitudDetalle = await SolicitudController.solicitudQueries.findSolicitudDetail({
+            solicitud_id: solicitudId
+        })
+
+        if (!finSolicitudDetalle.ok) {
+            errors.push({message: 'Existen problemas al momento de obtener sus solicitudes.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        // @ts-ignore
+        const serviceId = finSolicitudDetalle.solicitud.Servicio.id;
+
+        const findRequisitosByServicio = await SolicitudController.requisitosServiciosQueries.findRequisitosByServicio({
+            servicio_id: serviceId,
+            solicitud_id: solicitudId
+        });
+
+        if (!findRequisitosByServicio.ok) {
+            errors.push({message: 'Existen problemas al momento de buscar información del servicios.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+        try {
+            // @ts-ignore
+            const documentation = (finSolicitudDetalle.solicitud.DocumentosSolicitudRequisito) ? finSolicitudDetalle.solicitud.DocumentosSolicitudRequisito : null;
+            const zip = new AdmZip();
+
+            if(documentation) {
+                for (const documento of documentation) {
+                        const path = process.env.DOCUMENTATION_PATH + documento.Documentacion.url
+                    zip.addLocalFile(path);
+                }
+                const outputFile =  'Documentos' + '_' + finSolicitudDetalle.solicitud.folio + '.zip'
+
+                fs.writeFileSync(outputFile, zip.toBuffer());
+
+                return res.download(outputFile, (err) => {
+                    if(err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: [{ message: 'No es posible generar zip en estos momentos.' }]
+                        })
+                    }
+                    fs.unlinkSync(outputFile)
+                });
+
+            } else {
+                return res.status(400).json({
+                    ok: false,
+                    message: [{ message: 'La solicitud no tiene documentación para generar archivo.' }]
+                })
+            }
+
+        } catch (e) {
+            console.log(e)
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'No es posible generar zip en estos momentos.' }]
+            })
+        }
+
 
 
 

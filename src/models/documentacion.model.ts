@@ -9,6 +9,7 @@ export class DocumentacionModel extends Model{
     public tipos_documentos_id!: number
     public contribuyentes_id!: number
     public url!: string
+    public nombre_otro!: string
     public fecha_alta!: string
     public tipo_documento!: number
     public vigencia_inicial!: string
@@ -33,6 +34,9 @@ DocumentacionModel.init({
         type: DataTypes.INTEGER
     },
     url: {
+        type: DataTypes.STRING
+    },
+    nombre_otro: {
         type: DataTypes.STRING
     },
     fecha_alta: {
