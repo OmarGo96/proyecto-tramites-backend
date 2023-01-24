@@ -9,6 +9,8 @@ export class CambiaEstatusModel extends Model{
     public servicio_id!: number
     public estatus_solicitud_id!: number
     public estatus_solicitud_id_destino!: number
+    public order!: number
+    public default!: number
 
 }
 
@@ -30,6 +32,12 @@ CambiaEstatusModel.init({
     estatus_solicitud_id_destino: {
         type: DataTypes.INTEGER
     },
+    order: {
+        type: DataTypes.INTEGER
+    },
+    default: {
+        type: DataTypes.INTEGER
+    }
 }, {
     // Then add the configuration:
     sequelize: database,

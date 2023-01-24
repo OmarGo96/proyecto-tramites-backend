@@ -11,7 +11,9 @@ export class UrlIntentoCobroModel extends Model{
     public claves_id!: number
     public grupo_tramite_id!: number
     public tramite_id!: number
+    public solicitud_tramite_id!: number
     public referencia!: string
+    public folio_intencion_cobro!: string
     public url_intencion_cobro!: string
     public status!: number
     public codigo_error!: string
@@ -44,7 +46,13 @@ UrlIntentoCobroModel.init({
     tramite_id: {
         type: DataTypes.INTEGER
     },
+    solicitud_tramite_id: {
+        type: DataTypes.INTEGER
+    },
     referencia: {
+        type: DataTypes.STRING
+    },
+    folio_intencion_cobro: {
         type: DataTypes.STRING
     },
     url_intencion_cobro: {

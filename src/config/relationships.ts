@@ -60,7 +60,7 @@ export default class Relationship {
         // EstatusServicioModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
         EstatusServicioModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'EstatusSolicitud' })
         // ServicioModel.hasMany(EstatusServicioModel, { foreignKey: 'servicio_id' })
-        CambiaEstatusModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'EstatusSolicitud' })
+        CambiaEstatusModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id_destino', as: 'EstatusSolicitud' })
 
         DocumentosSolicitudRequisitoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})
