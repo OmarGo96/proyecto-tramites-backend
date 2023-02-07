@@ -408,7 +408,7 @@ export class SolicitudController {
         // Se valida que el estatus que se esta proporcionando sea valido
         if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
             && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
-            && estatus !== "12") {
+            && estatus !== "12" && estatus !== "13") {
             errors.push({message: 'El estatus proporcionado no es valido'})
         }
 
@@ -609,6 +609,9 @@ export class SolicitudController {
                 break;
             case '12':
                 message = 'La solicitud esta en revisión de documentos'
+                break;
+            case '13':
+                message = 'La solicitud esta ha sido cancelada'
                 break;
             default:
                 break;

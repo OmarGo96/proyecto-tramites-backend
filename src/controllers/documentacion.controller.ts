@@ -73,7 +73,7 @@ export class DocumentacionController {
             errors.push({ message: 'Favor de proporcionar la vigencia inicial' }) : body.vigencia_inicial;*/
 
         const vigenciaFinal: string = body.vigencia_final == null || validator.isEmpty(body.vigencia_final) ?
-            errors.push({ message: 'Favor de proporcionar la vigencia final' }) : body.vigencia_final;
+            null : body.vigencia_final;
 
         const nombreDocumento: string = !body.nombre_documento || validator.isEmpty(body.nombre_documento) ?
             null: body.nombre_documento;

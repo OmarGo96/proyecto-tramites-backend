@@ -201,6 +201,13 @@ export class SolicitudQueries {
                 motivo_rechazo: null
             }
         }
+
+        if (data.estatus_solicitud_id === '13') {
+            toUpdate = {
+                estatus_solicitud_id: data.estatus_solicitud_id,
+            }
+        }
+
         try {
             const solicitud = await SolicitudModel.update(toUpdate, {
                 where: {

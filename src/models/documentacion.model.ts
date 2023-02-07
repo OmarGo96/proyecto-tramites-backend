@@ -15,6 +15,7 @@ export class DocumentacionModel extends Model{
     public vigencia_inicial!: string
     public vigencia_final!: string
     public aprobado!: number
+    public status!: number
 
 }
 
@@ -52,6 +53,9 @@ DocumentacionModel.init({
         type: DataTypes.STRING
     },
     aprobado: {
+        type: DataTypes.INTEGER
+    },
+    status: {
         type: DataTypes.INTEGER
     },
 }, {
