@@ -6,12 +6,14 @@ import { AreaQueries } from '../queries/area.query'
 import { ClaveQueries } from '../queries/clave.query'
 import { Soap } from '../helpers/soap'
 import { Log } from '../helpers/logs'
+import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
 
 export class ClaveController {
     static areaQueries: AreaQueries = new AreaQueries()
     static claveQueries: ClaveQueries = new ClaveQueries()
     static soap: Soap = new Soap()
     static log: Log = new Log()
+    static urlIntencionCobroQueries: UrlIntencionCobroQueries = new UrlIntencionCobroQueries()
 
     /** Funcion para obtener todos las claves catastrales adjuntas a un cliente */
     public async show(req: Request, res: Response) {
@@ -464,6 +466,28 @@ export class ClaveController {
             return res.status(400).json({
                 ok: false,
                 errors: [{ message: 'No es posible generar el link de pago, favor de pasar a tesorería' }]
+            })
+        }
+
+        const referencia = moment().unix().toString() + contribuyente_id
+
+        const url_intencion_cobro = await ClaveController.urlIntencionCobroQueries.store({
+            clave_id: findClaveByContribuyente.clave.id,
+            grupo_tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.GrupoTramiteId,
+            tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.TramiteId,
+            solicitud_tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.SolicitudId,
+            referencia,
+            folio_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.FolioPaseCaja,
+            url_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro,
+            status: 0,
+            fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
+
+        })
+
+        if (!url_intencion_cobro.ok) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para generar el link de pago, intente más tarde' }]
             })
         }
 

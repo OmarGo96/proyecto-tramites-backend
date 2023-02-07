@@ -7,12 +7,13 @@ export class PaseCajaModel extends Model{
     //example:
     public id!: number
     public solicitud_id!: number
-    public licencias_funcionamiento_id!: number
-    public claves_id!: number
+    public licencia_funcionamiento_id!: number
+    public clave_id!: number
     public grupo_tramite_id!: number
     public tramite_id!: number
+    public solicitud_tramite_id!: number
     public observaciones!: string
-    public pase_caja!: string
+    public folio_pase_caja!: string
     public urlPaseImpresion!: string
     public codigo_error!: string
     public mensaje_error!: string
@@ -32,10 +33,10 @@ PaseCajaModel.init({
     solicitud_id: {
         type: DataTypes.INTEGER
     },
-    licencias_funcionamiento_id: {
+    licencia_funcionamiento_id: {
         type: DataTypes.INTEGER
     },
-    claves_id: {
+    clave_id: {
         type: DataTypes.INTEGER
     },
     grupo_tramite_id: {
@@ -47,7 +48,7 @@ PaseCajaModel.init({
     observaciones: {
         type: DataTypes.STRING
     },
-    pase_caja: {
+    folio_pase_caja: {
         type: DataTypes.STRING
     },
     urlPaseImpresion: {

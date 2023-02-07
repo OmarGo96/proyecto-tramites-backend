@@ -6,12 +6,14 @@ import { AreaQueries } from '../queries/area.query'
 import { LicenciaQueries } from '../queries/licencia.query'
 import { Soap } from '../helpers/soap'
 import { Log } from '../helpers/logs'
+import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
 
 export class LicenciaController {
     static areaQueries: AreaQueries = new AreaQueries()
     static licenciaQueries: LicenciaQueries = new LicenciaQueries()
     static soap: Soap = new Soap()
     static log: Log = new Log()
+    static urlIntencionCobroQueries: UrlIntencionCobroQueries = new UrlIntencionCobroQueries()
 
     public async show(req: Request, res: Response) {
         /** Obtenemos el id del administrador */
@@ -373,6 +375,28 @@ export class LicenciaController {
             return res.status(400).json({
                 ok: false,
                 message: [{ message: 'La clave proporcionada no existe' }]
+            })
+        }
+
+        const referencia = moment().unix().toString() + contribuyente_id
+
+        const url_intencion_cobro = await LicenciaController.urlIntencionCobroQueries.store({
+            licencia_funcionamiento_id: findLicenciaByContribuyente.licencia.id,
+            grupo_tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.GrupoTramiteId,
+            tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.TramiteId,
+            solicitud_tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.SolicitudId,
+            referencia,
+            folio_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.FolioPaseCaja,
+            url_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro,
+            status: 0,
+            fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
+
+        })
+
+        if (!url_intencion_cobro.ok) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para generar el link de pago, intente más tarde' }]
             })
         }
 

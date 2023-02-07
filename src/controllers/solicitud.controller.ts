@@ -915,9 +915,9 @@ export class SolicitudController {
             solicitud_id,
             grupo_tramite_id,
             tramite_id,
-            solicitud_tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro,
+            solicitud_tramite_id: soap.result[0].daoGeneraIntenciondecobroResult.SolicitudId,
             referencia,
-            folio_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro,
+            folio_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.FolioPaseCaja,
             url_intencion_cobro: soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro,
             status: 0,
             fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -950,7 +950,7 @@ export class SolicitudController {
             errors.push({ message: 'Favor de proporcionar la referencia' }) : req.params.referencia
 
         const findUrlIntentoCobro = await SolicitudController.urlIntencionCobroQueries.findByReference({
-            referencia
+            folio_intencion_cobro: referencia
         })
 
         if (!findUrlIntentoCobro.ok) {
