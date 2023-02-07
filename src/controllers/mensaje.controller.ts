@@ -12,6 +12,11 @@ export class MensajeController {
     static log: Log = new Log()
     static file: File = new File()
 
+    /** Funcion pora obtener los mensajes no leidos por solicitud*/
+    public async getUnreadMessages(req: Request, res: Response) {
+
+    }
+
     /** Función que permite dar de alta a un mensaje */
     public async getFile(req: Request, res: Response) {
         /** Creamos un array que nos almacenará los errores que surjan en la función */

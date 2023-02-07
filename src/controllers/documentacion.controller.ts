@@ -129,8 +129,9 @@ export class DocumentacionController {
             nombre_otro: nombreDocumento,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             tipo_documento: tipoDocumento,
-            vigencia_final: moment(vigenciaFinal).format('YYYY-MM-DD HH:mm:ss'),
-            aprobado: 1
+            vigencia_final: (vigenciaFinal) ? moment(vigenciaFinal).format('YYYY-MM-DD HH:mm:ss') : null,
+            aprobado: 1,
+            status: 1
         })
 
         if (!updateDocumentacion.ok) {
@@ -153,6 +154,56 @@ export class DocumentacionController {
             ok: true,
             message: 'Se ha guardado el documento de forma exitosa'
         })
+    }
+
+    public async deleteDocument(req: Request, res: Response) {
+        /* Get info from validateJWT middleware */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const documentacionId = req.params.documentacion_id == null ? null : validator.isEmpty(req.params.documentacion_id) ?
+            errors.push({ message: 'Favor de proporcionar el documento' }) :
+            req.params.documentacion_id
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const deleteDoc = await DocumentacionController.documentacionQueries.changeStatus({
+            id: documentacionId,
+            status: 0
+        })
+
+        if (!deleteDoc.ok) {
+            errors.push({ message: 'Existen problemas al momento de cambiar el estatus del documento.' })
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const createLogContribuyente = await DocumentacionController.log.contribuyente({
+            contribuyente_id,
+            navegador: req.headers['user-agent'],
+            accion: 'El contribuyente elimino un documento de su cuenta',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha eliminado el documento correctamente'
+        })
+
     }
 
     public async getFile(req: Request, res: Response) {

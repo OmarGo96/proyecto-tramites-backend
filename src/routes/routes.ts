@@ -102,12 +102,14 @@ export class Routes {
         app.route('/api/pagar_tramite').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pay)
         app.route('/api/pase_caja_tramite').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.paseCaja)*/
         // Routes for messages methods
+        //app.route('/api/mensajes/no-leidos').get(CheckHeaders.validateJWTContribuyente, this.mensajeController.)
         app.route('/api/mensajes').post(CheckHeaders.validateJWTAdministrador, this.mensajeController.store)
         app.route('/api/archivo_mensajes/:mensaje_id').get(CheckHeaders.validateJWTByTypeUser, this.mensajeController.getFile)
         // Routes for documentacion methods
         app.route('/api/documentacion').post(CheckHeaders.validateJWTContribuyente, this.documentacionController.attachFile)
         app.route('/api/documentacion').get(CheckHeaders.validateJWTContribuyente, this.documentacionController.index)
         app.route('/api/documentos-solcicitud').post(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.attachFile)
+        app.route('/api/documentacion/:documentacion_id').post(CheckHeaders.validateJWTContribuyente, this.documentacionController.deleteDocument)
         app.route('/api/documentos-solicitud-requisito/:documento_solicitud_requisito_id').put(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.updateDocumentoSolicitudRequisito)
         app.route('/api/archivo_documentacion/:documentacion_id').get(/*CheckHeaders.validateJWTByTypeUser, */this.documentacionController.getFile)
         app.route('/api/cambiar_estatus_documentacion/:documentacion_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.changeStatus)

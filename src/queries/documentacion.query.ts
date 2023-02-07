@@ -77,7 +77,8 @@ export class DocumentacionQueries {
                     fecha_alta: data.fecha_alta,
                     tipo_documento: data.tipo_documento,
                     vigencia_final: data.vigencia_final,
-                    aprobado: data.aprobado
+                    aprobado: data.aprobado,
+                    status: data.status
                 }
             )
             return { ok: true, documentacion }
@@ -106,7 +107,7 @@ export class DocumentacionQueries {
         try {
             const documentacion = await DocumentacionModel.update(
                 {
-                    estatus: data.estatus,
+                    status: data.status,
                 },
                 { where: { id: data.id } }
             )
