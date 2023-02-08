@@ -10,7 +10,8 @@ export class DocumentacionQueries {
         try {
             const documentacion = await DocumentacionModel.findAll({
                 where: {
-                    contribuyentes_id: data.contribuyente_id
+                    contribuyentes_id: data.contribuyente_id,
+                    status: 1
                 },
                 include: [
                     {

@@ -9,7 +9,7 @@ export class CheckHeaders {
     /** Este middleware valida que la cabecera de autenticación sea correcta */
     static validateJWTAdministrador(req: Request, res: Response, next: NextFunction) {
         /* Obtenemos la cabecera de autenticación */
-        const token: string = req.get('Authorization') || 'Authorization';
+        const token: string = req.get('Authorization');
         let publicKey
         /** Dependiendo del modo de desarrollo en el que estemos, vamos a obtener
          * las llaves publicas y privadas para desencriptar la información
@@ -53,7 +53,7 @@ export class CheckHeaders {
 
     static validateJWTContribuyente(req: Request, res: Response, next: NextFunction) {
         /* Obtenemos la cabecera de autenticación */
-        const token = req.get('Authorization') || 'Authorization';
+        const token = req.get('Authorization');
         let publicKey;
         /** Dependiendo del modo de desarrollo en el que estemos, vamos a obtener
          * las llaves publicas y privadas para desencriptar la información
@@ -95,7 +95,7 @@ export class CheckHeaders {
 
     static validateJWTByTypeUser(req: Request, res: Response, next: NextFunction) {
         /* Obtenemos la cabecera de autenticación */
-        const token = req.get('Authorization') || 'Authorization';
+        const token = req.get('Authorization')
 
         let publicKey;
         /** Dependiendo del modo de desarrollo en el que estemos, vamos a obtener

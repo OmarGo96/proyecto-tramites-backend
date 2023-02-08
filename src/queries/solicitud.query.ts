@@ -15,11 +15,13 @@ export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
         try {
             const solicitudes = await SolicitudModel.findAll({
+
                 order: [
                     ['fecha_alta', 'ASC']
                 ],
                 where: {
-                    contribuyente_id: data.contribuyente_id
+                    contribuyente_id: data.contribuyente_id,
+                    estatus_solicitud_id: {[Op.ne]: 13},
                 },
                 include: [
                     {
