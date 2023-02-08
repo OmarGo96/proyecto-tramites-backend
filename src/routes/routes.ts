@@ -102,7 +102,7 @@ export class Routes {
         app.route('/api/pagar_tramite').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pay)
         app.route('/api/pase_caja_tramite').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.paseCaja)*/
         // Routes for messages methods
-        //app.route('/api/mensajes/no-leidos').get(CheckHeaders.validateJWTContribuyente, this.mensajeController.)
+        app.route('/api/mensajes/no-leidos').get(CheckHeaders.validateJWTContribuyente, this.mensajeController.getUnreadMessages)
         app.route('/api/mensajes').post(CheckHeaders.validateJWTAdministrador, this.mensajeController.store)
         app.route('/api/archivo_mensajes/:mensaje_id').get(CheckHeaders.validateJWTByTypeUser, this.mensajeController.getFile)
         // Routes for documentacion methods

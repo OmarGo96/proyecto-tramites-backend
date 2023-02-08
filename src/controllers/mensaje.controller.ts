@@ -12,9 +12,24 @@ export class MensajeController {
     static log: Log = new Log()
     static file: File = new File()
 
-    /** Funcion pora obtener los mensajes no leidos por solicitud*/
+    /** Funcion pora obtener los mensajes no leidos por solicitud */
     public async getUnreadMessages(req: Request, res: Response) {
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+        const getSolicitudesMessages = await MensajeController.mensajeQueries.findSolicitudesAndUnreadMessages();
 
+        if (getSolicitudesMessages.ok === false) {
+            errors.push({ message: 'Existen problemas al momento de obtener mensajes no leídos.' })
+        } else if (getSolicitudesMessages.mensajes == null) {
+            errors.push({ message: 'No se encontraron mensajes no leídos' })
+        }
+        console.log(getSolicitudesMessages)
+
+        return res.status(200).json({
+            ok: true,
+            message: "Mensaje no leídos",
+            unreadMessages: getSolicitudesMessages.mensajes
+        })
     }
 
     /** Función que permite dar de alta a un mensaje */

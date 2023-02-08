@@ -24,6 +24,7 @@ import { EstatusSolicitudModel } from '../models/estatus_solicitud.model'
 import { MensajeModel } from '../models/mensaje.model'
 import {EstatusServicioModel} from "../models/estatus_servicio.model";
 import {CambiaEstatusModel} from "../models/cambia_estatus.model";
+import {MensajeController} from "../controllers/mensaje.controller";
 
 export default class Relationship {
     static init() {
@@ -68,6 +69,8 @@ export default class Relationship {
         SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
+
+        MensajeModel.belongsTo(SolicitudModel, {foreignKey: 'solicitud_id'});
 
         BitacoraSolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
     }

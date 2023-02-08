@@ -1,5 +1,6 @@
-import { Op } from 'sequelize'
+import sequelize, { Op } from 'sequelize'
 import { MensajeModel } from '../models/mensaje.model'
+import {SolicitudModel} from "../models/solicitud.model";
 
 export class MensajeQueries {
 
@@ -11,6 +12,22 @@ export class MensajeQueries {
                 }
             })
             return { ok: true, mensaje }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
+    public async findSolicitudesAndUnreadMessages() {
+        try {
+            const mensajes = await MensajeModel.findAll({
+                attributes: ['MensajeModel.*', [sequelize.fn('COUNT', 'SolicitudModel.id'), 'UnreadMessages']],
+                where: {
+                    leido: 0
+                },
+                include: [SolicitudModel]
+            })
+            return { ok: true, mensajes }
         } catch (e) {
             console.log(e)
             return { ok: false }
