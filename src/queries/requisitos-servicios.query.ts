@@ -38,7 +38,12 @@ export class RequisitosServiciosQueries {
                     servicios_id: data.servicio_id
                 },
                 include: [
-                    {model: RequisitoModel, as: 'Requisito'}
+                    {
+                        model: RequisitoModel, as: 'Requisito',
+                        where: {
+                            activo:  1
+                        }
+                    }
                 ]
             }
         } else {
@@ -53,7 +58,12 @@ export class RequisitosServiciosQueries {
                     ]
                 },
                 include: [
-                    {model: RequisitoModel, as: 'Requisito'}
+                    {
+                        model: RequisitoModel, as: 'Requisito',
+                        where: {
+                            activo:  1
+                        }
+                    }
                 ]
             }
         }

@@ -296,6 +296,8 @@ export class RequerimientoController {
         const body = req.body;
         const errors = [];
 
+        console.log(req.params);
+
         const requerimientoUuid = req.params.requerimiento_uuid == null ? null : validator.isEmpty(req.params.requerimiento_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_uuid;
 
@@ -331,7 +333,7 @@ export class RequerimientoController {
             });
         }
 
-        const updateRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.update({
+        const updateRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.disable({
             requisitos_id: findRequerimientoByUuid.requisito.id,
             activo: 0
         })

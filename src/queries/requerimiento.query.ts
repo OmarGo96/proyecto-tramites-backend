@@ -60,6 +60,7 @@ export class RequerimientoQueries {
     }
 
     public async findRequisitoByUUID(data: any) {
+        console.log(data)
         try {
             const requisito = await RequisitoModel.findOne({
                 where: {
