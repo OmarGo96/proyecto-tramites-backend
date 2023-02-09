@@ -100,14 +100,14 @@ export class LicenciaController {
         if (!soap.result[0].daoObtieneDatosLicenciaFuncionamientoIdResult) {
             return res.status(400).json({
                 ok: false,
-                errors: [{ message: 'La clave proporcionada no existe' }]
+                errors: [{ message: 'La licencia proporcionada no existe' }]
             })
         }
 
         if (!soap.result[0].daoObtieneDatosLicenciaFuncionamientoIdResult.LicenciasFuncionamientoStatus) {
             return res.status(400).json({
                 ok: false,
-                errors: [{ message: 'La clave proporcionada no existe' }]
+                errors: [{ message: 'La licencia proporcionada no existe' }]
             })
         }
 
@@ -160,7 +160,7 @@ export class LicenciaController {
         })
 
         if (!createLicncia.ok) {
-            errors.push({ message: 'Existen problemas al momento de salvar su licencia.' })
+            errors.push({ message: 'Existen problemas al momento de guardar su licencia.' })
         }
 
         if (errors.length > 0) {
@@ -236,10 +236,17 @@ export class LicenciaController {
             })
         }
 
+        if (soap.result[0].daoObtienerEdoCuentaLicenciaFuncionamientoResult.CodigoError && soap.result[0].daoObtienerEdoCuentaLicenciaFuncionamientoResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoObtienerEdoCuentaLicenciaFuncionamientoResult.parMensajeError }]
+            })
+        }
+
         if (!soap.result[0].daoObtienerEdoCuentaLicenciaFuncionamientoResult.proConsultaWSWSAdeudo.claEntFuenteIngresos) {
             return res.status(400).json({
                 ok: false,
-                errors: [{ message: 'La clave proporcionada no existe' }]
+                errors: [{ message: 'No fue posible obtener el estado de cuenta.' }]
             })
         }
 
@@ -305,10 +312,17 @@ export class LicenciaController {
             })
         }
 
+        if (soap.result[0].daoCreaPaseCajaLicenciasFuncionamientoResult.CodigoError && soap.result[0].daoCreaPaseCajaLicenciasFuncionamientoResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoCreaPaseCajaLicenciasFuncionamientoResult.MensajeError }]
+            })
+        }
+
         if(!soap.result[0].daoCreaPaseCajaLicenciasFuncionamientoResult){
             return res.status(400).json({
                 ok: false,
-                message: [{ message: 'La clave proporcionada no existe' }]
+                message: [{ message: 'La licencia proporcionada no existe' }]
             })
         }
 
@@ -371,10 +385,17 @@ export class LicenciaController {
             })
         }
 
+        if (soap.result[0].daoGeneraIntenciondecobroResult.CodigoError && soap.result[0].daoGeneraIntenciondecobroResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoGeneraIntenciondecobroResult.MensajeError }]
+            })
+        }
+
         if(!soap.result[0].daoGeneraIntenciondecobroResult.UrlIntencionCobro){
             return res.status(400).json({
                 ok: false,
-                message: [{ message: 'La clave proporcionada no existe' }]
+                message: [{ message: 'La licencia proporcionada no existe' }]
             })
         }
 

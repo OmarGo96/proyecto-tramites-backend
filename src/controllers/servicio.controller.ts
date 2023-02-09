@@ -469,6 +469,64 @@ export class ServicioController {
 
     }
 
+    public async delete(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const servicioUuid = req.params.servicio_uuid === null ? null : validator.isEmpty(req.params.servicio_uuid) ?
+            errors.push({message: 'Favor de proporcionar el servicio/trámite'}) :
+            req.params.servicio_uuid
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
+        const findServicioByUUID = await ServicioController.servicioQueries.findServicioByUUID({uuid: servicioUuid})
+
+        if (!findServicioByUUID.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de validar el servicio proporcionado.'}]
+            })
+        } else if (findServicioByUUID.servicio == null) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'El servicio proporcionado no existe.'}]
+            })
+        }
+
+        /** Actualizamos la información proporcionada */
+        const updateArea = await ServicioController.servicioQueries.delete({
+            id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
+            activo: 0
+        })
+
+        if (!updateArea.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de eliminar el servicio/trámite proporcionado.'}]
+            })
+        }
+
+        const createLogAdministrador = await ServicioController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha eliminado un servicio/trámite con index: ' + findServicioByUUID.servicio.id,
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha eliminado el servicio/trámite'
+        })
+    }
+
     public async upload(req: Request, res: Response) {
         const administratorId: number = Number(req.body.administrador_id);
         const body = req.body;

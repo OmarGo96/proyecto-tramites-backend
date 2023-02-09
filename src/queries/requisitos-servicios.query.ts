@@ -121,6 +121,22 @@ export class RequisitosServiciosQueries {
         }
     }
 
+    public async disable(data: any) {
+        try {
+            const requisitos = await RequisitoServiciosModel.update({
+                activo: 0
+            }, {
+                where: {
+                    requisitos_id: data.requisitos_id
+                }
+            })
+            return {ok: true, requisitos}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async update(data: any) {
         try {
             const requisitos = await RequisitoServiciosModel.update({

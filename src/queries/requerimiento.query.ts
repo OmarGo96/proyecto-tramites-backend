@@ -121,4 +121,20 @@ export class RequerimientoQueries {
             return {ok: false}
         }
     }
+
+    public async disable(data: any) {
+        try {
+            const requisito = await RequisitoModel.update({
+                activo: data.activo
+            }, {
+                where: {
+                    uuid: data.uuid
+                }
+            })
+            return {ok: true, requisito}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
 }

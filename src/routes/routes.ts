@@ -72,6 +72,7 @@ export class Routes {
         // Routes for servicios methods
         app.route('/api/servicios/:area_uuid').get(CheckHeaders.contentAuthorization, CheckHeaders.contentAuthorization, this.servicioController.index)
         app.route('/api/servicio/:uuid').get(this.servicioController.show)
+        app.route('/api/servicio/delete/:uuid').delete(CheckHeaders.validateJWTAdministrador, this.servicioController.delete)
         app.route('/api/servicios').get(this.servicioController.getAll);
         // app.route('/api/buscar_servicios').post(this.servicioController.findByNameOrDescription)
         // app.route('/api/top_servicios').get(this.servicioController.top)
@@ -83,6 +84,8 @@ export class Routes {
         app.route('/api/requerimientos/:servicio_uuid').get(CheckHeaders.contentAuthorization, this.requerimientoController.index)
         app.route('/api/requerimientos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.store)
         app.route('/api/requerimientos/:requerimiento_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.update)
+        app.route('/api/requerimientos/:requerimiento_uuid').delete(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.disable)
+
         // Routes for solicitudes methods
         app.route('/api/solicitudes').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.store)
         app.route('/api/solicitudes').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.show)

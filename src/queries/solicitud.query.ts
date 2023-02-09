@@ -80,7 +80,8 @@ export class SolicitudQueries {
                 where: {
                     area_id: data.area_id,
                     estatus_solicitud_id: {
-                        [Op.gte]: 2
+                        [Op.gte]: 2,
+                        [Op.notIn]: [13]
                     }
 
                 },
@@ -205,6 +206,12 @@ export class SolicitudQueries {
         }
 
         if (data.estatus_solicitud_id === '13') {
+            toUpdate = {
+                estatus_solicitud_id: data.estatus_solicitud_id,
+            }
+        }
+
+        if (data.estatus_solicitud_id > '13') {
             toUpdate = {
                 estatus_solicitud_id: data.estatus_solicitud_id,
             }

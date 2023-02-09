@@ -406,11 +406,11 @@ export class SolicitudController {
         }
 
         // Se valida que el estatus que se esta proporcionando sea valido
-        if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
-            && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
-            && estatus !== "12" && estatus !== "13") {
-            errors.push({message: 'El estatus proporcionado no es valido'})
-        }
+        // if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
+        //     && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
+        //     && estatus !== "12" && estatus !== "13") {
+        //     errors.push({message: 'El estatus proporcionado no es valido'})
+        // }
 
         /*if (estatus !== '2' && contribuyenteId !== null) {
             errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
@@ -541,7 +541,7 @@ export class SolicitudController {
             estatus_solicitud_id: estatus,
             fecha_envio: (estatus === '2') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_recepcion,
             fecha_recepcion: (estatus === '3' || estatus === '12') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_recepcion,
-            fecha_final: (estatus === '4') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_final,
+            fecha_final: (estatus === '18') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_final,
             fecha_rechazo: (estatus === '5' || estatus === '6' || estatus === '7') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_rechazo,
             motivo_rechazo: (estatus === '5' || estatus === '6' || estatus === '7') ? motivoRechazo : null,
             comentario: comentario ? comentario : null
@@ -614,6 +614,7 @@ export class SolicitudController {
                 message = 'La solicitud esta ha sido cancelada'
                 break;
             default:
+                message = 'La solicitud ha cambiado de estatus'
                 break;
         }
 
@@ -814,6 +815,14 @@ export class SolicitudController {
             })
         }
 
+        if (soap.result[0].daoCreaPaseCajaGenericoResult.CodigoError && soap.result[0].daoCreaPaseCajaGenericoResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoCreaPaseCajaGenericoResult.MensajeError }]
+            })
+        }
+
+
         if(!soap.result[0].daoCreaPaseCajaGenericoResult.UrlPaseImpresion) {
             return res.status(400).json({
                 ok: false,
@@ -901,6 +910,13 @@ export class SolicitudController {
             return res.status(400).json({
                 ok: false,
                 errors: [{ message: soap.message }]
+            })
+        }
+
+        if (soap.result[0].daoGeneraIntenciondecobroResult.CodigoError && soap.result[0].daoGeneraIntenciondecobroResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoGeneraIntenciondecobroResult.MensajeError }]
             })
         }
 

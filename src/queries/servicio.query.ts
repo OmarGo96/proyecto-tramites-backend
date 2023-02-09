@@ -219,7 +219,12 @@ export class ServicioQueries {
                     {
                         model: RequisitoServiciosModel, as: 'Requisitos',
                         include: [
-                            {model: RequisitoModel, as: 'Requisito'}
+                            {
+                                model: RequisitoModel, as: 'Requisito',
+                                where: {
+                                    activo: 1
+                                }
+                            }
                         ]
                     }
                 ]
@@ -242,6 +247,22 @@ export class ServicioQueries {
                 tiempo: data.tiempo,
                 documento_expedido: data.documentoExpedido,
                 en_linea: data.enLinea,
+                activo: data.activo
+            }, {
+                where: {
+                    id: data.id
+                }
+            })
+            return {ok: true, servicio}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
+    public async delete(data: any) {
+        try {
+            const servicio = await ServicioModel.update({
                 activo: data.activo
             }, {
                 where: {

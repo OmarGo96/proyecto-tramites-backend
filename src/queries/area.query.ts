@@ -18,7 +18,7 @@ export class AreaQueries {
                 ],
                 include: [
                     {
-                        model: ServicioModel, as: 'Servicio'
+                        model: ServicioModel, as: 'Servicio',
                     },
                 ]
             }
@@ -37,6 +37,9 @@ export class AreaQueries {
                 include: [
                     {
                         model: ServicioModel, as: 'Servicio',
+                        where: {
+                            activo: 1
+                        }
                     }
                 ]
             }

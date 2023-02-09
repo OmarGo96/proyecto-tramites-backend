@@ -164,7 +164,6 @@ export class ClaveController {
         })
     }
 
-    /** Funcion para obtener todos los servicios por area proporcionada */
     public async demarcate(req: Request, res: Response) {
         /** Obtenemos el id del administrador */
         const contribuyente_id: number = req.body.contribuyente_id
@@ -224,7 +223,6 @@ export class ClaveController {
         })
     }
 
-    /** Funcion para obtener todos los servicios por area proporcionada */
     public async statementaccount(req: Request, res: Response) {
         /** Obtenemos el id del administrador */
         const contribuyente_id: number = req.body.contribuyente_id
@@ -277,7 +275,7 @@ export class ClaveController {
             })
         }
 
-        if (soap.result[0].daoObtienerEdoCuentaPredialResult.CodigoError !== '200') {
+        if (soap.result[0].daoObtienerEdoCuentaPredialResult && soap.result[0].daoObtienerEdoCuentaPredialResult.CodigoError !== '200') {
             return res.status(400).json({
                 ok: false,
                 errors: [{ message: soap.result[0].daoObtienerEdoCuentaPredialResult.parMensajeError }]
@@ -379,6 +377,14 @@ export class ClaveController {
             })
         }
 
+        if (soap.result[0].daoCreaPaseCajaPredialResult.CodigoError && soap.result[0].daoCreaPaseCajaPredialResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoCreaPaseCajaPredialResult.MensajeError }]
+            })
+        }
+
+
         if (typeof (soap.result[0].daoCreaPaseCajaPredialResult.PaseCaja) === 'undefined') {
             return res.status(400).json({
                 ok: false,
@@ -459,6 +465,14 @@ export class ClaveController {
             return res.status(400).json({
                 ok: false,
                 errors: [{ message: soap.message }]
+            })
+        }
+
+
+        if (soap.result[0].daoGeneraIntenciondecobroResult.CodigoError && soap.result[0].daoGeneraIntenciondecobroResult.CodigoError !== '200') {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.result[0].daoGeneraIntenciondecobroResult.MensajeError }]
             })
         }
 

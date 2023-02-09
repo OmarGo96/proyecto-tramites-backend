@@ -290,4 +290,71 @@ export class RequerimientoController {
         })
 
     }
+
+    public async disable(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const requerimientoUuid = req.params.requerimiento_uuid == null ? null : validator.isEmpty(req.params.requerimiento_uuid) ?
+            errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_uuid;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            });
+        }
+
+        const findRequerimientoByUuid = await RequerimientoController.requerimientoQueries.findRequisitoByUUID({
+            uuid: requerimientoUuid
+        })
+
+        if (!findRequerimientoByUuid.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de desactivar el requerimiento proporcionado.'}]
+            });
+        }
+
+        const updateRequerimiento = await RequerimientoController.requerimientoQueries.disable({
+            uuid: requerimientoUuid,
+            activo: 0
+        });
+
+
+
+        if (!updateRequerimiento.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de desactivar el requerimiento proporcionado.'}]
+            });
+        }
+
+        const updateRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.update({
+            requisitos_id: findRequerimientoByUuid.requisito.id,
+            activo: 0
+        })
+
+        if (!updateRequisitosServicios.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de desactivar el requerimiento proporcionado.'}]
+            });
+        }
+
+        const createLogAdministrador = await RequerimientoController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha desactivado un requerimiento',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha desactivado el requerimiento correctamente'
+        })
+
+    }
 }
