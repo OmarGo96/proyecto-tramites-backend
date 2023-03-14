@@ -20,6 +20,13 @@ export class AreaQueries {
                     {
                         model: ServicioModel, as: 'Servicio',
                     },
+                    {
+                        model: AdministratorAreaModel,
+                        where: {
+                            administradores_id: data.administrador_id
+                        },
+                        required: true
+                    }
                 ]
             }
         } else {

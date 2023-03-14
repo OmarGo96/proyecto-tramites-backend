@@ -41,8 +41,9 @@ export class AreaController {
 
     public async index(req: Request, res: Response) {
         const auth = req.body.auth
+        const administrador_id = req.body.administrador_id
         const errors = []
-        const getAreas = await AreaController.areaQueries.getAreas({auth})
+        const getAreas = await AreaController.areaQueries.getAreas({auth, administrador_id})
 
         if (getAreas.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener las áreas.'})

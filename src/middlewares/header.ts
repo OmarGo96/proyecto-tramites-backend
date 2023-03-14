@@ -2,7 +2,7 @@
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import Cryptr from 'cryptr';
-import {Response, Request, NextFunction} from 'express';
+import {NextFunction, Request, Response} from 'express';
 
 export class CheckHeaders {
 
@@ -22,7 +22,7 @@ export class CheckHeaders {
         }
 
         /** Hacemos uso del controlador Crypter y de sus funciones */
-        const cryptr = new Cryptr(process.env.CRYPTR_KEY || '')
+        const cryptr = new Cryptr(process.env.CRYPTR_KEY)
         try {
             /* Primero verificamos que el token proporcionado sea valido */
             const decoded: any = jwt.verify(token, publicKey)
@@ -66,7 +66,7 @@ export class CheckHeaders {
         }
 
         /** Hacemos uso del controlador Crypter y de sus funciones */
-        const cryptr = new Cryptr(process.env.CRYPTR_KEY || '')
+        const cryptr = new Cryptr(process.env.CRYPTR_KEY)
         try {
             /* Primero verificamos que el token proporcionado sea valido */
             const decoded: any = jwt.verify(token, publicKey)
@@ -109,7 +109,7 @@ export class CheckHeaders {
         }
 
         /** Hacemos uso del controlador Crypter y de sus funciones */
-        const cryptr = new Cryptr(process.env.CRYPTR_KEY || '');
+        const cryptr = new Cryptr(process.env.CRYPTR_KEY);
         try {
             /* Primero verificamos que el token proporcionado sea valido */
             const decoded: any = jwt.verify(token, publicKey);
@@ -155,7 +155,7 @@ export class CheckHeaders {
             }
 
             /** Hacemos uso del controlador Crypter y de sus funciones */
-            const cryptr = new Cryptr(process.env.CRYPTR_KEY || '');
+            const cryptr = new Cryptr(process.env.CRYPTR_KEY);
             try {
                 /* Primero verificamos que el token proporcionado sea valido */
                 const decoded: any = jwt.verify(token, publicKey);
@@ -166,6 +166,7 @@ export class CheckHeaders {
                         errors: [{message: 'Usted no cuenta con el permiso correcto'}]
                     })
                 }
+                req.body.administrador_id = cryptr.decrypt(decoded.administradorId)
 
                 auth = true;
 
