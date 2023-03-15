@@ -184,6 +184,51 @@ export class LicenciaController {
         })
     }
 
+    public async checkLicense(req: Request, res: Response) {
+        /** Obtenemos el id del administrador */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia) ?
+            errors.push({ message: 'Favor de proporcionar la licencia' }) : body.licencia
+
+        const folioRenovacion: string = body.folioRenovacion == null || validator.isEmpty(body.folioRenovacion) ?
+            errors.push({ message: 'Favor de proporcionar el ultimo folio de renovación' }) : body.folioRenovacion
+
+        const ultimoAnoRenovacion: string = body.ultimoAnoRenovacion == null || validator.isEmpty(body.ultimoAnoRenovacion) ?
+            errors.push({ message: 'Favor de proporcionar el ultimo año de la renovación' }) : body.ultimoAnoRenovacion
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        if (licencia == "1") {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'No es posible renovar su licencia en estos momentos.' }]
+            })
+
+        }
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Puede renovar su licencia'
+        })
+
+
+
+
+        // Proceso para checar la licencia de funcionamiento
+
+
+    }
+
     public async statementaccount(req: Request, res: Response) {
         /** Obtenemos el id del administrador */
         const contribuyente_id: number = req.body.contribuyente_id

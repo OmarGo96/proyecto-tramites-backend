@@ -133,6 +133,7 @@ export class Routes {
         // Routes for licencias funcionamiento
         app.route('/api/licencia-funcionamiento').get(CheckHeaders.validateJWTContribuyente, this.licenciaController.show)
         app.route('/api/licencia-funcionamiento').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.store)
+        app.route('/api/licencia-funcionamiento/check').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.checkLicense)
         app.route('/api/licencia-funcionamiento-estado-de-cuenta').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.statementaccount)
         app.route('/api/licencia-pase-caja').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.pasecaja)
         app.route('/api/licencia-pago-en-linea').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.linkpago)

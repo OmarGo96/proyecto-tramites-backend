@@ -80,7 +80,7 @@ export class SolicitudQueries {
                 where: {
                     area_id: data.area_id,
                     estatus_solicitud_id: {
-                        [Op.gte]: 2,
+                        [Op.in]: [data.estatus],
                         [Op.notIn]: [13]
                     }
 

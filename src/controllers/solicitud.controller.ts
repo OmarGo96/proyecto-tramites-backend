@@ -637,6 +637,19 @@ export class SolicitudController {
         const administrador_id = req.body.administrador_id
         const errors = []
 
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+
+        const estatus: any = req.body.status == null || validator.isEmpty(req.body.status + '') ?
+            errors.push({ message: 'Favor de proporcionar el estatus' }) : req.body.status
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
         const findAreasByAdministrador = await SolicitudController.administradorAreaQueries.findAreasByAdministrador({
             administrador_id
         });
@@ -654,7 +667,8 @@ export class SolicitudController {
         for (const value of areas) {
             const findAllSolicitudes = await SolicitudController.solicitudQueries.findAllSolicitudes({
                 // @ts-ignore
-                area_id: value.areas_id
+                area_id: value.areas_id,
+                estatus
             })
 
             // tslint:disable-next-line:no-shadowed-variable
