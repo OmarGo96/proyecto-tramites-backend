@@ -9,6 +9,7 @@ export class SolicitudModel extends Model{
     public contribuyente_id!: number
     public area_id!: number
     public servicio_id!: number
+    public licencia_id!: number
     public estatus_solicitud_id!: number
     public folio!: string
     public fecha_recepcion!: string
@@ -38,6 +39,9 @@ SolicitudModel.init({
     },
     servicio_id: {
         type: DataTypes.INTEGER
+    },
+    licencia_id: {
+      type: DataTypes.INTEGER
     },
     estatus_solicitud_id: {
         type: DataTypes.INTEGER

@@ -24,6 +24,7 @@ export class LicenciaModel extends Model{
     public estatus!: string
     public ultimo_ejercicio_pagado!: string
     public ultimo_periodo_pagado!: string
+    public renovable!: number
     public fecha_alta!: string
 }
 
@@ -101,6 +102,9 @@ LicenciaModel.init({
     },
     ultimo_periodo_pagado: {
         type: DataTypes.STRING
+    },
+    renovable: {
+      type: DataTypes.TINYINT
     },
     fecha_alta: {
         type: DataTypes.STRING

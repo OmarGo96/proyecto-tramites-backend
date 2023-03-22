@@ -17,8 +17,10 @@ import {PaseCajaQueries} from "../queries/pase_caja.query";
 import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
 import fs from "fs";
 import AdmZip from "adm-zip";
+import {LicenciaQueries} from "../queries/licencia.query";
 
 export class SolicitudController {
+    static licenciaQueries: LicenciaQueries = new LicenciaQueries()
     static servicioQueries: ServicioQueries = new ServicioQueries()
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static contribuyenteQueries: ContribuyenteQueries = new ContribuyenteQueries()
@@ -46,8 +48,8 @@ export class SolicitudController {
         const servicioUuid: string = body.servicio_uuid == null || validator.isEmpty(body.servicio_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : body.servicio_uuid
 
-        const referencia: string = body.referencia == null || validator.isEmpty(body.referencia) ?
-            null : body.referencia
+        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia + '') ?
+            null : body.licencia
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -70,12 +72,30 @@ export class SolicitudController {
                 errors
             })
         }
+        let findSolicitudByLicenciaId;
+
+        if (licencia != null) {
+            // Verificar si la licencia esta en alguna solicitud activa.
+            findSolicitudByLicenciaId = await SolicitudController.licenciaQueries.findLicenciaByContribuyentev2({
+                licencia_funcionamiento_id: licencia,
+                contribuyente_id
+            })
+
+            if (!findSolicitudByLicenciaId.ok) {
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{ message: 'Existen problemas al momento de obtener la licencia de funcionamiento proporcionada.' }]
+                })
+            }
+        }
+
 
         /** Creamos una nueva solicitud en la base de datos */
         const createSolicitud = await SolicitudController.solicitudQueries.create({
             contribuyente_id,
             area_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.area_id : false,
             servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
+            licencia_id: (findSolicitudByLicenciaId.licencia) ? findSolicitudByLicenciaId.licencia.id : null,
             folio: moment().unix(),
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
@@ -640,8 +660,8 @@ export class SolicitudController {
         /** Obtenemos toda la información que nos envia el cliente */
         const body = req.body
 
-        const estatus: any = req.body.status == null || validator.isEmpty(req.body.status + '') ?
-            errors.push({ message: 'Favor de proporcionar el estatus' }) : req.body.status
+        const estatus: any = req.body.estatus == null || validator.isEmpty(req.body.estatus + '') ?
+            errors.push({ message: 'Favor de proporcionar el estatus' }) : req.body.estatus
 
         if (errors.length > 0) {
             return res.status(400).json({

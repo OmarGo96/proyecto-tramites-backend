@@ -7,8 +7,11 @@ import { LicenciaQueries } from '../queries/licencia.query'
 import { Soap } from '../helpers/soap'
 import { Log } from '../helpers/logs'
 import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
+import {ServicioQueries} from "../queries/servicio.query";
+import {SolicitudQueries} from "../queries/solicitud.query";
 
 export class LicenciaController {
+    static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static areaQueries: AreaQueries = new AreaQueries()
     static licenciaQueries: LicenciaQueries = new LicenciaQueries()
     static soap: Soap = new Soap()
@@ -208,7 +211,93 @@ export class LicenciaController {
             })
         }
 
-        if (licencia == "1") {
+        /** Buscamos en la base d edatos si el contribuyente ya tiene adjunto esa clave catastral */
+        const findLicenciaByContribuyente = await LicenciaController.licenciaQueries.findLicenciaByContribuyentev2({
+            licencia_funcionamiento_id: licencia,
+            contribuyente_id
+        })
+
+        if (!findLicenciaByContribuyente.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'Existen problemas al momento de obtener la licencia de funcionamiento proporcionada.' }]
+            })
+        }
+
+        // if (findLicenciaByContribuyente.licencia != null) {
+        //     return res.status(400).json({
+        //         ok: false,
+        //         errors: [{ message: 'La licencia proporcionada ya esta adjunta a su cuenta.' }]
+        //     })
+        // }
+
+        // Verificar si la licencia esta en alguna solicitud activa.
+        if (findLicenciaByContribuyente.licencia != null) {
+            const findSolicitudByLicenciaId = await LicenciaController.solicitudQueries.findSolicitudByLicenciaId({
+                licencia_id: findLicenciaByContribuyente.licencia.id
+            })
+
+            if (!findSolicitudByLicenciaId.ok) {
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{ message: 'Existen problemas al momento de obtener la licencia de funcionamiento proporcionada.' }]
+                })
+            }
+
+            if (findSolicitudByLicenciaId.solicitud != null ) {
+                if ( !(findSolicitudByLicenciaId.solicitud.estatus_solicitud_id === 7 || findSolicitudByLicenciaId.solicitud.estatus_solicitud_id === 13 || findSolicitudByLicenciaId.solicitud.estatus_solicitud_id === 18)) {
+                    errors.push({ message: 'La licencia proporcionada ya esta adjunta a una solicitud' })
+                }
+
+            }
+
+            if (errors.length > 0) {
+                return res.status(400).json({
+                    ok: false,
+                    errors
+                })
+            }
+        }
+
+
+
+        const data = {
+            url: process.env.RENOVACION_LICENCIA,
+            function: 'daoObtieneDatosLicenciaFuncionamientoRenovacionId',
+            args: {
+                // tslint:disable-next-line:radix
+                parIntIdComercio: parseInt(licencia),
+                // tslint:disable-next-line:radix
+                parFolioLicencia: parseInt(folioRenovacion),
+                // tslint:disable-next-line:radix
+                parEjercicio: parseInt(ultimoAnoRenovacion)
+            }
+        }
+
+        const soap: any = await LicenciaController.soap.request(data)
+
+        if (soap.ok === false) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.message }]
+            })
+        }
+
+        if (!soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'La licencia proporcionada no existe' }]
+            })
+        }
+
+        if (!soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoStatus) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'La licencia proporcionada no existe' }]
+            })
+        }
+
+        if (soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoEsRenovable === false) {
             return res.status(400).json({
                 ok: false,
                 message: [{ message: 'No es posible renovar su licencia en estos momentos.' }]
@@ -216,17 +305,81 @@ export class LicenciaController {
 
         }
 
+
+        const rfc = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.RFCPersona
+        const licenciaFuncionamientoFolio = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoFolio
+        const razonSocial = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.RazonSocialPersona
+        const nombreEstablecimiento = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.nombrecomercial
+        const habitaciones = 0
+        const domicilioFiscal = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.Domicilio_Fiscal
+        const claveCatastral = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.PredioCveCatastral
+        const calle = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.calle
+        const noInterior = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.NumInt
+        const noExterior = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.NumExt
+        const cp = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.CodigoPostalColonia
+        const colonia = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.NombreColonia
+        const localidad = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.NombreOficialLocalidad
+        const municipio = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.NombreOficialMunicipio
+        const estado = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.NombreEntidadFederativa
+        const estatus = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoStatus
+        const propietarioNombre = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.propietario
+        const fechaInicioOperacion = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.FechaInicioOperacion
+        const ultimoEjercicioPagado = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoUltimoEjercicioPagado
+        const ultimoPeriodoPagado = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoUltimoPeriodoPagado
+        const renovable = soap.result[0].daoObtieneDatosLicenciaFuncionamientoRenovacionIdResult.LicenciasFuncionamientoEsRenovable
+
+
+        const createLicncia = await LicenciaController.licenciaQueries.upsert({
+            id: (findLicenciaByContribuyente.licencia) ? findLicenciaByContribuyente.licencia.id : null,
+            contribuyente_id,
+            rfc,
+            licencia_funcionamiento_id: licencia,
+            licencia_funcionamiento_folio: licenciaFuncionamientoFolio,
+            razon_social: razonSocial,
+            nombre_establecimiento: nombreEstablecimiento,
+            habitaciones,
+            domicilio_fiscal: domicilioFiscal,
+            clave_catastral: claveCatastral,
+            calle,
+            no_interior: noInterior,
+            no_exterior: noExterior,
+            cp,
+            colonia,
+            localidad,
+            municipio,
+            estado,
+            propietario_nombre: propietarioNombre,
+            fecha_inicio_operacion: moment(fechaInicioOperacion).format('YYYY-MM-DD'),
+            ultimo_ejercicio_pagado: ultimoEjercicioPagado,
+            ultimo_periodo_pagado: ultimoPeriodoPagado,
+            renovable,
+            estatus
+        })
+
+        if (!createLicncia.ok) {
+            errors.push({message: 'Existen problemas al momento de guardar su licencia.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+        const createLogContribuyente = await LicenciaController.log.contribuyente({
+            contribuyente_id,
+            navegador: req.headers['user-agent'],
+            accion: 'El contribuyente adjunto una licencia para su renovación',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
         return res.status(200).json({
             ok: true,
             message: 'Puede renovar su licencia'
         })
-
-
-
-
-        // Proceso para checar la licencia de funcionamiento
-
-
     }
 
     public async statementaccount(req: Request, res: Response) {

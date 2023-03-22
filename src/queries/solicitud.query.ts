@@ -117,6 +117,20 @@ export class SolicitudQueries {
         }
     }
 
+    public async findSolicitudByLicenciaId(data: any) {
+        try {
+            const solicitud = await SolicitudModel.findOne({
+                where: {
+                    licencia_id: data.licencia_id
+                }
+            })
+            return {ok: true, solicitud}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async findSolicitudDetail(data: any) {
         try {
             const solicitud = await SolicitudModel.findOne({
@@ -148,6 +162,7 @@ export class SolicitudQueries {
                 contribuyente_id: data.contribuyente_id,
                 area_id: data.area_id,
                 servicio_id: data.servicio_id,
+                licencia_id: data.licencia_id,
                 fecha_alta: data.fecha_alta,
                 folio: data.folio,
                 estatus_solicitud_id: 1
