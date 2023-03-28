@@ -195,13 +195,13 @@ export class LicenciaController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia) ?
-            errors.push({ message: 'Favor de proporcionar la licencia' }) : body.licencia
+        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia + '') || validator.isNumeric(body.licencia + '') == false  ?
+            errors.push({ message: 'La licencia es obligatoria y debe contener solo números' }) : body.licencia
 
-        const folioRenovacion: string = body.folioRenovacion == null || validator.isEmpty(body.folioRenovacion) ?
-            errors.push({ message: 'Favor de proporcionar el ultimo folio de renovación' }) : body.folioRenovacion
+        const folioRenovacion: string = body.folioRenovacion == null || validator.isEmpty(body.folioRenovacion + '')  || validator.isNumeric(body.folioRenovacion + '') == false ?
+            errors.push({ message: 'El ultimo folio de renovación es obligatorio y debe contener solo números' }) : body.folioRenovacion
 
-        const ultimoAnoRenovacion: string = body.ultimoAnoRenovacion == null || validator.isEmpty(body.ultimoAnoRenovacion) ?
+        const ultimoAnoRenovacion: string = body.ultimoAnoRenovacion == null || validator.isEmpty(body.ultimoAnoRenovacion) || validator.isNumeric(body.ultimoAnoRenovacion + '') == false ?
             errors.push({ message: 'Favor de proporcionar el ultimo año de la renovación' }) : body.ultimoAnoRenovacion
 
         if (errors.length > 0) {
