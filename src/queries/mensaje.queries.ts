@@ -21,7 +21,7 @@ export class MensajeQueries {
     public async findSolicitudesAndUnreadMessages() {
         try {
             const mensajes = await MensajeModel.findAll({
-                attributes: ['MensajeModel.*', [sequelize.fn('COUNT', 'SolicitudModel.id'), 'UnreadMessages']],
+                attributes: ['SolicitudModel.*', [sequelize.fn('COUNT', 'MensajeModel.id'), 'UnreadMessages']],
                 where: {
                     leido: 0
                 },

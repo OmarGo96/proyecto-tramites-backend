@@ -25,6 +25,7 @@ import { MensajeModel } from '../models/mensaje.model'
 import {EstatusServicioModel} from "../models/estatus_servicio.model";
 import {CambiaEstatusModel} from "../models/cambia_estatus.model";
 import {MensajeController} from "../controllers/mensaje.controller";
+import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 
 export default class Relationship {
     static init() {
@@ -68,6 +69,7 @@ export default class Relationship {
         RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})
 
         SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
+        SolicitudModel.hasMany(DocumentacionPagoModel, {foreignKey:'solicitudes_id', as: 'DocumentacionPagoModel'})
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
 
