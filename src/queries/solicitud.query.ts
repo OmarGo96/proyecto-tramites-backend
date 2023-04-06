@@ -10,6 +10,7 @@ import {MensajeModel} from '../models/mensaje.model'
 import {BitacoraSolicitudModel} from '../models/bitacora_solicitud.model'
 import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 import moment from "moment";
+import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -141,6 +142,12 @@ export class SolicitudQueries {
                     {model: ServicioModel, as: 'Servicio'},
                     {
                         model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
+                        include: [
+                            {model: DocumentacionModel, as: 'Documentacion'}
+                        ]
+                    },
+                    {
+                        model: DocumentacionPagoModel, as: 'DocumentosPago',
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]

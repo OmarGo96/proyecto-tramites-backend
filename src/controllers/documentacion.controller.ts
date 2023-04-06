@@ -341,7 +341,7 @@ export class DocumentacionController {
         /** Obtenemos toda la información que nos envia el cliente */
         const body = req.body
 
-        const documentacionId = req.params.documentacion_id == null ? null : validator.isEmpty(req.params.documentacion_id) ?
+        const documentacionPagoId = req.params.documentacion_pago_id == null ? null : validator.isEmpty(req.params.documentacion_pago_id) ?
             errors.push({ message: 'Favor de proporcionar la documentación' }) :
             req.params.documentacion_id
 
@@ -367,11 +367,11 @@ export class DocumentacionController {
         }
 
         /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
-        const findDocumentacionById = await DocumentacionController.documentoSolicitudRequisitoQueries.findDocumentacionById({ id: documentacionId });
+        const findDocumentacionPagoById = await DocumentacionController.documentacionPagoQueries.findDocumentacionPagoById({ id: documentacionPagoId });
 
-        if (!findDocumentacionById.ok) {
+        if (!findDocumentacionPagoById.ok) {
             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' });
-        } else if (findDocumentacionById.documentacion == null) {
+        } else if (findDocumentacionPagoById.documentacionPago == null) {
             errors.push({ message: 'La documentación proporcionada no existe.' })
         }
 
@@ -383,7 +383,7 @@ export class DocumentacionController {
         }
 
         const changeStatus = await DocumentacionController.documentacionPagoQueries.changeStatus({
-            id: documentacionId,
+            id: documentacionPagoId,
             estatus
         })
 

@@ -27,10 +27,13 @@ export class DocumentacionPagoController {
         const errors = []
 
         const documentacionId: string = body.documentacion_id == null ?
-            errors.push({message: 'Favor de proporcionar el id del documento'}) : body.documentacion_id;
+            errors.push({message: 'Favor de proporcionar el documento'}) : body.documentacion_id;
 
         const solicitudId: string = body.solicitud_id == null ?
             errors.push({message: 'Favor de proporcionar la solicitud'}) : body.solicitud_id;
+
+        const documentoPago: string = body.documento_pago == null ?
+            errors.push({message: 'Favor de proporcionar el tipo de documento'}) : body.documento_pago;
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -41,7 +44,8 @@ export class DocumentacionPagoController {
 
         const createDocumento = await DocumentacionPagoController.documentacionPagoQueries.create({
             documentacion_id: documentacionId,
-            solicitudes_id: solicitudId,
+            solicitud_id: solicitudId,
+            documento_pago: documentoPago,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             estatus: 0,
         })
@@ -64,7 +68,7 @@ export class DocumentacionPagoController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha guardado el requisito de forma exitosa'
+            message: 'Se ha guardado el documento de forma exitosa'
         })
     }
 
@@ -77,14 +81,17 @@ export class DocumentacionPagoController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        const documentoSolicitudRequisitoId = req.params.documento_solicitud_requisito_id === null ? null : validator.isEmpty(req.params.documento_solicitud_requisito_id) ?
-            errors.push({message: 'Favor de proporcionar el id'}) : req.params.documento_solicitud_requisito_id
+        const documentoPagoId = req.params.documento_pago_id === null ? null : validator.isEmpty(req.params.documento_pago_id) ?
+            errors.push({message: 'Favor de proporcionar el id'}) : req.params.documento_pago_id
 
         const documentacionId: string = body.documentacion_id == null ?
             errors.push({message: 'Favor de proporcionar el id del documento'}) : body.documentacion_id;
 
         const solicitudId: string = body.solicitud_id == null ?
             errors.push({message: 'Favor de proporcionar la solicitud'}) : body.solicitud_id;
+
+        const documentoPago: string = body.documento_pago == null ?
+            errors.push({message: 'Favor de proporcionar el tipo de documento'}) : body.documento_pago;
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -94,9 +101,10 @@ export class DocumentacionPagoController {
         }
 
         const createDocumento = await DocumentacionPagoController.documentacionPagoQueries.update({
-            id: documentoSolicitudRequisitoId,
+            id: documentoPagoId,
             documentacion_id: documentacionId,
-            solicitudes_id: solicitudId,
+            solicitud_id: solicitudId,
+            documento_pago: documentoPago,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             estatus: 0,
         })
@@ -119,7 +127,7 @@ export class DocumentacionPagoController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha guardado el requisito de forma exitosa'
+            message: 'Se ha guardado el documento de forma exitosa'
         })
     }
 

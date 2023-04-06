@@ -8,6 +8,7 @@ export class DocumentacionPagoQueries {
             const documentacionPago = await DocumentacionPagoModel.create({
                 documentacion_id: data.documentacion_id,
                 solicitud_id: data.solicitud_id,
+                documento_pago: data.documento_pago,
                 fecha_alta: data.fecha_alta,
                 estatus: data.estatus
             })
@@ -23,6 +24,7 @@ export class DocumentacionPagoQueries {
             const documentacionPago = await DocumentacionPagoModel.update({
                 documentacion_id: data.documentacion_id,
                 solicitud_id: data.solicitud_id,
+                documento_pago: data.documento_pago,
                 fecha_alta: data.fecha_alta,
                 estatus: data.estatus
             }, {
@@ -37,7 +39,7 @@ export class DocumentacionPagoQueries {
         }
     }
 
-    public async findDocumentacionById(data: any) {
+    public async findDocumentacionPagoById(data: any) {
         try {
             const documentacionPago = await DocumentacionPagoModel.findOne({
                 where: {
