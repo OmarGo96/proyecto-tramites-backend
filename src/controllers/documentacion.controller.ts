@@ -342,8 +342,8 @@ export class DocumentacionController {
         const body = req.body
 
         const documentacionPagoId = req.params.documentacion_pago_id == null ? null : validator.isEmpty(req.params.documentacion_pago_id) ?
-            errors.push({ message: 'Favor de proporcionar la documentación' }) :
-            req.params.documentacion_id
+            errors.push({ message: 'Favor de proporcionar la documentación' }) : req.params.documentacion_pago_id
+
 
         const estatus: string = body.estatus == null || validator.isEmpty(body.estatus) ?
             errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.estatus
