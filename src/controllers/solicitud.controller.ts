@@ -631,7 +631,7 @@ export class SolicitudController {
                 message = 'La solicitud esta en revisión de documentos'
                 break;
             case '13':
-                message = 'La solicitud esta ha sido cancelada'
+                message = 'La solicitud ha sido eliminada'
                 break;
             default:
                 message = 'La solicitud ha cambiado de estatus'
@@ -1127,6 +1127,29 @@ export class SolicitudController {
 
 
 
+    }
+
+    public async getBadgesByEstatusSolicitud(req: Request, res: Response) {
+        const administrador_id = req.body.administrador_id
+        const errors = [];
+        const getCountSolicitudesByStatus = await SolicitudController.solicitudQueries.solicitudesCount()
+
+        if (!getCountSolicitudesByStatus.ok) {
+            errors.push({message: 'Existen problemas al momento de obtener sus solicitudes.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            badges: getCountSolicitudesByStatus.count,
+            message: 'Solicitudes por status'
+        })
     }
 
     /*

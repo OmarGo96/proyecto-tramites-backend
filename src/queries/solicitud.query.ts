@@ -1,4 +1,4 @@
-import {Op} from 'sequelize'
+import {Op, QueryTypes} from 'sequelize'
 import {SolicitudModel} from '../models/solicitud.model'
 import {DocumentacionModel} from '../models/documentacion.model'
 import {ServicioModel} from '../models/servicio.model'
@@ -11,6 +11,7 @@ import {BitacoraSolicitudModel} from '../models/bitacora_solicitud.model'
 import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 import moment from "moment";
 import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
+import {database} from "../config/database";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -350,6 +351,24 @@ export class SolicitudQueries {
         } catch (e) {
             console.log(e)
             return {ok: false}
+        }
+    }
+
+    public async solicitudesCount() {
+        const sql = `SELECT es.id, es.nombre, COUNT(s.id) as cuantos FROM estatus_solicitud es LEFT JOIN solicitudes s ON es.id = s.estatus_solicitud_id GROUP BY es.id;`;
+        try {
+            const result = await database.query<any>(sql, {
+                type: QueryTypes.SELECT
+            });
+
+            if (result.length > 0) {
+                return {ok: true, count: result};
+            } else {
+                return {ok: true, count: null};
+            }
+        } catch (e) {
+            console.error(e);
+            return {ok: false};
         }
     }
 }

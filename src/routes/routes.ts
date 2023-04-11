@@ -101,6 +101,8 @@ export class Routes {
         app.route('/api/solicitud/get-documents-zip/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.solicitudController.downloadDocumentsZip)
         app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.index)
         app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.indexByEstatusId)
+        app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
+
         /*app.route('/api/adjuntar_comentario').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.attachComment)
         app.route('/api/eliminar_solicitud/:solicitud_id').delete(CheckHeaders.validateJWTContribuyente, this.solicitudController.delete)
         app.route('/api/pagar_tramite').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pay)

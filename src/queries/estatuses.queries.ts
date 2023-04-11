@@ -36,6 +36,7 @@ export class EstatusesQueries {
                     servicio_id,
                     estatus_solicitud_id
                 },
+                order:[['order', 'ASC']],
                 include: [
                     { model: EstatusSolicitudModel, as: 'EstatusSolicitud'}
                 ]
