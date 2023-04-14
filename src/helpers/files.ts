@@ -40,7 +40,7 @@ export class File {
 
         const file: any = data.files.file
         const nameFile: number = moment().unix()
-        const path: any = (type === 'documentacion') ? process.env.DOCUMENTATION_PATH : (type === 'solicitud') ? process.env.SERVICES_DOCS_PATH : process.env.MESSAGE_DOCS_PATH
+        const path: any = (type === 'documentacion') ? process.env.DOCUMENTATION_PATH : (type === 'solicitud') ? process.env.SOLICITUD_DOCS_PATH : (type === 'servicio') ? process.env.SERVICES_DOCS_PAT : process.env.MESSAGE_DOCS_PATH
 
         if (lastFile != null) {
             try {

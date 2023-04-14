@@ -17,10 +17,12 @@ import {DocumentosSolicitudRequistoController} from '../controllers/documentos-s
 import {EstatusesController} from '../controllers/estatuses.controller';
 import {MensajeController} from "../controllers/mensaje.controller";
 import {DocumentacionPagoController} from "../controllers/documentacion-pago.controller";
+import {DocumentosSolicitudController} from "../controllers/documentos-solicitud.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { Roles } from '../middlewares/roles'
+
 
 
 
@@ -41,6 +43,7 @@ export class Routes {
     public estatusesController: EstatusesController = new EstatusesController();
     public mensajeController: MensajeController = new MensajeController();
     public documentacionPagoController: DocumentacionPagoController = new DocumentacionPagoController();
+    public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
     /*
 
     public testController: TestController = new TestController();
@@ -102,6 +105,7 @@ export class Routes {
         app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.index)
         app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.indexByEstatusId)
         app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
+        app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
 
         /*app.route('/api/adjuntar_comentario').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.attachComment)
         app.route('/api/eliminar_solicitud/:solicitud_id').delete(CheckHeaders.validateJWTContribuyente, this.solicitudController.delete)

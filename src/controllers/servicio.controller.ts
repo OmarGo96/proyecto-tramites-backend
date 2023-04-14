@@ -577,7 +577,7 @@ export class ServicioController {
 
         const file = (findDocumentoByServicio.documento != null) ? findDocumentoByServicio.documento.url : null
 
-        const uploadFile = await ServicioController.file.upload(req, file, 'solicitud')
+        const uploadFile = await ServicioController.file.upload(req, file, 'servicio')
 
         if (!uploadFile.ok) {
             return res.status(400).json({
