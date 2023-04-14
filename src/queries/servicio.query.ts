@@ -218,12 +218,14 @@ export class ServicioQueries {
                     {model: DocumentacionServicioModel, as: 'Documento'},
                     {
                         model: RequisitoServiciosModel, as: 'Requisitos',
+                        required: false,
                         include: [
                             {
                                 model: RequisitoModel, as: 'Requisito',
                                 where: {
                                     activo: 1
-                                }
+                                },
+                                required: false
                             }
                         ]
                     }
