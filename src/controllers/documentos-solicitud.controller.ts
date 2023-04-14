@@ -20,7 +20,7 @@ export class DocumentosSolicitudController {
 
         const solicitudId = req.params.solicitud_id == null ? null : validator.isEmpty(req.params.solicitud_id) ?
             errors.push({message: 'Favor de proporcionar la solicitud'}) :
-            req.params.servicio_uuid
+            req.params.solicitud_id
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -139,4 +139,6 @@ export class DocumentosSolicitudController {
             message: 'Se ha guardado el documento de forma exitosa'
         })
     }
+
+
 }
