@@ -140,5 +140,50 @@ export class DocumentosSolicitudController {
         })
     }
 
+    public async getFile(req: Request, res: Response) {
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        if (req.body.auth === false) {
+            errors.push({ message: 'Es neecsario la cabecera de autenticacion' })
+        }
+
+        const solicitudId = req.params.solicitud_id == null ? null : validator.isEmpty(req.params.solicitud_id) ?
+            errors.push({ message: 'Favor de proporcionar la solicitud' }) :
+            req.params.solicitud_id
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+        /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
+        const findDocumentacionById = await DocumentosSolicitudController.documentoSolicitudQueries.findDocumentoBySolicitud({ id: solicitudId })
+
+        if (!findDocumentacionById.ok) {
+            errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' })
+        } else if (findDocumentacionById.documento == null) {
+            errors.push({ message: 'La documentación proporcionada no existe.' })
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const downloadFile = await DocumentosSolicitudController.file.download(findDocumentacionById.documento ? findDocumentacionById.documento.url : false, 'solicitud')
+
+        if (!downloadFile.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: downloadFile.message }]
+            })
+        }
+
+        return res.status(200).contentType('application/pdf').send(downloadFile.pdf)
+    }
 
 }
