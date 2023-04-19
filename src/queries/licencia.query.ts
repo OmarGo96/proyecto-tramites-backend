@@ -28,8 +28,7 @@ export class LicenciaQueries {
                 where: {
                     [Op.and]: [
                         { contribuyentes_id: data.contribuyente_id },
-                        { licencia_funcionamiento_id: data.licencia_funcionamiento_id },
-                        { estatus: 'A' },
+                        { id: data.id },
                     ]
                 }
             })

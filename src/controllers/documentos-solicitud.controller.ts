@@ -14,7 +14,6 @@ export class DocumentosSolicitudController {
     static file: File = new File()
 
     public async upload(req: Request, res: Response) {
-        console.log('Ayu')
         const administratorId: number = Number(req.body.administrador_id);
         const body = req.body;
         const errors = [];

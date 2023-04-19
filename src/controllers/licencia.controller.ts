@@ -466,7 +466,7 @@ export class LicenciaController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia) ?
+        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia+'') ?
             errors.push({ message: 'Favor de proporcionar el licencia' }) : body.licencia
 
         if (errors.length > 0) {
@@ -478,7 +478,7 @@ export class LicenciaController {
 
         /** Buscamos en la base d edatos si el contribuyente ya tiene adjunto esa licencia catastral */
         const findLicenciaByContribuyente = await LicenciaController.licenciaQueries.findLicenciaByContribuyente({
-            licencia_funcionamiento_id: licencia,
+            id: licencia,
             contribuyente_id
         })
 
@@ -497,7 +497,8 @@ export class LicenciaController {
             url: process.env.PASE_CAJA_LICENCIA,
             function: 'daoCreaPaseCajaLicenciasFuncionamiento',
             args: {
-                parStrLicenciaFuncionamiento: licencia
+                parStrLicenciaFuncionamiento: findLicenciaByContribuyente.licencia.licencia_funcionamiento_id
+
             }
         }
 
@@ -538,7 +539,7 @@ export class LicenciaController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia) ?
+        const licencia: string = body.licencia == null || validator.isEmpty(body.licencia+ '') ?
             errors.push({ message: 'Favor de proporcionar el licencia' }) : body.licencia
 
         if (errors.length > 0) {
@@ -550,7 +551,7 @@ export class LicenciaController {
 
         /** Buscamos en la base d edatos si el contribuyente ya tiene adjunto esa licencia catastral */
         const findLicenciaByContribuyente = await LicenciaController.licenciaQueries.findLicenciaByContribuyente({
-            licencia_funcionamiento_id: licencia,
+            id: licencia,
             contribuyente_id
         })
 
@@ -569,7 +570,7 @@ export class LicenciaController {
             url: process.env.INTENTO_COBRO_LICENCIA,
             function: 'daoGeneraIntenciondecobro',
             args: {
-                parStrLicenciaFuncionamiento: licencia,
+                parStrLicenciaFuncionamiento: findLicenciaByContribuyente.licencia.licencia_funcionamiento_id,
                 parStrTokenValidate: 'dedededed'
             }
         }
