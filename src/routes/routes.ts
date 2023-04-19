@@ -106,6 +106,7 @@ export class Routes {
         app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.indexByEstatusId)
         app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
         app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
+        app.route('/api/solicitud/documento-digital/:solicitud_id').get(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudController.getFile)
 
         /*app.route('/api/adjuntar_comentario').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.attachComment)
         app.route('/api/eliminar_solicitud/:solicitud_id').delete(CheckHeaders.validateJWTContribuyente, this.solicitudController.delete)

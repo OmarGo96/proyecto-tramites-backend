@@ -14,6 +14,7 @@ export class DocumentosSolicitudController {
     static file: File = new File()
 
     public async upload(req: Request, res: Response) {
+        console.log('Ayu')
         const administratorId: number = Number(req.body.administrador_id);
         const body = req.body;
         const errors = [];
@@ -144,10 +145,6 @@ export class DocumentosSolicitudController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        if (req.body.auth === false) {
-            errors.push({ message: 'Es neecsario la cabecera de autenticacion' })
-        }
-
         const solicitudId = req.params.solicitud_id == null ? null : validator.isEmpty(req.params.solicitud_id) ?
             errors.push({ message: 'Favor de proporcionar la solicitud' }) :
             req.params.solicitud_id
@@ -159,7 +156,7 @@ export class DocumentosSolicitudController {
             })
         }
         /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
-        const findDocumentacionById = await DocumentosSolicitudController.documentoSolicitudQueries.findDocumentoBySolicitud({ id: solicitudId })
+        const findDocumentacionById = await DocumentosSolicitudController.documentoSolicitudQueries.findDocumentoBySolicitud({ solicitud_id: solicitudId })
 
         if (!findDocumentacionById.ok) {
             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' })
