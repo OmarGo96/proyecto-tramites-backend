@@ -391,14 +391,14 @@ export class SolicitudController {
 
         const contribuyenteId: any = (req.body.contribuyente_id) ? req.body.contribuyente_id : null
 
-        const solicitudId: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id) ?
+        const solicitudId: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id + '') ?
             errors.push({message: 'Favor de proporcionar la solicitud al cual se le cambiara el estatus'}) : body.solicitud_id
 
         const motivoRechazo = body.motivo_rechazo == null ? null : body.motivo_rechazo;
 
         const comentario = body.comentario == null ? null : body.comentario
 
-        const estatus: string = body.estatus_solicitud_id == null || validator.isEmpty(body.estatus_solicitud_id) ?
+        const estatus: string = body.estatus_solicitud_id == null || validator.isEmpty(body.estatus_solicitud_id + '') ?
             errors.push({message: 'Favor de proporcionar el estatus'}) : body.estatus_solicitud_id
 
         if (errors.length > 0) {

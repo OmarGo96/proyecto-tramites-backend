@@ -18,13 +18,11 @@ import {EstatusesController} from '../controllers/estatuses.controller';
 import {MensajeController} from "../controllers/mensaje.controller";
 import {DocumentacionPagoController} from "../controllers/documentacion-pago.controller";
 import {DocumentosSolicitudController} from "../controllers/documentos-solicitud.controller";
+import {DocumentosAnuenciaController} from "../controllers/documentos-anuencia.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { Roles } from '../middlewares/roles'
-
-
-
 
 export class Routes {
     public sessionController = new SessionController();
@@ -44,6 +42,7 @@ export class Routes {
     public mensajeController: MensajeController = new MensajeController();
     public documentacionPagoController: DocumentacionPagoController = new DocumentacionPagoController();
     public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
+    public documentosAnuenciaController: DocumentosAnuenciaController = new DocumentosAnuenciaController();
     /*
 
     public testController: TestController = new TestController();
@@ -106,7 +105,11 @@ export class Routes {
         app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.indexByEstatusId)
         app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
         app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
-        app.route('/api/solicitud/documento-digital/:solicitud_id').get(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudController.getFile)
+        app.route('/api/solicitud/documento-digital/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosSolicitudController.getFile)
+
+        app.route('/api/solicitud/documento-anuencia/:solicitud_id').post(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.upload)
+        app.route('/api/solicitud/documento-anuencia/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.getFile)
+        app.route('/api/solicitud/validar-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentosAnuenciaController.validarDocAnuencia)
 
         /*app.route('/api/adjuntar_comentario').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.attachComment)
         app.route('/api/eliminar_solicitud/:solicitud_id').delete(CheckHeaders.validateJWTContribuyente, this.solicitudController.delete)

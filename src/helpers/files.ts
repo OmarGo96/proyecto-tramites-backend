@@ -40,7 +40,30 @@ export class File {
 
         const file: any = data.files.file
         const nameFile: number = moment().unix()
-        const path: any = (type === 'documentacion') ? process.env.DOCUMENTATION_PATH : (type === 'solicitud') ? process.env.SOLICITUD_DOCS_PATH : (type === 'servicio') ? process.env.SERVICES_DOCS_PATH : process.env.MESSAGE_DOCS_PATH
+        let path: any;
+
+        switch (type) {
+            case 'documentacion': {
+                path = process.env.DOCUMENTATION_PATH;
+                break;
+            }
+            case 'solicitud': {
+                path = process.env.SOLICITUD_DOCS_PATH;
+                break;
+            }
+            case 'servicio': {
+                path = process.env.SERVICES_DOCS_PATH;
+                break;
+            }
+            case 'message': {
+                path = process.env.MESSAGE_DOCS_PATH;
+                break;
+            }
+            case 'anuencia': {
+                path = process.env.ANUENCIA_DOCS_PATH;
+                break;
+            }
+        }
 
         if (lastFile != null) {
             try {
@@ -67,7 +90,30 @@ export class File {
 
     public async download(name: any, type: any) {
 
-        const path: any = (type === 'documentacion') ? process.env.DOCUMENTATION_PATH : (type === 'solicitud') ? process.env.SOLICITUD_DOCS_PATH : (type === 'servicio') ? process.env.SERVICES_DOCS_PATH : process.env.MESSAGE_DOCS_PATH
+        let path: any;
+
+        switch (type) {
+            case 'documentacion': {
+                path = process.env.DOCUMENTATION_PATH;
+                break;
+            }
+            case 'solicitud': {
+                path = process.env.SOLICITUD_DOCS_PATH;
+                break;
+            }
+            case 'servicio': {
+                path = process.env.SERVICES_DOCS_PATH;
+                break;
+            }
+            case 'message': {
+                path = process.env.MESSAGE_DOCS_PATH;
+                break;
+            }
+            case 'anuencia': {
+                path = process.env.ANUENCIA_DOCS_PATH;
+                break;
+            }
+        }
 
         try {
             return {ok: true, pdf: fs.readFileSync(path + name)}

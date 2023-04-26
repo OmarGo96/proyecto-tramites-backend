@@ -12,6 +12,7 @@ import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_
 import moment from "moment";
 import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 import {database} from "../config/database";
+import {DocumentosAnuenciaModel} from "../models/documentos_anuencia.model";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -152,6 +153,9 @@ export class SolicitudQueries {
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
+                    },
+                    {
+                        model: DocumentosAnuenciaModel, as: 'DocumentoAnuencia'
                     },
                     {model: MensajeModel},
                     {model: ContribuyenteModel, as: 'Contribuyente'}
