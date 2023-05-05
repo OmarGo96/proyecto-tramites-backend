@@ -51,10 +51,10 @@ export default class Relationship {
         SolicitudModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
 
         // Relaciones Servicio y Requisitos (Pivote)
-        RequisitoServiciosModel.belongsTo(ServicioModel, {foreignKey: 'servicios_id', as: 'Servicios'})
-        RequisitoServiciosModel.belongsTo(RequisitoModel, {foreignKey: 'requisitos_id', as: 'Requisito'})
-        ServicioModel.hasMany(RequisitoServiciosModel, {foreignKey: 'servicios_id', as: 'Requisitos'})
-        RequisitoModel.hasMany(RequisitoServiciosModel, {foreignKey: 'requisitos_id', as: 'Requisitos'})
+        RequisitoServiciosModel.belongsTo(ServicioModel, {foreignKey: 'servicio_id', as: 'Servicios'})
+        RequisitoServiciosModel.belongsTo(RequisitoModel, {foreignKey: 'requisito_id', as: 'Requisito'})
+        ServicioModel.hasMany(RequisitoServiciosModel, {foreignKey: 'servicio_id', as: 'Requisitos'})
+        RequisitoModel.hasMany(RequisitoServiciosModel, {foreignKey: 'requisito_id', as: 'Requisitos'})
 
         DocumentacionServicioModel.belongsTo(ServicioModel, {foreignKey: 'servicio_id', as: 'Servicio'})
         ServicioModel.hasOne(DocumentacionServicioModel, {foreignKey: 'servicio_id', as: 'Documento'})

@@ -3,8 +3,8 @@ import { database } from '../config/database'
 
 export class RequisitoServiciosModel extends Model{
     public id!: number;
-    public requisitosId!: number;
-    public serviciosId!: number;
+    public requisitoId!: number;
+    public servicioId!: number;
     public original!: number;
     public noCopias!: number;
     public activo!: number;
@@ -20,10 +20,10 @@ RequisitoServiciosModel.init({
         autoIncrement: true,
         primaryKey: true
     },
-    requisitos_id: {
+    requisito_id: {
         type: DataTypes.INTEGER
     },
-    servicios_id: {
+    servicio_id: {
         type: DataTypes.INTEGER
     },
     original: {

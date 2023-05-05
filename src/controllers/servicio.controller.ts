@@ -67,6 +67,7 @@ export class ServicioController {
             })
         }
 
+
         const FindServiciosByArea = await ServicioController.servicioQueries.getServicios({
             auth,
             area_id: findAreaByUUID.area ? findAreaByUUID.area.id : false

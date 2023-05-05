@@ -19,6 +19,29 @@ export class RequerimientoController {
         const auth = req.body.auth;
         const errors = [];
 
+        const findRequerimientosByServicio = await RequerimientoController.requisitosServiciosQueries.getRequerimientos();
+
+        if (findRequerimientosByServicio.ok === false) {
+            errors.push({message: 'Existen problemas al momento de obtener los requerimientos por servicio/trámite.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            requerimientos: findRequerimientosByServicio.requerimientos
+        })
+    }
+
+    public async getRequerimientosByServicio(req: Request, res: Response) {
+        const auth = req.body.auth;
+        const errors = [];
+
         const servicioUuid = req.params.servicio_uuid == null ? null : validator.isEmpty(req.params.servicio_uuid) ?
             errors.push({message: 'Favor de proporcionar el área'}) :
             req.params.servicio_uuid
@@ -45,7 +68,10 @@ export class RequerimientoController {
             })
         }
 
-        const findRequerimientosByServicio = await RequerimientoController.requisitosServiciosQueries.getRequerimeintos();
+        const findRequerimientosByServicio = await RequerimientoController.requisitosServiciosQueries.getRequerimientosByServicio({
+            auth,
+            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false
+        });
 
         if (findRequerimientosByServicio.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener los requerimientos por servicio/trámite.'})
@@ -69,10 +95,7 @@ export class RequerimientoController {
         const body = req.body;
         const errors = [];
 
-        const servicioUuid: string = body.servicio_uuid == null || validator.isEmpty(body.servicio_uuid) ?
-            errors.push({message: 'Favor de proporcionar el uuid del servicio'}) : body.servicio_uuid
-
-        const tiposDocumentosId: string = body.tipos_documentos_id == null || validator.isEmpty(body.tipos_documentos_id) ?
+        const tiposDocumentosId: string = body.tipos_documentos_id == null || validator.isEmpty(body.tipos_documentos_id + '') ?
             errors.push({message: 'Favor de proporcionar el id del documento'}) : body.tipos_documentos_id
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) ?
@@ -82,21 +105,6 @@ export class RequerimientoController {
             errors.push({message: 'Favor de proporcionar una descripción'}) : body.descripcion
 
         const uuid = uuidv4();
-
-        if (errors.length > 0) {
-            return res.status(400).json({
-                ok: false,
-                errors
-            })
-        }
-
-        const findServicioByUUID = await RequerimientoController.servicioQueries.findServicioByUUID({uuid: servicioUuid})
-
-        if (!findServicioByUUID.ok) {
-            errors.push({message: 'Existen problemas al momento de validar el servicio proporcionado.'})
-        } else if (findServicioByUUID.servicio == null) {
-            errors.push({message: 'El servicio proporcionada no existe.'})
-        }
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -145,19 +153,10 @@ export class RequerimientoController {
         const body = req.body;
         const errors = [];
 
-        const requerimientoUuid = req.params.requerimiento_uuid == null ? null : validator.isEmpty(req.params.requerimiento_uuid) ?
+        const requerimientoUuid = req.params.requerimiento_uuid == null || validator.isEmpty(req.params.requerimiento_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_uuid;
 
-        const requisitoId: string = body.requisito_id === null ?
-            errors.push({message: 'Favor de proporcionar el uuid del servicio'}) : body.requisito_id;
-
-        const requisitosId: string = body.requisitos_id === null ?
-            errors.push({message: 'Favor de proporcionar el requisitos id'}) : body.requisitos_id;
-
-        const serviciosId: string = body.servicios_id === null ?
-            errors.push({message: 'Favor de proporcionar el servicios id'}) : body.servicios_id;
-
-        const tiposDocumentosId: string = body.tipos_documentos_id === null ?
+        const tiposDocumentosId: string = body.tipos_documentos_id === null || validator.isEmpty(req.body.tipos_documentos_id + '') ?
             errors.push({message: 'Favor de proporcionar el id del documento'}) : body.tipos_documentos_id;
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) ?
@@ -165,17 +164,6 @@ export class RequerimientoController {
 
         const descripcion: string = body.descripcion == null || validator.isEmpty(body.descripcion) ?
             errors.push({message: 'Favor de proporcionar una descripción'}) : body.descripcion;
-
-        const noCopias: number = body.no_copias === null ?
-            errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.no_copias
-
-        const original: string = body.original;
-
-        const complementario: boolean = body.complementario;
-
-        const obligatorio: boolean = body.obligatorio;
-
-        const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -196,32 +184,6 @@ export class RequerimientoController {
             errors.push({message: 'Existen problemas al momento de actualizar el requerimiento proporcionado.'})
         }
 
-        let updateRequisitosServicios: any
-
-        if (requerimientoUuid !== null) {
-            updateRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.update({
-                id: requisitoId,
-                requisitos_id: requisitosId,
-                servicios_id: serviciosId,
-                original,
-                noCopias,
-                complementario,
-                obligatorio,
-                fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            })
-
-            if (updateRequisitosServicios.ok === false) {
-                errors.push({message: 'Existen problemas al momento de crear la relacion'})
-            }
-
-            if (errors.length > 0) {
-                return res.status(400).json({
-                    ok: false,
-                    errors
-                })
-            }
-        }
-
         const createLogAdministrador = await RequerimientoController.log.administrador({
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
@@ -237,7 +199,7 @@ export class RequerimientoController {
 
     }
 
-    public async disable(req: Request, res: Response) {
+    public async changeAction(req: Request, res: Response) {
         const administratorId: number = req.body.administrador_id;
         const body = req.body;
         const errors = [];
@@ -246,6 +208,9 @@ export class RequerimientoController {
 
         const requerimientoUuid = req.params.requerimiento_uuid == null ? null : validator.isEmpty(req.params.requerimiento_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_uuid;
+
+        const action = req.body.action == null ? null : validator.isEmpty(req.body.action) ?
+            errors.push({message: 'Favor de proporcionar la accion a realizar'}) : req.body.action;
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -261,48 +226,95 @@ export class RequerimientoController {
         if (!findRequerimientoByUuid.ok) {
             return res.status(400).json({
                 ok: false,
-                errors: [{message: 'Existen problemas al momento de desactivar el requerimiento proporcionado.'}]
+                errors: [{message: 'Existen problemas al momento de realizar la acción al requerimiento proporcionado.'}]
             });
         }
 
-        const updateRequerimiento = await RequerimientoController.requerimientoQueries.disable({
+        const updateRequerimiento = await RequerimientoController.requerimientoQueries.change({
             uuid: requerimientoUuid,
-            activo: 0
+            activo: action
         });
-
-
 
         if (!updateRequerimiento.ok) {
             return res.status(400).json({
                 ok: false,
-                errors: [{message: 'Existen problemas al momento de desactivar el requerimiento proporcionado.'}]
+                errors: [{message: 'Existen problemas al momento de realizar la acción al requerimiento proporcionado.'}]
             });
         }
 
-        const updateRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.disable({
-            requisitos_id: findRequerimientoByUuid.requisito.id,
-            activo: 0
-        })
-
-        if (!updateRequisitosServicios.ok) {
-            return res.status(400).json({
-                ok: false,
-                errors: [{message: 'Existen problemas al momento de desactivar el requerimiento proporcionado.'}]
-            });
-        }
+        const actionString = (action === 1) ? "activado" : "desactivado"
 
         const createLogAdministrador = await RequerimientoController.log.administrador({
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
-            accion: 'El administrador ha desactivado un requerimiento',
+            accion: 'El administrador ha ' + actionString + ' un requerimiento',
             ip: req.connection.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha desactivado el requerimiento correctamente'
+            message: 'Se ha ' + actionString + ' el requerimiento correctamente'
         })
+
+    }
+
+    public async assingRequerimiento(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const servicioUuid: string = body.servicios_uuid === null ?
+            errors.push({message: 'Favor de proporcionar el servicio '}) : body.servicios_uuid;
+
+        const requisitoId: string = body.requisito_id === null ?
+            errors.push({message: 'Favor de proporcionar el requisito'}) : body.requisito_id;
+
+        const noCopias: number = body.no_copias === null ?
+            errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.no_copias
+
+        const original: string = body.original;
+
+        const complementario: boolean = body.complementario;
+
+        const obligatorio: boolean = body.obligatorio;
+
+        const findServicioByUUID = await RequerimientoController.servicioQueries.findServicioByUUID({
+            uuid: servicioUuid
+        });
+
+        if (findServicioByUUID.ok === false) {
+            errors.push({message: 'Existen problemas al momento de vincular los requerimientos al servicio/trámite.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const createRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.create({
+            requisito_id: requisitoId,
+            servicio_id: findServicioByUUID.servicio.id,
+            original,
+            noCopias,
+            complementario,
+            obligatorio,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (createRequisitosServicios.ok === false) {
+            errors.push({message: 'Existen problemas al momento de crear la vinculación del requisito con el servicio/ tramite'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
 
     }
 }

@@ -26,13 +26,63 @@ export class RequisitosServiciosQueries {
         }
     }
 
-    public async getRequerimeintos(data?: any) {
+    public async getRequerimientos(data?: any) {
         try {
             const requerimientos = await RequisitoModel.findAll()
             return {ok: true, requerimientos}
         } catch (e) {
             console.log(e)
             return {ok: false}
+        }
+    }
+
+    public  async getRequerimientosByServicio(data: any) {
+        let query: any
+
+        if (data.auth === true) {
+            query = {
+                attributes: [
+                    'id', 'servicio_id', 'requisito_id', 'original', 'no_copias', 'complementario', 'obligatorio', 'activo'
+                ],
+                where: {
+                    servicio_id: data.servicio_id
+                },
+                include: [
+                    {
+                        model: RequisitoModel, as: 'Requisito',
+                        where: {
+                            activo:  1
+                        }
+                    }
+                ]
+            }
+        } else {
+            query = {
+                attributes: [
+                    'id', 'servicio_id', 'requisito_id', 'original', 'no_copias', 'complementario', 'obligatorio',
+                ],
+                where: {
+                    [Op.and]: [
+                        {servicio_id: data.servicio_id},
+                        {activo: 1}
+                    ]
+                },
+                include: [
+                    {
+                        model: RequisitoModel, as: 'Requisito',
+                        where: {
+                            activo:  1
+                        }
+                    }
+                ]
+            }
+        }
+
+        try {
+            const requerimientos = await RequisitoServiciosModel.findAll(query)
+            return {ok: true, requerimientos}
+        } catch (e) {
+            console.log(e)
         }
     }
 
@@ -43,7 +93,7 @@ export class RequisitosServiciosQueries {
                     ['id', 'ASC']
                 ],
                 where: {
-                    servicios_id: data.servicio_id,
+                    servicio_id: data.servicio_id,
                     activo: 1
                 },
                 include: [
@@ -74,8 +124,8 @@ export class RequisitosServiciosQueries {
     public async create(data: any) {
         try {
             const requisitos = await RequisitoServiciosModel.create({
-                requisitos_id: data.requisitos_id,
-                servicios_id: data.servicios_id,
+                requisito_id: data.requisito_id,
+                servicio_id: data.servicio_id,
                 original: data.original,
                 no_copias: data.noCopias,
                 complementario: data.complementario,
@@ -96,7 +146,7 @@ export class RequisitosServiciosQueries {
                 activo: 0
             }, {
                 where: {
-                    requisitos_id: data.requisitos_id
+                    requisito_id: data.requisito_id
                 }
             })
             return {ok: true, requisitos}
@@ -109,8 +159,8 @@ export class RequisitosServiciosQueries {
     public async update(data: any) {
         try {
             const requisitos = await RequisitoServiciosModel.update({
-                requisitos_id: data.requisitos_id,
-                servicios_id: data.servicios_id,
+                requisito_id: data.requisito_id,
+                servicio_id: data.servicio_id,
                 original: data.original,
                 no_copias: data.noCopias,
                 complementario: data.complementario,

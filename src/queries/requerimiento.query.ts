@@ -123,7 +123,7 @@ export class RequerimientoQueries {
         }
     }
 
-    public async disable(data: any) {
+    public async change(data: any) {
         try {
             const requisito = await RequisitoModel.update({
                 activo: data.activo
