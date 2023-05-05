@@ -26,50 +26,9 @@ export class RequisitosServiciosQueries {
         }
     }
 
-    public async getRequerimeintos(data: any) {
-        let query: any
-
-        if (data.auth === true) {
-            query = {
-                attributes: [
-                    'id', 'servicios_id', 'requisitos_id', 'original', 'no_copias', 'complementario', 'obligatorio', 'activo'
-                ],
-                where: {
-                    servicios_id: data.servicio_id
-                },
-                include: [
-                    {
-                        model: RequisitoModel, as: 'Requisito',
-                        where: {
-                            activo:  1
-                        }
-                    }
-                ]
-            }
-        } else {
-            query = {
-                attributes: [
-                    'id', 'servicios_id', 'requisitos_id', 'original', 'no_copias', 'complementario', 'obligatorio',
-                ],
-                where: {
-                    [Op.and]: [
-                        {servicios_id: data.servicio_id},
-                        {activo: 1}
-                    ]
-                },
-                include: [
-                    {
-                        model: RequisitoModel, as: 'Requisito',
-                        where: {
-                            activo:  1
-                        }
-                    }
-                ]
-            }
-        }
-
+    public async getRequerimeintos(data?: any) {
         try {
-            const requerimientos = await RequisitoServiciosModel.findAll(query)
+            const requerimientos = await RequisitoModel.findAll()
             return {ok: true, requerimientos}
         } catch (e) {
             console.log(e)

@@ -45,10 +45,7 @@ export class RequerimientoController {
             })
         }
 
-        const findRequerimientosByServicio = await RequerimientoController.requisitosServiciosQueries.getRequerimeintos({
-            auth,
-            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false
-        });
+        const findRequerimientosByServicio = await RequerimientoController.requisitosServiciosQueries.getRequerimeintos();
 
         if (findRequerimientosByServicio.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener los requerimientos por servicio/trámite.'})
@@ -84,18 +81,7 @@ export class RequerimientoController {
         const descripcion: string = body.descripcion == null || validator.isEmpty(body.descripcion) ?
             errors.push({message: 'Favor de proporcionar una descripción'}) : body.descripcion
 
-        const noCopias: number = body.no_copias === null ?
-            errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.no_copias
-
-        const original: string = body.original;
-
-        const complementario: boolean = body.complementario;
-
-        const obligatorio: boolean = body.obligatorio;
-
         const uuid = uuidv4();
-
-        const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -119,21 +105,6 @@ export class RequerimientoController {
             })
         }
 
-        /*const findRequisitoByNombre = await RequerimientoController.requerimientoQueries.findRequisitoByNombre({nombre})
-
-        if (!findRequisitoByNombre.ok) {
-            errors.push({message: 'Existen problemas al momento de validar el requisito proporcionado.'})
-        } else if (findRequisitoByNombre.requisito != null) {
-            errors.push({message: 'El requisito proporcionado ya existe.'})
-        }
-
-        if (errors.length > 0) {
-            return res.status(400).json({
-                ok: false,
-                errors
-            })
-        }
-*/
         const createRequisito = await RequerimientoController.requerimientoQueries.create({
             uuid,
             tiposDocumentosId,
@@ -153,31 +124,6 @@ export class RequerimientoController {
             })
         }
 
-        let createRequisitosServicios: any
-
-        if (servicioUuid !== null) {
-            createRequisitosServicios = await RequerimientoController.requisitosServiciosQueries.create({
-                requisitos_id: createRequisito.requisito ? createRequisito.requisito.id : false,
-                servicios_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
-                original,
-                noCopias,
-                complementario,
-                obligatorio,
-                fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            })
-
-            if (createRequisitosServicios.ok === false) {
-                errors.push({message: 'Existen problemas al momento de crear la relacion'})
-            }
-
-            if (errors.length > 0) {
-                return res.status(400).json({
-                    ok: false,
-                    errors
-                })
-            }
-        }
-
         const createLogAdministrador = await RequerimientoController.log.administrador({
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
@@ -188,7 +134,7 @@ export class RequerimientoController {
 
         return res.status(200).json({
             ok: true,
-            message: 'Se ha dado de alta el requisito proporcionado'
+            message: 'Se ha dado de alta el requisito'
         })
 
 
