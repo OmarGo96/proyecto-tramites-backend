@@ -264,8 +264,8 @@ export class RequerimientoController {
         const body = req.body;
         const errors = [];
 
-        const servicioUuid: string = body.servicios_uuid === null ?
-            errors.push({message: 'Favor de proporcionar el servicio '}) : body.servicios_uuid;
+        const servicioUuid: string = body.servicio_uuid === null ?
+            errors.push({message: 'Favor de proporcionar el servicio '}) : body.servicio_uuid;
 
         const requisitoId: string = body.requisito_id === null ?
             errors.push({message: 'Favor de proporcionar el requisito'}) : body.requisito_id;
@@ -279,12 +279,12 @@ export class RequerimientoController {
 
         const obligatorio: boolean = body.obligatorio;
 
-        const findServicioByUUID = await RequerimientoController.servicioQueries.findServicioByUUID({
+        const findServicioByUUID = await RequerimientoController.servicioQueries.findOneServicioByUUID({
             uuid: servicioUuid
         });
 
         if (findServicioByUUID.ok === false) {
-            errors.push({message: 'Existen problemas al momento de vincular los requerimientos al servicio/trámite.'})
+            errors.push({message: 'Existen problemas al momento de vincular el requerimiento al servicio/trámite.'})
         }
 
         if (errors.length > 0) {

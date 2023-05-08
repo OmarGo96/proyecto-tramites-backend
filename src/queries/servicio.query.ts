@@ -207,6 +207,20 @@ export class ServicioQueries {
         }
     }
 
+    public async findOneServicioByUUID(data: any) {
+        try {
+            const servicio = await ServicioModel.findOne({
+                where: {
+                    uuid: data.uuid
+                }
+            })
+            return {ok: true, servicio}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async findServicioByUUID(data: any) {
         try {
             const servicio = await ServicioModel.findOne({

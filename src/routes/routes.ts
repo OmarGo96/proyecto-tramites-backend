@@ -85,7 +85,7 @@ export class Routes {
         app.route('/api/servicios/:servicio_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.servicioController.update)
         // Routes for requerimientos methods
         app.route('/api/requerimientos').get(CheckHeaders.contentAuthorization, this.requerimientoController.index)
-        app.route('/api/requerimientos-servicio:servicio_uuid').get(CheckHeaders.contentAuthorization, this.requerimientoController.getRequerimientosByServicio)
+        app.route('/api/requerimientos-servicio/:servicio_uuid').get(CheckHeaders.contentAuthorization, this.requerimientoController.getRequerimientosByServicio)
         app.route('/api/requerimientos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.store)
         app.route('/api/requerimientos/:requerimiento_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.update)
         app.route('/api/requerimientos/:requerimiento_uuid').patch(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.changeAction)
