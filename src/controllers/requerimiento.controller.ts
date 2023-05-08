@@ -275,9 +275,7 @@ export class RequerimientoController {
 
         const original: string = body.original;
 
-        const complementario: boolean = body.complementario;
-
-        const obligatorio: boolean = body.obligatorio;
+        const obligatorio: number = body.obligatorio;
 
         const findServicioByUUID = await RequerimientoController.servicioQueries.findOneServicioByUUID({
             uuid: servicioUuid
@@ -299,8 +297,8 @@ export class RequerimientoController {
             servicio_id: findServicioByUUID.servicio.id,
             original,
             noCopias,
-            complementario,
-            obligatorio,
+            complementario: (obligatorio === 0) ? 1 : 0,
+            obligatorio: (obligatorio === 1) ? 1 : 0,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
 
