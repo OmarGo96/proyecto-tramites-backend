@@ -19,10 +19,12 @@ import {MensajeController} from "../controllers/mensaje.controller";
 import {DocumentacionPagoController} from "../controllers/documentacion-pago.controller";
 import {DocumentosSolicitudController} from "../controllers/documentos-solicitud.controller";
 import {DocumentosAnuenciaController} from "../controllers/documentos-anuencia.controller";
+import {DocumentacionComplementariaController} from "../controllers/documentacion-complementaria.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { Roles } from '../middlewares/roles'
+
 
 export class Routes {
     public sessionController = new SessionController();
@@ -43,6 +45,7 @@ export class Routes {
     public documentacionPagoController: DocumentacionPagoController = new DocumentacionPagoController();
     public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
     public documentosAnuenciaController: DocumentosAnuenciaController = new DocumentosAnuenciaController();
+    public documentacionComplementariaController: DocumentacionComplementariaController = new DocumentacionComplementariaController();
     /*
 
     public testController: TestController = new TestController();
@@ -135,6 +138,10 @@ export class Routes {
         app.route('/api/documento-anuencia').post(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.attachFile)
         app.route('/api/documento-anuencia/:documento_anuencia_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.updateDocumentacionAneuncia)
         app.route('/api/validar-documento-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocAnuencia)
+        // Routes para documentacion-complementaria
+        app.route('/api/documento-complementaria').post(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.attachFile)
+        app.route('/api/documento-complementaria/:documentacion_complementaria_id').get(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.updateDocumentacionComplementaria)
+        app.route('/api/validar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocComplementario)
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
         app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.tiposDocumentosController.store);
