@@ -71,8 +71,8 @@ export class DocumentacionComplementariaController {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
 
-        const documentoAnuenciaId = req.params.documento_anuencia_id === null ? null : validator.isEmpty(req.params.documento_anuencia_id) ?
-            errors.push({message: 'Favor de proporcionar el documento'}) : req.params.documento_anuencia_id
+        const documentoComplementariaId = req.params.documentacion_complementaria_id === null || validator.isEmpty(req.params.documentacion_complementaria_id + '') ?
+            errors.push({message: 'Favor de proporcionar el documento'}) : req.params.documentacion_complementaria_id
 
         const documentacionId: string = body.documentacion_id == null ?
             errors.push({message: 'Favor de proporcionar el id del documento'}) : body.documentacion_id;
@@ -88,7 +88,7 @@ export class DocumentacionComplementariaController {
         }
 
         const createDocumento = await DocumentacionComplementariaController.documentacionComplementariaQueries.update({
-            id: documentoAnuenciaId,
+            id: documentoComplementariaId,
             documentacion_id: documentacionId,
             solicitud_id: solicitudId,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),

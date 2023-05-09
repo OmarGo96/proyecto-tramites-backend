@@ -136,11 +136,11 @@ export class Routes {
         app.route('/api/validar_documentacion_pago/:documentacion_pago_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocPago)
         // Routes para documentacion-anuencia
         app.route('/api/documento-anuencia').post(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.attachFile)
-        app.route('/api/documento-anuencia/:documento_anuencia_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.updateDocumentacionAneuncia)
+        app.route('/api/documento-anuencia/:documento_anuencia_id').put(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.updateDocumentacionAneuncia)
         app.route('/api/validar-documento-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocAnuencia)
         // Routes para documentacion-complementaria
         app.route('/api/documento-complementaria').post(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.attachFile)
-        app.route('/api/documento-complementaria/:documentacion_complementaria_id').get(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.updateDocumentacionComplementaria)
+        app.route('/api/documento-complementaria/:documentacion_complementaria_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.updateDocumentacionComplementaria)
         app.route('/api/validar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocComplementario)
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)

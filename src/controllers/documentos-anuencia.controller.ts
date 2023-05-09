@@ -39,7 +39,7 @@ export class DocumentosAnuenciaController {
         const createDocumento = await DocumentosAnuenciaController.documentoAnuenciaQueries.create({
             documentacion_id: documentacionId,
             solicitud_id: solicitudId,
-            documento_pago: documentoAnuencia,
+            documento_anuencia: documentoAnuencia,
             status: 0,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
