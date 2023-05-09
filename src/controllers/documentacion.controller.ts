@@ -495,7 +495,6 @@ export class DocumentacionController {
         })
 
     }
-
     public async validarDocComplementario(req: Request, res: Response) {
         const administrador_id = req.body.administrador_id
         /** Creamos un array que nos almacenará los errores que surjan en la función */
@@ -545,7 +544,7 @@ export class DocumentacionController {
             })
         }
 
-        const changeStatus = await DocumentacionController.documentacionAnuenciaQueries.changeStatus({
+        const changeStatus = await DocumentacionController.documentacionComplementariaQueries.changeStatus({
             id: documentacionComplementariaId,
             status
         })
