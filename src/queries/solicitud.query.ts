@@ -13,6 +13,7 @@ import moment from "moment";
 import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 import {database} from "../config/database";
 import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model";
+import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -155,7 +156,16 @@ export class SolicitudQueries {
                         ]
                     },
                     {
-                        model: DocumentacionAnuenciaModel, as: 'DocumentosAnuencia'
+                        model: DocumentacionAnuenciaModel, as: 'DocumentosAnuencia',
+                        include: [
+                            {model: DocumentacionModel, as: 'Documentacion'}
+                        ]
+                    },
+                    {
+                        model: DocumentacionComplementariaModel, as: 'DocumentosComplementarios',
+                        include: [
+                            {model: DocumentacionModel, as: 'Documentacion'}
+                        ]
                     },
                     {model: MensajeModel},
                     {model: ContribuyenteModel, as: 'Contribuyente'}

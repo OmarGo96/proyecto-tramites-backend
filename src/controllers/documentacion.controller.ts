@@ -450,11 +450,11 @@ export class DocumentacionController {
         }
 
         /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
-        const findDocumentacionPagoById = await DocumentacionController.documentacionAnuenciaQueries.findDocumentacionAnuenciaById({ id: documentacionAnuenciaId });
+        const findDocumentacionAnuenciaById = await DocumentacionController.documentacionAnuenciaQueries.findDocumentacionAnuenciaById({ id: documentacionAnuenciaId });
 
-        if (!findDocumentacionPagoById.ok) {
+        if (!findDocumentacionAnuenciaById.ok) {
             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' });
-        } else if (findDocumentacionPagoById.documentacionAnuencia == null) {
+        } else if (findDocumentacionAnuenciaById.documentacionAnuencia == null) {
             errors.push({ message: 'La documentación proporcionada no existe.' })
         }
 
