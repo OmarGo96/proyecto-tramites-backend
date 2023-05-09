@@ -429,7 +429,7 @@ export class DocumentacionController {
 
 
         const status: string = body.status == null || validator.isEmpty(body.status) ?
-            errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.status
+            errors.push({ message: 'Favor de proporcionar la validación' }) : body.status
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -509,7 +509,7 @@ export class DocumentacionController {
 
 
         const status: string = body.status == null || validator.isEmpty(body.status) ?
-            errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.status
+            errors.push({ message: 'Favor de proporcionar la validación' }) : body.status
 
         if (errors.length > 0) {
             return res.status(400).json({
