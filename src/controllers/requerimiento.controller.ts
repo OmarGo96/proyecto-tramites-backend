@@ -313,6 +313,23 @@ export class RequerimientoController {
             })
         }
 
+        if (!createRequisitosServicios.ok) {
+            errors.push({message: 'Existen problemas al momento de actualizar el requerimiento proporcionado.'})
+        }
+
+        const createLogAdministrador = await RequerimientoController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha asignado el requerimiento al tramite',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha asignado el requisito al tramite/servicio correctamente'
+        })
+
 
     }
 }
