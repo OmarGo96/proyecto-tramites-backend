@@ -108,9 +108,7 @@ export class Routes {
         app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
         app.route('/api/solicitud/documento-digital/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosSolicitudController.getFile)
 
-        app.route('/api/solicitud/documento-anuencia/:solicitud_id').post(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.upload)
-        app.route('/api/solicitud/documento-anuencia/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.getFile)
-        app.route('/api/solicitud/validar-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentosAnuenciaController.validarDocAnuencia)
+
 
         /*app.route('/api/adjuntar_comentario').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.attachComment)
         app.route('/api/eliminar_solicitud/:solicitud_id').delete(CheckHeaders.validateJWTContribuyente, this.solicitudController.delete)
@@ -133,6 +131,10 @@ export class Routes {
         app.route('/api/documentacion-pago').post(CheckHeaders.validateJWTContribuyente, this.documentacionPagoController.attachFile)
         app.route('/api/documentacion-pago/:documento_pago_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionPagoController.updateDocumentacionPago)
         app.route('/api/validar_documentacion_pago/:documentacion_pago_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocPago)
+        // Routes para documentacion-anuencia
+        app.route('/api/documento-anuencia').post(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.attachFile)
+        app.route('/api/documento-anuencia/:documento_anuencia_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.updateDocumentacionAneuncia)
+        app.route('/api/validar-documento-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocAnuencia)
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
         app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.tiposDocumentosController.store);

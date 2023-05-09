@@ -1,18 +1,19 @@
 import {Op} from 'sequelize'
-import {DocumentacionPagoModel} from '../models/documentacion_pago.model';
-import {DocumentacionModel} from "../models/documentacion.model";
+import {DocumentacionAnuenciaModel} from '../models/documentacion_anuencia.model';
+import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 
-export class DocumentacionPagoQueries {
+export class DocumentacionAnuenciaQueries {
+
     public async create(data: any) {
         try {
-            const documentacionPago = await DocumentacionPagoModel.create({
+            const documentAnuencia = await DocumentacionAnuenciaModel.create({
                 documentacion_id: data.documentacion_id,
                 solicitud_id: data.solicitud_id,
-                documento_pago: data.documento_pago,
+                documento_anuencia: data.documento_anuencia,
+                status: data.status,
                 fecha_alta: data.fecha_alta,
-                status: data.status
             })
-            return {ok: true, documentacionPago}
+            return {ok: true, documentAnuencia}
         } catch (e) {
             console.log(e);
             return {ok: false}
@@ -21,32 +22,32 @@ export class DocumentacionPagoQueries {
 
     public async update(data: any) {
         try {
-            const documentacionPago = await DocumentacionPagoModel.update({
+            const documentacionAnuencia = await DocumentacionAnuenciaModel.update({
                 documentacion_id: data.documentacion_id,
                 solicitud_id: data.solicitud_id,
-                documento_pago: data.documento_pago,
+                documento_anuencia: data.documento_anuencia,
+                status: data.status,
                 fecha_alta: data.fecha_alta,
-                status: data.status
             }, {
                 where: {
                     id: data.id
                 }
             })
-            return {ok: true, documentacionPago}
+            return {ok: true, documentacionAnuencia}
         } catch (e) {
             console.log(e);
             return {ok: false}
         }
     }
 
-    public async findDocumentacionPagoById(data: any) {
+    public async findDocumentacionAnuenciaById(data: any) {
         try {
-            const documentacionPago = await DocumentacionPagoModel.findOne({
+            const documentacionAnuencia = await DocumentacionAnuenciaModel.findOne({
                 where: {
                     id: data.id
                 }
             })
-            return { ok: true, documentacionPago }
+            return { ok: true, documentacionAnuencia }
         } catch (e) {
             console.log(e)
             return { ok: false }
@@ -55,13 +56,13 @@ export class DocumentacionPagoQueries {
 
     public async changeStatus(data: any) {
         try {
-            const documentacionPago = await DocumentacionPagoModel.update(
+            const documentacionAnuencia = await DocumentacionAnuenciaModel.update(
                 {
                     status: data.status,
                 },
                 { where: { id: data.id } }
             )
-            return { ok: true, documentacionPago }
+            return { ok: true, documentacionAnuencia }
         } catch (e) {
             console.log(e)
             return { ok: false }

@@ -1,38 +1,38 @@
 import { Model, DataTypes } from 'sequelize'
 import { database } from '../config/database'
 
-export class DocumentosAnuenciaModel extends Model{
+export class DocumentacionAnuenciaModel extends Model{
     public id!: number
-    public solicitud_id!: number
-    public contribuyente_id!: number
-    public url!: string
+    public solicitudId!: number
+    public documentacionId!: number
+    public documento_anuencia!: number
     public fechaAlta!: string
     public status!: number
 }
 
-DocumentosAnuenciaModel.init({
+DocumentacionAnuenciaModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
     },
+    documentacion_id: {
+        type: DataTypes.INTEGER
+    },
     solicitud_id: {
         type: DataTypes.INTEGER
     },
-    contribuyente_id: {
+    documento_anuencia:{
         type: DataTypes.INTEGER
-    },
-    url: {
-        type: DataTypes.STRING
-    },
-    fecha_alta: {
-        type: DataTypes.STRING
     },
     status: {
         type: DataTypes.INTEGER
     },
+    fecha_alta: {
+        type: DataTypes.STRING
+    },
 }, {
     sequelize: database,
     timestamps: false,
-    tableName: 'documentos_anuencia'
+    tableName: 'documentacion_anuencia'
 })

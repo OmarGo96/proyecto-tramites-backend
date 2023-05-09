@@ -24,9 +24,9 @@ import { EstatusSolicitudModel } from '../models/estatus_solicitud.model'
 import { MensajeModel } from '../models/mensaje.model'
 import {EstatusServicioModel} from "../models/estatus_servicio.model";
 import {CambiaEstatusModel} from "../models/cambia_estatus.model";
-import {MensajeController} from "../controllers/mensaje.controller";
 import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
-import {DocumentosAnuenciaModel} from "../models/documentos_anuencia.model";
+import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model";
+import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
 
 export default class Relationship {
     static init() {
@@ -68,11 +68,15 @@ export default class Relationship {
 
         DocumentosSolicitudRequisitoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionPagoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
+        DocumentacionAnuenciaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
+        DocumentacionComplementariaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
+
         RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})
 
         SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
         SolicitudModel.hasMany(DocumentacionPagoModel, {foreignKey:'solicitud_id', as: 'DocumentosPago'})
-        SolicitudModel.hasOne(DocumentosAnuenciaModel, {foreignKey:'solicitud_id', as: 'DocumentoAnuencia'})
+        SolicitudModel.hasMany(DocumentacionAnuenciaModel, {foreignKey:'solicitud_id', as: 'DocumentosAnuencia'})
+        SolicitudModel.hasOne(DocumentacionComplementariaModel, {foreignKey:'solicitud_id', as: 'DocumentosComplementarios'})
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
 

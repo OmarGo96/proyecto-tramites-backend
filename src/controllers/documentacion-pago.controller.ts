@@ -12,9 +12,7 @@ import {DocumentacionPagoQueries} from "../queries/documentacion-pago.query";
 export class DocumentacionPagoController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
-    static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
     static documentacionPagoQueries: DocumentacionPagoQueries = new DocumentacionPagoQueries()
-    static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static log: Log = new Log()
     static file: File = new File()
 
@@ -47,7 +45,7 @@ export class DocumentacionPagoController {
             solicitud_id: solicitudId,
             documento_pago: documentoPago,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            estatus: 0,
+            status: 0,
         })
 
         if (!createDocumento.ok) {
@@ -61,7 +59,7 @@ export class DocumentacionPagoController {
         const createLogContribuyente = await DocumentacionPagoController.log.contribuyente({
             contribuyente_id,
             navegador: req.headers['user-agent'],
-            accion: 'El contribuyente a agregado un documento al requerimiento',
+            accion: 'El contribuyente a agregado un documento al requerimiento de documentacion de pago',
             ip: req.connection.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
@@ -106,7 +104,7 @@ export class DocumentacionPagoController {
             solicitud_id: solicitudId,
             documento_pago: documentoPago,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            estatus: 0,
+            status: 0,
         })
 
         if (!createDocumento.ok) {
@@ -120,7 +118,7 @@ export class DocumentacionPagoController {
         const createLogContribuyente = await DocumentacionPagoController.log.contribuyente({
             contribuyente_id,
             navegador: req.headers['user-agent'],
-            accion: 'El contribuyente a agregado un documento al requerimiento',
+            accion: 'El contribuyente a agregado un documento al requerimiento de documentacion de pago',
             ip: req.connection.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
