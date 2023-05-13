@@ -15,6 +15,9 @@ export class PaseCajaModel extends Model{
     public observaciones!: string
     public folio_pase_caja!: string
     public urlPaseImpresion!: string
+    public cantidad_pagar!: number
+    public fecha_vencimiento!: string
+    public status!: number
     public codigo_error!: string
     public mensaje_error!: string
     public fecha_alta!: string
@@ -53,6 +56,15 @@ PaseCajaModel.init({
     },
     urlPaseImpresion: {
         type: DataTypes.TEXT
+    },
+    cantidad_pagar: {
+        type: DataTypes.DECIMAL
+    },
+    fecha_vencimiento: {
+        type: DataTypes.DATE
+    },
+    status: {
+        type: DataTypes.TINYINT
     },
     codigo_error: {
         type: DataTypes.STRING
