@@ -59,8 +59,8 @@ export class File {
                 path = process.env.MESSAGE_DOCS_PATH;
                 break;
             }
-            case 'anuencia': {
-                path = process.env.ANUENCIA_DOCS_PATH;
+            case 'pase_caja': {
+                path = process.env.PASECAJA_DOCS_PATH;
                 break;
             }
         }
@@ -109,8 +109,8 @@ export class File {
                 path = process.env.MESSAGE_DOCS_PATH;
                 break;
             }
-            case 'anuencia': {
-                path = process.env.ANUENCIA_DOCS_PATH;
+            case 'pase_caja': {
+                path = process.env.PASECAJA_DOCS_PATH;
                 break;
             }
         }

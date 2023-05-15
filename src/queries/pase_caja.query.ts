@@ -14,6 +14,21 @@ export class PaseCajaQueries {
         }
     }
 
+    public async findDocumentoBySolicitud(data: any) {
+        try {
+            const documento = await PaseCajaModel.findOne({
+                where: {
+                    solicitud_id: data.solicitud_id
+                },
+                order: [['id','DESC']]
+            })
+            return {ok: true, documento}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
 }
 
 

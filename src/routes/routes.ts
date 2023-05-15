@@ -20,10 +20,12 @@ import {DocumentacionPagoController} from "../controllers/documentacion-pago.con
 import {DocumentosSolicitudController} from "../controllers/documentos-solicitud.controller";
 import {DocumentosAnuenciaController} from "../controllers/documentos-anuencia.controller";
 import {DocumentacionComplementariaController} from "../controllers/documentacion-complementaria.controller";
+import {PaseCajaController} from "../controllers/pase-caja.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { Roles } from '../middlewares/roles'
+
 
 
 export class Routes {
@@ -46,6 +48,7 @@ export class Routes {
     public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
     public documentosAnuenciaController: DocumentosAnuenciaController = new DocumentosAnuenciaController();
     public documentacionComplementariaController: DocumentacionComplementariaController = new DocumentacionComplementariaController();
+    public paseCajaController: PaseCajaController = new PaseCajaController();
     /*
 
     public testController: TestController = new TestController();
@@ -163,7 +166,9 @@ export class Routes {
         app.route('/api/licencia-funcionamiento-estado-de-cuenta').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.statementaccount)
         app.route('/api/licencia-pase-caja').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.pasecaja)
         app.route('/api/licencia-pago-en-linea').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.linkpago)
-
+        // Routes for pase a caja
+        app.route('/api/solicitud/pase-caja/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.paseCajaController.upload)
+        app.route('/api/solicitud/pase-caja/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.paseCajaController.getFile)
         // Routes for solicitudes history
         app.route('/api/solicitud/history/:id').get(this.solicitudController.history);
         app.route('/api/solicitud/messages/:id').get(this.solicitudController.messages);

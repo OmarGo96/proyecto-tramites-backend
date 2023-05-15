@@ -14,6 +14,7 @@ import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 import {database} from "../config/database";
 import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model";
 import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
+import {PaseCajaModel} from "../models/pase_caja.model";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -166,6 +167,9 @@ export class SolicitudQueries {
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
+                    },
+                    {
+                        model: PaseCajaModel, as: 'PaseCaja'
                     },
                     {model: MensajeModel},
                     {model: ContribuyenteModel, as: 'Contribuyente'}

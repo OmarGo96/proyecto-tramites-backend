@@ -18,6 +18,7 @@ export class PaseCajaModel extends Model{
     public cantidad_pagar!: number
     public fecha_vencimiento!: string
     public status!: number
+    public tipo!: number
     public codigo_error!: string
     public mensaje_error!: string
     public fecha_alta!: string
@@ -64,6 +65,9 @@ PaseCajaModel.init({
         type: DataTypes.DATE
     },
     status: {
+        type: DataTypes.TINYINT
+    },
+    tipo: {
         type: DataTypes.TINYINT
     },
     codigo_error: {

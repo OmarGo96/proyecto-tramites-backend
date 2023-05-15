@@ -27,6 +27,7 @@ import {CambiaEstatusModel} from "../models/cambia_estatus.model";
 import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model";
 import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
+import {PaseCajaModel} from "../models/pase_caja.model";
 
 export default class Relationship {
     static init() {
@@ -47,13 +48,14 @@ export default class Relationship {
         ServicioModel.belongsTo(AreaModel, {foreignKey: 'area_id', as: 'Area'})
         // AreaModel.hasMany(ServicioModel, {foreignKey: 'administradores_id', as: 'Area'})
 
-        SolicitudModel.belongsTo(ContribuyenteModel, { foreignKey: 'contribuyente_id', as: 'Contribuyente' })
-        SolicitudModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
+
 
         // Relaciones Servicio y Requisitos (Pivote)
         RequisitoServiciosModel.belongsTo(ServicioModel, {foreignKey: 'servicio_id', as: 'Servicios'})
         RequisitoServiciosModel.belongsTo(RequisitoModel, {foreignKey: 'requisito_id', as: 'Requisito'})
         ServicioModel.hasMany(RequisitoServiciosModel, {foreignKey: 'servicio_id', as: 'Requisitos'})
+
+        RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})
         RequisitoModel.hasMany(RequisitoServiciosModel, {foreignKey: 'requisito_id', as: 'Requisitos'})
 
         DocumentacionServicioModel.belongsTo(ServicioModel, {foreignKey: 'servicio_id', as: 'Servicio'})
@@ -71,14 +73,17 @@ export default class Relationship {
         DocumentacionAnuenciaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionComplementariaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
 
-        RequisitoModel.hasOne(DocumentosSolicitudRequisitoModel, {foreignKey:'requisito_id', as: 'Documento'})
 
+
+        SolicitudModel.belongsTo(ContribuyenteModel, { foreignKey: 'contribuyente_id', as: 'Contribuyente' })
+        SolicitudModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
         SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
         SolicitudModel.hasMany(DocumentacionPagoModel, {foreignKey:'solicitud_id', as: 'DocumentosPago'})
         SolicitudModel.hasMany(DocumentacionAnuenciaModel, {foreignKey:'solicitud_id', as: 'DocumentosAnuencia'})
         SolicitudModel.hasOne(DocumentacionComplementariaModel, {foreignKey:'solicitud_id', as: 'DocumentosComplementarios'})
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
+        SolicitudModel.hasOne(PaseCajaModel, { foreignKey: 'solicitud_id', as: 'PaseCaja' })
 
         MensajeModel.belongsTo(SolicitudModel, {foreignKey: 'solicitud_id'});
 
