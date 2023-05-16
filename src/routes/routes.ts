@@ -25,6 +25,7 @@ import {PaseCajaController} from "../controllers/pase-caja.controller";
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { Roles } from '../middlewares/roles'
+import { GetValue } from '../middlewares/get-values'
 
 
 
