@@ -71,7 +71,7 @@ export class PaseCajaController {
                 errors: [{message: uploadFile.message}]
             })
         }
-console.log(moment(vigenciaPase).format('YYYY-MM-DD HH:mm:ss'))
+console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
         const uploadPaseCaja = await PaseCajaController.paseCajaQueries.store({
             solicitud_id: solicitudId,
             grupo_tramite_id,
