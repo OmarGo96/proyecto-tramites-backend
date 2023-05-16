@@ -9,7 +9,8 @@ export class PaseCajaQueries {
         try {
             const paseCaja = await PaseCajaModel.create(data)
             return { ok: true, paseCaja }
-        } catch{
+        } catch(e){
+            console.log(e)
             return { ok: false }
         }
     }
