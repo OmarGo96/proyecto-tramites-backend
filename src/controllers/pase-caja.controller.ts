@@ -78,7 +78,7 @@ export class PaseCajaController {
             tramite_id,
             folio_pase_caja: folio,
             cantidad_pagar: cantidadPagar,
-            fecha_vencimiento: moment(vigenciaPase).format('YYYY-MM-DD HH:mm:ss'),
+            fecha_vencimiento: moment(new Date(vigenciaPase)).format('YYYY-MM-DD HH:mm:ss'),
             urlPaseImpresion: uploadFile.nameFile,
             tipo: 1,
             fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
