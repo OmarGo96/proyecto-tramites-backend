@@ -11,7 +11,6 @@ export class PaseCajaModel extends Model{
     public clave_id!: number
     public grupo_tramite_id!: number
     public tramite_id!: number
-    public solicitud_tramite_id!: number
     public observaciones!: string
     public folio_pase_caja!: string
     public urlPaseImpresion!: string
