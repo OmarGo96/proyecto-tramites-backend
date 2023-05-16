@@ -35,7 +35,7 @@ export class PaseCajaController {
         const folio: string = body.folio == null || validator.isEmpty(body.folio) ?
             errors.push({ message: 'Favor de proporcionar el folio' }) : body.folio;
 
-        const vigenciaPase: string = body.vigencia == null || validator.isEmpty(body.vigencia + '') ?
+        const vigenciaPase: any = body.vigencia == null || validator.isEmpty(body.vigencia + '') ?
             errors.push({ message: 'Favor de proporcionar la vigencia' }) : body.vigencia;
 
         if (errors.length > 0) {
