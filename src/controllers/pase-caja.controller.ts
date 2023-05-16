@@ -35,7 +35,7 @@ export class PaseCajaController {
         const folio: string = body.folio == null || validator.isEmpty(body.folio) ?
             errors.push({ message: 'Favor de proporcionar el folio' }) : body.folio;
 
-        const vigenciaPase: any = body.vigencia == null || validator.isEmpty(body.vigencia + '') ?
+        const vigenciaPase: string = body.vigencia == null || validator.isEmpty(body.vigencia + '') ?
             errors.push({ message: 'Favor de proporcionar la vigencia' }) : body.vigencia;
 
         if (errors.length > 0) {
@@ -78,7 +78,7 @@ export class PaseCajaController {
             tramite_id,
             folio_pase_caja: folio,
             cantidad_pagar: cantidadPagar,
-            fecha_vencimiento: moment(new Date(vigenciaPase)).format('YYYY-MM-DD HH:mm:ss'),
+            fecha_vencimiento: moment(vigenciaPase).format('YYYY-MM-DD HH:mm:ss'),
             urlPaseImpresion: uploadFile.nameFile,
             tipo: 1,
             fecha_alta:  moment().format('YYYY-MM-DD HH:mm:ss'),
