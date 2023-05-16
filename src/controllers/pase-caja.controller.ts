@@ -35,7 +35,7 @@ export class PaseCajaController {
         const folio: string = body.folio == null || validator.isEmpty(body.folio) ?
             errors.push({ message: 'Favor de proporcionar el folio' }) : body.folio;
 
-        const vigenciaPase: any = body.vigencia == null || validator.isEmpty(body.vigencia + '') ?
+        const vigenciaPase: string = body.vigencia == null || validator.isEmpty(body.vigencia + '') ?
             errors.push({ message: 'Favor de proporcionar la vigencia' }) : body.vigencia;
 
         if (errors.length > 0) {
@@ -71,7 +71,7 @@ export class PaseCajaController {
                 errors: [{message: uploadFile.message}]
             })
         }
-
+console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
         const uploadPaseCaja = await PaseCajaController.paseCajaQueries.store({
             solicitud_id: solicitudId,
             grupo_tramite_id,
