@@ -13,7 +13,7 @@ import {PagoController} from '../controllers/pago.controller';
 import {LicenciaController} from '../controllers/licencia.controller';
 import {SolicitudController} from '../controllers/solicitud.controller';
 import {DocumentacionController} from '../controllers/documentacion.controller';
-import {DocumentosSolicitudRequistoController} from '../controllers/documentos-solicitud-requisito.controller';
+import {DocumentosSolicitudRequisitoController} from '../controllers/documentos-solicitud-requisito.controller';
 import {EstatusesController} from '../controllers/estatuses.controller';
 import {MensajeController} from "../controllers/mensaje.controller";
 import {DocumentacionPagoController} from "../controllers/documentacion-pago.controller";
@@ -42,7 +42,7 @@ export class Routes {
     public licenciaController: LicenciaController = new LicenciaController();
     public solicitudController: SolicitudController = new SolicitudController();
     public documentacionController: DocumentacionController = new DocumentacionController();
-    public documentosSolicitudRequisitoController: DocumentosSolicitudRequistoController = new DocumentosSolicitudRequistoController();
+    public documentosSolicitudRequisitoController: DocumentosSolicitudRequisitoController = new DocumentosSolicitudRequisitoController();
     public estatusesController: EstatusesController = new EstatusesController();
     public mensajeController: MensajeController = new MensajeController();
     public documentacionPagoController: DocumentacionPagoController = new DocumentacionPagoController();
@@ -133,19 +133,23 @@ export class Routes {
         // Routes for documentos-solicitud-requisito
         app.route('/api/documentos-solcicitud').post(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.attachFile)
         app.route('/api/documentos-solicitud-requisito/:documento_solicitud_requisito_id').put(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.updateDocumentoSolicitudRequisito)
-        app.route('/api/cambiar_estatus_documentacion/:documentacion_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.changeStatus)
+        app.route('/api/cambiar_estatus_documentacion/:documentacion_id').put(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudRequisitoController.validarDocumentoRequisito)
+        app.route('/api/eliminar-documentacion/:documentacion_id').put(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.unlinkDocumentoRequisito)
         // Routes for documentacion-pago
         app.route('/api/documentacion-pago').post(CheckHeaders.validateJWTContribuyente, this.documentacionPagoController.attachFile)
         app.route('/api/documentacion-pago/:documento_pago_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionPagoController.updateDocumentacionPago)
-        app.route('/api/validar_documentacion_pago/:documentacion_pago_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocPago)
+        app.route('/api/validar_documentacion_pago/:documentacion_pago_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionPagoController.validarDocPago)
+        app.route('/api/eliminar_documentacion_pago/:documentacion_pago_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionPagoController.unlinkDocPago)
         // Routes para documentacion-anuencia
         app.route('/api/documento-anuencia').post(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.attachFile)
         app.route('/api/documento-anuencia/:documento_anuencia_id').put(CheckHeaders.validateJWTByTypeUser, this.documentosAnuenciaController.updateDocumentacionAneuncia)
-        app.route('/api/validar-documento-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocAnuencia)
+        app.route('/api/validar-documento-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTAdministrador, this.documentosAnuenciaController.validarDocAnuencia)
+        app.route('/api/eliminar-documentacion-anuencia/:documentacion_anuencia_id').put(CheckHeaders.validateJWTContribuyente, this.documentosAnuenciaController.unlinkDocAnuencia)
         // Routes para documentacion-complementaria
         app.route('/api/documento-complementaria').post(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.attachFile)
         app.route('/api/documento-complementaria/:documentacion_complementaria_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.updateDocumentacionComplementaria)
-        app.route('/api/validar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionController.validarDocComplementario)
+        app.route('/api/validar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionComplementariaController.validarDocComplementario)
+        app.route('/api/eliminar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.unlinkDocComplementario)
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
         app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.tiposDocumentosController.store);

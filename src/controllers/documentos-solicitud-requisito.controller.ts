@@ -10,11 +10,11 @@ import {File} from '../helpers/files'
 import {DocumentoSolicitudRequisitoQueries} from "../queries/documento-solicitud-requisito.query";
 import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_requisito.model";
 
-export class DocumentosSolicitudRequistoController {
+export class DocumentosSolicitudRequisitoController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static documentacionQueries: DocumentacionQueries = new DocumentacionQueries()
-    static documentoSolicitudRequistoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
+    static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static log: Log = new Log()
     static file: File = new File()
@@ -43,7 +43,7 @@ export class DocumentosSolicitudRequistoController {
             })
         }
 
-        const createDocumento = await DocumentosSolicitudRequistoController.documentoSolicitudRequistoQueries.create({
+        const createDocumento = await DocumentosSolicitudRequisitoController.documentoSolicitudRequisitoQueries.create({
             documentacion_id: documentacionId,
             solicitudes_id: solicitudId,
             requisito_id: requisitoId,
@@ -59,7 +59,7 @@ export class DocumentosSolicitudRequistoController {
         }
 
         /** Creamos el log del usuario */
-        const createLogContribuyente = await DocumentosSolicitudRequistoController.log.contribuyente({
+        const createLogContribuyente = await DocumentosSolicitudRequisitoController.log.contribuyente({
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento',
@@ -101,7 +101,7 @@ export class DocumentosSolicitudRequistoController {
             })
         }
 
-        const createDocumento = await DocumentosSolicitudRequistoController.documentoSolicitudRequistoQueries.update({
+        const createDocumento = await DocumentosSolicitudRequisitoController.documentoSolicitudRequisitoQueries.update({
             id: documentoSolicitudRequisitoId,
             documentacion_id: documentacionId,
             solicitudes_id: solicitudId,
@@ -118,7 +118,7 @@ export class DocumentosSolicitudRequistoController {
         }
 
         /** Creamos el log del usuario */
-        const createLogContribuyente = await DocumentosSolicitudRequistoController.log.contribuyente({
+        const createLogContribuyente = await DocumentosSolicitudRequisitoController.log.contribuyente({
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento',
@@ -132,129 +132,150 @@ export class DocumentosSolicitudRequistoController {
         })
     }
 
-    /* public async getFile(req: Request, res: Response) {
-         /!** Creamos un array que nos almacenará los errores que surjan en la función *!/
-         const errors = []
+    public async validarDocumentoRequisito(req: Request, res: Response) {
+        const administrador_id = req.body.administrador_id
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
 
-         if (req.body.auth == false) {
-             errors.push({ message: 'Es neecsario la cabecera de autenticacion' })
-         }
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
 
-         const documentacion_id = req.params.documentacion_id == null ? null : validator.isEmpty(req.params.documentacion_id) ?
-             errors.push({ message: 'Favor de proporcionar la documentación' }) :
-             req.params.documentacion_id
+        const documentacionId = req.params.documentacion_id == null ? null : validator.isEmpty(req.params.documentacion_id) ?
+            errors.push({ message: 'Favor de proporcionar la documentación' }) :
+            req.params.documentacion_id
 
-         if (errors.length > 0) {
-             return res.status(400).json({
-                 ok: false,
-                 errors
-             })
-         }
-         /!** Buscamos en la base de datos si existe un contrato con el nombre proporcionado *!/
-         const findDocumentacionById = await DocumentacionController.documentacionQueries.findDocumentacionById({ id: documentacion_id })
+        const estatus: string = body.estatus == null || validator.isEmpty(body.estatus) ?
+            errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.estatus
 
-         if (findDocumentacionById.ok == false) {
-             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' })
-         } else if (findDocumentacionById.documentacion == null) {
-             errors.push({ message: 'La documentación proporcionada no existe.' })
-         }
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
-         if (errors.length > 0) {
-             return res.status(400).json({
-                 ok: false,
-                 errors
-             })
-         }
+        if (estatus !== '-1' && estatus !== '1' && estatus !== '3') {
+            errors.push({ message: 'Favor de proporcionar un estatus valido' })
+        }
 
-         const download_file = await DocumentacionController.file.download(findDocumentacionById.documentacion.url, 'documentacion')
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
-         if (download_file.ok == false) {
-             return res.status(400).json({
-                 ok: false,
-                 errors: [{ message: download_file.message }]
-             })
-         }
+        /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
+        const findDocumentacionById = await DocumentosSolicitudRequisitoController.documentoSolicitudRequisitoQueries.findDocumentacionById({ id: documentacionId });
 
-         return res.status(200).contentType('application/pdf').send(download_file.pdf)
-     }
+        if (!findDocumentacionById.ok) {
+            errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' });
+        } else if (findDocumentacionById.documentacion == null) {
+            errors.push({ message: 'La documentación proporcionada no existe.' })
+        }
 
-     public async changeStatus(req: Request, res: Response) {
-         const administrador_id = req.body.administrador_id
-         /!** Creamos un array que nos almacenará los errores que surjan en la función *!/
-         const errors = []
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
-         /!** Obtenemos toda la información que nos envia el cliente *!/
-         const body = req.body
+        const changeStatus = await DocumentosSolicitudRequisitoController.documentoSolicitudRequisitoQueries.changeStatus({
+            id: documentacionId,
+            estatus
+        })
 
-         const documentacion_id = req.params.documentacion_id == null ? null : validator.isEmpty(req.params.documentacion_id) ?
-             errors.push({ message: 'Favor de proporcionar la documentación' }) :
-             req.params.documentacion_id
+        if (!changeStatus.ok) {
+            errors.push({ message: 'Existen problemas al momento de cambiar el estatus del documento.' })
+        }
 
-         const estatus: string = body.estatus == null || validator.isEmpty(body.estatus) == true ?
-             errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.estatus
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
-         if (errors.length > 0) {
-             return res.status(400).json({
-                 ok: false,
-                 errors
-             })
-         }
+        const logAdministrador = await DocumentosSolicitudRequisitoController.log.administrador({
+            administrador_id,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador cambio el estatus del documento',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
 
-         if (estatus != '-1' && estatus != '1') {
-             errors.push({ message: 'Favor de proporcionar un estatus valido' })
-         }
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha cambiado el estatus del documento'
+        })
 
-         if (errors.length > 0) {
-             return res.status(400).json({
-                 ok: false,
-                 errors
-             })
-         }
+    }
 
-         /!** Buscamos en la base de datos si existe un contrato con el nombre proporcionado *!/
-         const findDocumentacionById = await DocumentacionController.documentacionQueries.findDocumentacionById({ id: documentacion_id })
+    public async unlinkDocumentoRequisito(req: Request, res: Response) {
+        /* Get info from validateJWT middleware */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
 
-         if (findDocumentacionById.ok == false) {
-             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' })
-         } else if (findDocumentacionById.documentacion == null) {
-             errors.push({ message: 'La documentación proporcionada no existe.' })
-         }
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
 
-         if (errors.length > 0) {
-             return res.status(400).json({
-                 ok: false,
-                 errors
-             })
-         }
+        const documentacionId = req.params.documentacion_id == null ? null : validator.isEmpty(req.params.documentacion_id) ?
+            errors.push({ message: 'Favor de proporcionar la documentación' }) :
+            req.params.documentacion_id
 
-         const changeStatus = await DocumentacionController.documentacionQueries.changeStatus({
-             id: documentacion_id,
-             estatus
-         })
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
-         if (changeStatus.ok == false) {
-             errors.push({ message: 'Existen problemas al momento de cambiar el estatus del documento.' })
-         }
+        /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
+        const findDocumentacionById = await DocumentosSolicitudRequisitoController.documentoSolicitudRequisitoQueries.findDocumentacionById({ id: documentacionId });
 
-         if (errors.length > 0) {
-             return res.status(400).json({
-                 ok: false,
-                 errors
-             })
-         }
+        if (!findDocumentacionById.ok) {
+            errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' });
+        } else if (findDocumentacionById.documentacion == null) {
+            errors.push({ message: 'La documentación proporcionada no existe.' })
+        }
 
-         const logAdministrador = await DocumentacionController.log.administrador({
-             administrador_id,
-             navegador: req.headers['user-agent'],
-             accion: 'El administrador cambio el estatus del documento con el index: ' + documentacion_id + '. Estatus: ' + estatus,
-             ip: req.connection.remoteAddress,
-             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
-         })
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
-         return res.status(200).json({
-             ok: true,
-             message: 'Se ha cambiado el estatus del documento'
-         })
+        const changeStatus = await DocumentosSolicitudRequisitoController.documentoSolicitudRequisitoQueries.changeStatus({
+            id: documentacionId,
+            estatus: -2
+        })
 
-     }*/
+        if (!changeStatus.ok) {
+            errors.push({ message: 'Existen problemas al momento de eliminar el documento.' })
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const logContribuyente = await DocumentosSolicitudRequisitoController.log.contribuyente({
+            contribuyente_id,
+            navegador: req.headers['user-agent'],
+            accion: 'El contribuyente eliminó documento al requisito',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha eliminado el documento'
+        })
+
+    }
 }

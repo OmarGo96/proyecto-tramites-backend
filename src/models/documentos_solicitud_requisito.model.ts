@@ -7,7 +7,7 @@ export class DocumentosSolicitudRequisitoModel extends Model{
     public solicitudesId!: number
     public requistoId!: number
     public fechaAlta!: string
-    public estaus!: number
+    public estatus!: number
 }
 
 DocumentosSolicitudRequisitoModel.init({

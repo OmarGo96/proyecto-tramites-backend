@@ -103,7 +103,10 @@ export class RequisitosServiciosQueries {
                             {
                                 model: DocumentosSolicitudRequisitoModel, as: 'Documento',
                                 where: {
-                                    solicitudes_id: data.solicitud_id
+                                    solicitudes_id: data.solicitud_id,
+                                    estatus: {
+                                        [Op.in]: [-1,0,1,3]
+                                    }
                                 },
                                 required: false,
                                 include: [

@@ -285,28 +285,6 @@ export class SolicitudController {
             })
         }
 
-        /*let solicitudes: any[];
-        solicitudes = [];
-
-        findSolicitudesByContribuyente.solicitudes.forEach(solicitud => {
-            const data = {
-                id: solicitud.id,
-                comentario: solicitud.comentario,
-                referencia: solicitud.referencia,
-                servicio: solicitud.Servicio.nombre,
-                fecha_alta: moment(solicitud.fecha_alta).format('YYYY-MM-DD HH:mm:ss'),
-                fecha_envio: (solicitud.fecha_envio != null) ? moment(solicitud.fecha_envio).format('YYYY-MM-DD HH:mm:ss') : null,
-                fecha_recepcion: (solicitud.fecha_recepcion != null) ? moment(solicitud.fecha_recepcion).format('YYYY-MM-DD HH:mm:ss') : null,
-                fecha_final: (solicitud.fecha_final != null) ? moment(solicitud.fecha_final).format('YYYY-MM-DD HH:mm:ss') : null,
-                fecha_rechazo: (solicitud.fecha_rechazo != null) ? moment(solicitud.fecha_rechazo).format('YYYY-MM-DD HH:mm:ss') : null,
-                estatus: solicitud.Estatus.nombre,
-                color: solicitud.Estatus.color,
-                documentacion: solicitud.DocumentacionModels,
-                mensajes: solicitud.MensajeModels
-            }
-            solicitudes.push(data)
-        })*/
-
         return res.status(200).json({
             ok: true,
             solicitud: findSolicitudesByContribuyente.solicitud,

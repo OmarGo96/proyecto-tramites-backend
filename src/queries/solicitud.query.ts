@@ -146,24 +146,48 @@ export class SolicitudQueries {
                     {model: ServicioModel, as: 'Servicio'},
                     {
                         model: DocumentosSolicitudRequisitoModel, as: 'DocumentosSolicitudRequisito',
+                        where: {
+                            estatus: {
+                                [Op.in]: [-1,0,1,3]
+                            }
+                        },
+                        required: false,
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
                     },
                     {
                         model: DocumentacionPagoModel, as: 'DocumentosPago',
+                        where: {
+                            status: {
+                                [Op.in]: [-1,0,1,3]
+                            }
+                        },
+                        required: false,
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
                     },
                     {
                         model: DocumentacionAnuenciaModel, as: 'DocumentosAnuencia',
+                        where: {
+                            status: {
+                                [Op.in]: [-1,0,1,3]
+                            }
+                        },
+                        required: false,
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
                     },
                     {
                         model: DocumentacionComplementariaModel, as: 'DocumentosComplementarios',
+                        where: {
+                            status: {
+                                [Op.in]: [-1,0,1,3]
+                            }
+                        },
+                        required: false,
                         include: [
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
