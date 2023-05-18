@@ -204,8 +204,6 @@ export class RequerimientoController {
         const body = req.body;
         const errors = [];
 
-        console.log(req.params);
-
         const requerimientoUuid = req.params.requerimiento_uuid == null ? null : validator.isEmpty(req.params.requerimiento_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_uuid;
 
@@ -259,7 +257,7 @@ export class RequerimientoController {
 
     }
 
-    public async assingRequerimiento(req: Request, res: Response) {
+    public async assignRequerimientoServicio(req: Request, res: Response) {
         const administratorId: number = req.body.administrador_id;
         const body = req.body;
         const errors = [];
@@ -313,10 +311,6 @@ export class RequerimientoController {
             })
         }
 
-        if (!createRequisitosServicios.ok) {
-            errors.push({message: 'Existen problemas al momento de actualizar el requerimiento proporcionado.'})
-        }
-
         const createLogAdministrador = await RequerimientoController.log.administrador({
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
@@ -331,5 +325,122 @@ export class RequerimientoController {
         })
 
 
+    }
+    public async unlinkRequerimientoServicio(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const requerimiento_servicio_id = req.params.requerimiento_servicio_id == null || validator.isEmpty(req.params.requerimiento_servicio_id + '') ?
+            errors.push({message: 'Favor de proporcionar el requerimiento'}) : req.params.requerimiento_servicio_id;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            });
+        }
+
+        const findRequerimientoByUuid = await RequerimientoController.requerimientoQueries.findRequisitoByUUID({
+            uuid: requerimiento_servicio_id
+        })
+
+        if (!findRequerimientoByUuid.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de realizar la acción al requerimiento proporcionado.'}]
+            });
+        }
+
+        const updateRequerimiento = await RequerimientoController.requisitosServiciosQueries.delete({
+            id: requerimiento_servicio_id
+        });
+
+        if (!updateRequerimiento.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de realizar la acción al requerimiento proporcionado.'}]
+            });
+        }
+
+
+        const createLogAdministrador = await RequerimientoController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha desasignado un requerimiento del servicio',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha desasignado el requerimiento correctamente'
+        })
+    }
+
+    public async editRequerimientoServicio(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const requerimiento_servicio_id = req.params.requerimiento_servicio_id == null || validator.isEmpty(req.params.requerimiento_servicio_id + '') ?
+            errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_servicio_id;
+
+        const noCopias: number = body.no_copias === null ?
+            errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.no_copias
+
+        const original: string = body.original;
+
+        const obligatorio: number = body.obligatorio;
+
+        const findRequerimientoServicioById= await RequerimientoController.requisitosServiciosQueries.findRequerimientoServicioById({
+            id: requerimiento_servicio_id
+        });
+
+        if (findRequerimientoServicioById.ok === false) {
+            errors.push({message: 'Existen problemas al momento de editar el requerimiento al servicio/trámite.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const editRequisitoServicio = await RequerimientoController.requisitosServiciosQueries.update({
+            id: findRequerimientoServicioById.requerimientoServicio.id,
+            requisito_id: findRequerimientoServicioById.requerimientoServicio.requisitoId,
+            servicio_id: findRequerimientoServicioById.requerimientoServicio.servicioId,
+            original,
+            noCopias,
+            complementario: (obligatorio === 0) ? 1 : 0,
+            obligatorio: (obligatorio === 1) ? 1 : 0,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (editRequisitoServicio.ok === false) {
+            errors.push({message: 'Existen problemas al momento de editar la vinculación del requisito con el servicio/ tramite'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const createLogAdministrador = await RequerimientoController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha editado el requerimiento del tramite',
+            ip: req.connection.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha editado el requisito correctamente'
+        })
     }
 }

@@ -8,23 +8,6 @@ import {DocumentosSolicitudRequisitoModel} from "../models/documentos_solicitud_
 import {DocumentacionModel} from "../models/documentacion.model";
 
 export class RequisitosServiciosQueries {
-    public async findAreasByAdministrador(data: any) {
-        try {
-            const areas = await AdministratorAreaModel.findAll({
-                attributes: [
-                    'area_id'
-                ],
-                where: {
-                    administrador_id: data.administrador_id,
-                    activo: 1
-                }
-            })
-            return {ok: true, areas}
-        } catch (e) {
-            console.log(e)
-            return {ok: false}
-        }
-    }
 
     public async getRequerimientos(data?: any) {
         try {
@@ -124,6 +107,21 @@ export class RequisitosServiciosQueries {
         }
     }
 
+    public async findRequerimientoServicioById(data: any) {
+        try {
+            const requerimientoServicio = await RequisitoServiciosModel.findOne({
+                where: {
+                    id: data.id,
+                    activo: 1
+                }
+            })
+            return {ok: true, requerimientoServicio}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async create(data: any) {
         try {
             const requisitos = await RequisitoServiciosModel.create({
@@ -143,16 +141,14 @@ export class RequisitosServiciosQueries {
         }
     }
 
-    public async disable(data: any) {
+    public async delete(data: any) {
         try {
-            const requisitos = await RequisitoServiciosModel.update({
-                activo: 0
-            }, {
+            const requisitoServicio = await RequisitoServiciosModel.destroy({
                 where: {
-                    requisito_id: data.requisito_id
+                    id: data.id
                 }
             })
-            return {ok: true, requisitos}
+            return {ok: true, requisitoServicio}
         } catch (e) {
             console.log(e)
             return {ok: false}

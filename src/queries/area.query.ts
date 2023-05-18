@@ -61,6 +61,24 @@ export class AreaQueries {
         }
     }
 
+    public async findAreasByAdministrador(data: any) {
+        try {
+            const areas = await AdministratorAreaModel.findAll({
+                attributes: [
+                    'area_id'
+                ],
+                where: {
+                    administrador_id: data.administrador_id,
+                    activo: 1
+                }
+            })
+            return {ok: true, areas}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async create(data: any) {
         try {
             const area = await AreaModel.create({

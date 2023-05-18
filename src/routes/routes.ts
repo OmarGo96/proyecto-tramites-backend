@@ -96,7 +96,9 @@ export class Routes {
         app.route('/api/requerimientos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.store)
         app.route('/api/requerimientos/:requerimiento_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.update)
         app.route('/api/requerimientos/:requerimiento_uuid').patch(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.changeAction)
-        app.route('/api/requerimiento/assign').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.assingRequerimiento)
+        app.route('/api/requerimiento/assign').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.assignRequerimientoServicio)
+        app.route('/api/requerimiento/edit/:requerimiento_servicio_id').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.editRequerimientoServicio)
+        app.route('/api/requerimiento/unlink/:requerimiento_servicio_id').delete(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.unlinkRequerimientoServicio)
         // Routes for solicitudes methods
         app.route('/api/solicitudes').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.store)
         app.route('/api/solicitudes').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.show)

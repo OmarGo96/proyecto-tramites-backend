@@ -28,6 +28,7 @@ import {DocumentacionPagoModel} from "../models/documentacion_pago.model";
 import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model";
 import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
 import {PaseCajaModel} from "../models/pase_caja.model";
+import {LicenciaModel} from "../models/licencia.model";
 
 export default class Relationship {
     static init() {
@@ -84,6 +85,7 @@ export default class Relationship {
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
         SolicitudModel.hasOne(PaseCajaModel, { foreignKey: 'solicitud_id', as: 'PaseCaja' })
+        SolicitudModel.belongsTo(LicenciaModel, { foreignKey: 'licencia_id', as: 'LicenciaFuncionamiento'})
 
         MensajeModel.belongsTo(SolicitudModel, {foreignKey: 'solicitud_id'});
 
