@@ -28,8 +28,8 @@ export class PaseCajaController {
         const tramite_id: string = body.tramite_id == null || validator.isEmpty(body.tramite_id + '') ?
             errors.push({ message: 'Favor de proporcionar el tramite' }) : body.tramite_id
 
-        const cantidadPagar: number = body.cantidad_pagar == null || validator.isEmpty(body.cantidad_pagar + '') ?
-            errors.push({ message: 'Favor de proporcionar la cantidad a pagar' }) : Number(body.cantidad_pagar);
+        const cantidadPagar: string = body.cantidad_pagar == null || validator.isEmpty(body.cantidad_pagar + '') ?
+            errors.push({ message: 'Favor de proporcionar la cantidad a pagar' }) : body.cantidad_pagar;
 
 
         const folio: string = body.folio == null || validator.isEmpty(body.folio) ?
