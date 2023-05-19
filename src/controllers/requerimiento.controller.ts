@@ -265,7 +265,7 @@ export class RequerimientoController {
         const servicioUuid: string = body.servicio_uuid === null || validator.isEmpty(body.servicio_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio '}) : body.servicio_uuid;
 
-        const requisitoId: string = body.requisito_id === null || validator.isEmpty(body.requisito_id) ?
+        const requisitoId: string = body.requisito_id === null || validator.isEmpty(body.requisito_id + '') ?
             errors.push({message: 'Favor de proporcionar el requisito'}) : body.requisito_id;
 
         const noCopias: number = body.no_copias === null || validator.isEmpty(body.no_copias + '') ?
@@ -273,7 +273,7 @@ export class RequerimientoController {
 
         const original: string = body.original;
 
-        const obligatorio: string = body.obligatorio === null || validator.isEmpty(body.obligatorio)
+        const obligatorio: string = body.obligatorio === null || validator.isEmpty(body.obligatorio + '')
             ? errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.obligatorio;
 
         if (errors.length > 0) {
