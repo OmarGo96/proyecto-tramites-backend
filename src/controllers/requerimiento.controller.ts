@@ -262,18 +262,26 @@ export class RequerimientoController {
         const body = req.body;
         const errors = [];
 
-        const servicioUuid: string = body.servicio_uuid === null ?
+        const servicioUuid: string = body.servicio_uuid === null || validator.isEmpty(body.servicio_uuid) ?
             errors.push({message: 'Favor de proporcionar el servicio '}) : body.servicio_uuid;
 
-        const requisitoId: string = body.requisito_id === null ?
+        const requisitoId: string = body.requisito_id === null || validator.isEmpty(body.requisito_id + '') ?
             errors.push({message: 'Favor de proporcionar el requisito'}) : body.requisito_id;
 
-        const noCopias: number = body.no_copias === null ?
+        const noCopias: number = body.no_copias === null || validator.isEmpty(body.no_copias + '') ?
             errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.no_copias
 
         const original: string = body.original;
 
-        const obligatorio: number = body.obligatorio;
+        const obligatorio: string = body.obligatorio === null || validator.isEmpty(body.obligatorio + '')
+            ? errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.obligatorio;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
         const findServicioByUUID = await RequerimientoController.servicioQueries.findOneServicioByUUID({
             uuid: servicioUuid
@@ -295,8 +303,8 @@ export class RequerimientoController {
             servicio_id: findServicioByUUID.servicio.id,
             original,
             noCopias,
-            complementario: (obligatorio === 0) ? 1 : 0,
-            obligatorio: (obligatorio === 1) ? 1 : 0,
+            complementario: (obligatorio === '0') ? 1 : 0,
+            obligatorio: (obligatorio === '1') ? 1 : 0,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
 
@@ -386,12 +394,20 @@ export class RequerimientoController {
         const requerimiento_servicio_id = req.params.requerimiento_servicio_id == null || validator.isEmpty(req.params.requerimiento_servicio_id + '') ?
             errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_servicio_id;
 
-        const noCopias: number = body.no_copias === null ?
+        const noCopias: number = body.no_copias === null || validator.isEmpty(body.no_copias + '') ?
             errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.no_copias
 
         const original: string = body.original;
 
-        const obligatorio: number = body.obligatorio;
+        const obligatorio: string = body.obligatorio === null || validator.isEmpty(body.obligatorio + '')
+            ? errors.push({message: 'Favor de proporcionar el número de copias necesarios'}) : body.obligatorio;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
 
         const findRequerimientoServicioById= await RequerimientoController.requisitosServiciosQueries.findRequerimientoServicioById({
             id: requerimiento_servicio_id
@@ -414,8 +430,8 @@ export class RequerimientoController {
             servicio_id: findRequerimientoServicioById.requerimientoServicio.servicioId,
             original,
             noCopias,
-            complementario: (obligatorio === 0) ? 1 : 0,
-            obligatorio: (obligatorio === 1) ? 1 : 0,
+            complementario: (obligatorio === '0') ? 1 : 0,
+            obligatorio: (obligatorio === '1') ? 1 : 0,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
 
