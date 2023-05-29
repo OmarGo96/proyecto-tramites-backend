@@ -63,9 +63,6 @@ export class AdministratorQueries {
     public async findAdministradorById(data: any) {
         try {
             const administrator = await AdministratorModel.findOne({
-                attributes: [
-                    'uuid', 'rol', 'nombre', 'apellidos', 'usuario'
-                ],
                 where: {
                     id: data.id
                 },

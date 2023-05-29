@@ -46,7 +46,7 @@ export class AdministradorController {
     public async index(req: Request, res: Response) {
         const adminInfo = req.body.adminInfo;
         const errors = [];
-        console.log(adminInfo.AdministradorArea[0].areas_id)
+        console.log(adminInfo)
         const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: adminInfo.id, areas_id: adminInfo.AdministradorArea[0].areas_id});
 
         if (getAdministradores.ok === false) {
