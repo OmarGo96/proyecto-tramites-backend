@@ -372,9 +372,9 @@ export class SolicitudController {
         const solicitudId: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id + '') ?
             errors.push({message: 'Favor de proporcionar la solicitud al cual se le cambiara el estatus'}) : body.solicitud_id
 
-        const motivoRechazo = body.motivo_rechazo == null ? null : body.motivo_rechazo;
+        const motivoRechazo = body.motivo_rechazo == null || validator.isEmpty(body.motivo_rechazo) ? null : body.motivo_rechazo;
 
-        const comentario = body.comentario == null ? null : body.comentario
+        const comentario = body.comentario == null || validator.isEmpty(body.comentario) ? null : body.comentario
 
         const estatus: string = body.estatus_solicitud_id == null || validator.isEmpty(body.estatus_solicitud_id + '') ?
             errors.push({message: 'Favor de proporcionar el estatus'}) : body.estatus_solicitud_id
@@ -537,12 +537,12 @@ export class SolicitudController {
         const changeStatus = await SolicitudController.solicitudQueries.changeStatus({
             id: findSolicitudById.solicitud.id,
             estatus_solicitud_id: estatus,
-            fecha_envio: (estatus === '2') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_recepcion,
+            fecha_envio: (estatus === "2") ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_envio,
             fecha_recepcion: (estatus === '3' || estatus === '12') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_recepcion,
             fecha_final: (estatus === '18') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_final,
             fecha_rechazo: (estatus === '5' || estatus === '6' || estatus === '7') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_rechazo,
             motivo_rechazo: (estatus === '5' || estatus === '6' || estatus === '7') ? motivoRechazo : null,
-            comentario: comentario ? comentario : null
+            comentario: (comentario) ? comentario : null
         })
 
         if (!changeStatus.ok) {

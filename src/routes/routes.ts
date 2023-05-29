@@ -24,7 +24,7 @@ import {PaseCajaController} from "../controllers/pase-caja.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
-import { Roles } from '../middlewares/roles'
+import { CheckRoles } from '../middlewares/roles'
 import { GetValue } from '../middlewares/get-values'
 
 
@@ -70,15 +70,15 @@ export class Routes {
         app.route('/api/activar_cuenta/:codigo_activacion').get(this.contribuyenteController.active)
         app.route('/api/contribuyentes/:contribuyente_uuid').get(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.drop)
         // Routes for administradores methods
-        app.route('/api/administradores').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.administradorController.store)
-        app.route('/api/administradores').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.administradorController.index)
-        app.route('/api/info_administrador').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.administradorController.show)
-        app.route('/api/administradores/:administrador_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.administradorController.update)
+        app.route('/api/administradores').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.store)
+        app.route('/api/administradores').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.administradorController.index)
+        app.route('/api/info_administrador').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.show)
+        app.route('/api/administradores/:administrador_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.update)
         // Routes for areas methods
         app.route('/api/areas').get(CheckHeaders.validateJWTByTypeUser, this.areaController.index)
-        app.route('/api/area/:uuid').get(this.areaController.show)
-        app.route('/api/areas').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.areaController.store)
-        app.route('/api/areas/:area_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.areaController.update)
+        app.route('/api/area/:uuid').get(CheckHeaders.validateJWTByTypeUser,this.areaController.show)
+        app.route('/api/areas').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.areaController.store)
+        app.route('/api/areas/:area_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.areaController.update)
         // Routes for servicios methods
         app.route('/api/servicios/:area_uuid').get(CheckHeaders.contentAuthorization, CheckHeaders.contentAuthorization, this.servicioController.index)
         app.route('/api/servicio/:uuid').get(this.servicioController.show)
@@ -88,17 +88,17 @@ export class Routes {
         // app.route('/api/top_servicios').get(this.servicioController.top)
         app.route('/api/documento_servicios/:servicio_uuid').get(this.servicioController.getDocumentService)
         app.route('/api/adjuntar_documento_servicio/:servicio_uuid').post(CheckHeaders.validateJWTAdministrador, this.servicioController.upload)
-        app.route('/api/servicios').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.servicioController.store)
-        app.route('/api/servicios/:servicio_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.servicioController.update)
+        app.route('/api/servicios').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.servicioController.store)
+        app.route('/api/servicios/:servicio_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.servicioController.update)
         // Routes for requerimientos methods
         app.route('/api/requerimientos').get(CheckHeaders.contentAuthorization, this.requerimientoController.index)
         app.route('/api/requerimientos-servicio/:servicio_uuid').get(CheckHeaders.contentAuthorization, this.requerimientoController.getRequerimientosByServicio)
-        app.route('/api/requerimientos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.store)
-        app.route('/api/requerimientos/:requerimiento_uuid').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.update)
-        app.route('/api/requerimientos/:requerimiento_uuid').patch(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.changeAction)
-        app.route('/api/requerimiento/assign').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.assignRequerimientoServicio)
-        app.route('/api/requerimiento/edit/:requerimiento_servicio_id').put(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.editRequerimientoServicio)
-        app.route('/api/requerimiento/unlink/:requerimiento_servicio_id').delete(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.requerimientoController.unlinkRequerimientoServicio)
+        app.route('/api/requerimientos').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.store)
+        app.route('/api/requerimientos/:requerimiento_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.update)
+        app.route('/api/requerimientos/:requerimiento_uuid').patch(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.changeAction)
+        app.route('/api/requerimiento/assign').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.assignRequerimientoServicio)
+        app.route('/api/requerimiento/edit/:requerimiento_servicio_id').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.editRequerimientoServicio)
+        app.route('/api/requerimiento/unlink/:requerimiento_servicio_id').delete(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.unlinkRequerimientoServicio)
         // Routes for solicitudes methods
         app.route('/api/solicitudes').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.store)
         app.route('/api/solicitudes').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.show)
@@ -110,9 +110,9 @@ export class Routes {
         app.route('/api/cambiar_solicitud_estatus').post(CheckHeaders.validateJWTByTypeUser, this.solicitudController.changeStatus);
         app.route('/api/todas_solicitudes').post(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.findOneAdmin)
-        app.route('/api/solicitud/get-documents-zip/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.solicitudController.downloadDocumentsZip)
-        app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.index)
-        app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.estatusesController.indexByEstatusId)
+        app.route('/api/solicitud/get-documents-zip/:id').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.solicitudController.downloadDocumentsZip)
+        app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.estatusesController.index)
+        app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.estatusesController.indexByEstatusId)
         app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
         app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
         app.route('/api/solicitud/documento-digital/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosSolicitudController.getFile)
@@ -154,7 +154,7 @@ export class Routes {
         app.route('/api/eliminar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.unlinkDocComplementario)
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
-        app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, Roles.administrador, this.tiposDocumentosController.store);
+        app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.tiposDocumentosController.store);
         app.route('/api/documentos_tipos/:documento_tipo_id').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.tiposDocumentosList)
         // Routes for pago predial
         app.route('/api/claves').post(CheckHeaders.validateJWTContribuyente, this.claveController.store)

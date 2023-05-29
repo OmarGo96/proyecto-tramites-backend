@@ -227,65 +227,8 @@ export class SolicitudQueries {
 
     public async changeStatus(data: any) {
 
-        let toUpdate = {}
-        if (data.estatus_solicitud_id === '1') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-                comentario: data.comentario
-            }
-        }
-
-        if (data.estatus_solicitud_id === '2') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-                fecha_envio: data.fecha_envio,
-                comentario: data.comentario
-            }
-        }
-
-        if (data.estatus_solicitud_id === '3' || data.estatus_solicitud_id === '12') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-                fecha_recepcion: data.fecha_recepcion
-            }
-        }
-
-        if (data.estatus_solicitud_id === '4') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id
-            }
-        }
-
-        if (data.estatus_solicitud_id === '5' || data.estatus_solicitud_id === '6' || data.estatus_solicitud_id === '7') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-                fecha_rechazo: data.fecha_rechazo,
-                motivo_rechazo: data.motivo_rechazo
-            }
-        }
-
-        if (data.estatus_solicitud_id === '8' || data.estatus_solicitud_id === '9' || data.estatus_solicitud_id === '10' || data.estatus_solicitud_id === '11') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-                fecha_rechazo: null,
-                motivo_rechazo: null
-            }
-        }
-
-        if (data.estatus_solicitud_id === '13') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-            }
-        }
-
-        if (data.estatus_solicitud_id > '13') {
-            toUpdate = {
-                estatus_solicitud_id: data.estatus_solicitud_id,
-            }
-        }
-
         try {
-            const solicitud = await SolicitudModel.update(toUpdate, {
+            const solicitud = await SolicitudModel.update(data, {
                 where: {
                     id: data.id
                 }

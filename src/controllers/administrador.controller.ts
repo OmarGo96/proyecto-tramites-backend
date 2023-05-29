@@ -7,6 +7,7 @@ import {AreaQueries} from '../queries/area.query';
 import {AdministratorQueries} from '../queries/administrator.query';
 import {AdministradorAreaQueries} from '../queries/administrador_area.query';
 import {Log} from '../helpers/logs';
+import {Roles} from "../enums/roles";
 
 export class AdministradorController {
     static salt = bcrypt.genSaltSync(Number(process.env.NO_SALT))
@@ -43,9 +44,10 @@ export class AdministradorController {
     }
 
     public async index(req: Request, res: Response) {
-        const administrador_id = req.body.administrador_id;
+        const adminInfo = req.body.adminInfo;
         const errors = [];
-        const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: administrador_id});
+        console.log(adminInfo.AdministradorArea[0].areas_id)
+        const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: adminInfo.id, areas_id: adminInfo.AdministradorArea[0].areas_id});
 
         if (getAdministradores.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener a los usuarios.'})
@@ -70,8 +72,8 @@ export class AdministradorController {
         const errors = [];
         const areas: any = [];
 
-        const rol: string = body.rol == null || validator.isEmpty(body.rol) ?
-            errors.push({message: 'Favor de proporcionar el rol'}) : body.rol
+        const rol: number = body.rol == null || validator.isEmpty(body.rol + '') ?
+            errors.push({message: 'Favor de proporcionar el rol'}) : Number(body.rol)
 
         const areaUuid: string = body.area_uuid == null ?
             null : body.area_uuid
@@ -102,7 +104,7 @@ export class AdministradorController {
             })
         }
 
-        if (!validator.isNumeric(rol)) {
+        if (!validator.isNumeric(rol + '')) {
             errors.push({message: 'Favor de proporcionar un rol valido.'})
         }
 
@@ -122,7 +124,8 @@ export class AdministradorController {
             errors.push({message: 'La contraseñas proporcionadas no coinciden'})
         }
 
-        if (rol !== "1" && rol !== "2") {
+        // tslint:disable-next-line:radix
+        if (!Object.values(Roles).includes(rol)) {
             errors.push({message: 'El rol proporcionado no existe.'})
         }
 
@@ -283,8 +286,8 @@ export class AdministradorController {
         const apellidos: string = body.apellidos == null || validator.isEmpty(body.apellidos) === true ?
             errors.push({message: 'Favor de proporcionar su(s) apellidos.'}) : body.apellidos
 
-        const rol: string = body.rol == null || validator.isEmpty(body.rol + '') === true ?
-            errors.push({message: 'Favor de proporcionar su rol.'}) : body.rol
+        const rol: number = body.rol == null || validator.isEmpty(body.rol + '') === true ?
+            errors.push({message: 'Favor de proporcionar su rol.'}) : Number(body.rol)
 
         const usuario: string = body.usuario == null || validator.isEmpty(body.usuario) === true ?
             errors.push({message: 'Favor de proporcionar el usuario.'}) : body.usuario
@@ -309,12 +312,12 @@ export class AdministradorController {
             errors.push({message: 'Favor de solo proporcionar letras para el campo de apellido(s)'})
         }
 
-        if (validator.isNumeric(rol) === false) {
+        if (validator.isNumeric(rol + '') === false) {
             errors.push({message: 'Favor de solo proporcionar números para el campo de teléfono'})
         }
 
-        if (rol !== "1" && rol !== "2") {
-            errors.push({message: 'Favor de solo proporcionarun rol valido'})
+        if (!Object.values(Roles).includes(rol)) {
+            errors.push({message: 'Favor de solo proporcionar un rol valido'})
         }
 
         if (validator.isNumeric(activo) === false) {

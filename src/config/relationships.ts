@@ -37,8 +37,8 @@ export default class Relationship {
          */
         AdministratorAreaModel.belongsTo(AdministratorModel, {foreignKey: 'administradores_id', as: 'Administrador'})
         AdministratorAreaModel.belongsTo(AreaModel, {foreignKey: 'areas_id', as: 'Area'})
-        AdministratorModel.hasMany(AdministratorAreaModel, {foreignKey: 'administradores_id'})
-        AreaModel.hasMany(AdministratorAreaModel, {foreignKey: 'areas_id'})
+        AdministratorModel.hasMany(AdministratorAreaModel, {foreignKey: 'administradores_id', as: 'AdministradorArea'})
+        AreaModel.hasMany(AdministratorAreaModel, {foreignKey: 'areas_id', as: 'AdministradorArea'})
 
         /*BitacoraSolicitudModel.belongsTo(SolicitudModel, { foreignKey: 'solicitud_id', as: 'Solicitud' })
         DocumentacionModel.belongsTo(SolicitudModel, { foreignKey: 'solicitud_id', as: 'Solicitud' })

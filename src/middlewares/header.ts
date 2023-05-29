@@ -38,8 +38,8 @@ export class CheckHeaders {
             const administratorId = cryptr.decrypt(decoded.administradorId)
             const rol = cryptr.decrypt(decoded.rol)
             /*Retornamos el id del usuario decodificado junto con el token */
-            req.body.administrador_id = administratorId
-            req.body.administrador_rol = rol
+            req.body.administrador_id = +administratorId
+            req.body.rol = +rol
         } catch (e) {
             /*Cachamos los errores posibles*/
             return res.status(403).json({
@@ -81,7 +81,7 @@ export class CheckHeaders {
             /*Desencriptamos información deseada del usuario*/
             const contribuyenteId = cryptr.decrypt(decoded.contribuyenteId)
             /*Retornamos el id del usuario decodificado junto con el token */
-            req.body.contribuyente_id = contribuyenteId
+            req.body.contribuyente_id = +contribuyenteId
         } catch (e) {
             /*Cachamos los errores posibles*/
             return res.status(403).json({
@@ -122,7 +122,9 @@ export class CheckHeaders {
 
             if (userType === 'administrador') {
                 const administratorId = cryptr.decrypt(decoded.administradorId)
-                req.body.administrador_id = administratorId
+                const rol = cryptr.decrypt(decoded.rol)
+                req.body.administrador_id = +administratorId
+                req.body.rol = +rol
             }
 
 

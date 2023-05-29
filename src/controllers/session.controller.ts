@@ -136,8 +136,8 @@ export class SessionController {
 
         const result = await SessionController.payload.createToken({
             user_type: 'administrador',
-            administrador_id: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.id.toString() : false,
-            rol: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.rol.toString() : false
+            administrador_id: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.id : false,
+            rol: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.rol : false
         })
 
         if (result && result.ok === false) {

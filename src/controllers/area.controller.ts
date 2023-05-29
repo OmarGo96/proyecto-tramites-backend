@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 import {Request, Response} from 'express';
 import {AreaQueries} from '../queries/area.query';
 import {Log} from '../helpers/logs';
+import {Roles} from "../enums/roles";
 
 export class AreaController {
     static areaQueries: AreaQueries = new AreaQueries()
@@ -40,7 +41,7 @@ export class AreaController {
     }
 
     public async index(req: Request, res: Response) {
-        const auth = req.body.auth
+        const auth = (req.body.rol === Roles.SUPERADMIN || req.body.rol === Roles.ADMINISTRADOR);
         const administrador_id = req.body.administrador_id
         const errors = []
         const getAreas = await AreaController.areaQueries.getAreas({auth, administrador_id})

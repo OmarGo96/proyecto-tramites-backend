@@ -12,12 +12,13 @@ export class SolicitudModel extends Model{
     public licencia_id!: number
     public estatus_solicitud_id!: number
     public folio!: string
+    public fecha_alta!: string
     public fecha_recepcion!: string
     public fecha_envio!: string
     public fecha_final!: string
     public fecha_rechazo!: string
     public motivo_rechazo!: string
-    public fecha_alta!: string
+
     public comentario!: string;
     public Servicio!: string;
 }
@@ -50,21 +51,21 @@ SolicitudModel.init({
         type: DataTypes.STRING
     },
     fecha_recepcion: {
-        type: DataTypes.STRING
-    },
-    fecha_envio: {
-        type: DataTypes.STRING
-    },
-    fecha_final: {
-        type: DataTypes.STRING
-    },
-    fecha_rechazo: {
-        type: DataTypes.STRING
-    },
-    motivo_rechazo: {
-        type: DataTypes.STRING
+        type: DataTypes.DATE
     },
     fecha_alta: {
+        type: DataTypes.DATE
+    },
+    fecha_envio: {
+        type: DataTypes.DATE
+    },
+    fecha_final: {
+        type: DataTypes.DATE
+    },
+    fecha_rechazo: {
+        type: DataTypes.DATE
+    },
+    motivo_rechazo: {
         type: DataTypes.STRING
     },
     comentario: {

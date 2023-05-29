@@ -21,6 +21,7 @@ export class AdministratorQueries {
     public async getAdministrators(data: any) {
         try {
             const administrators = await AdministratorModel.findAll({
+                logging: true,
                 attributes: [
                     'uuid', 'rol', 'nombre', 'apellidos', 'usuario',
                     'activo'
@@ -35,13 +36,18 @@ export class AdministratorQueries {
                 },
                 include: [
                     {
-                        model: AdministratorAreaModel,
+                        required: true,
+                        model: AdministratorAreaModel, as: 'AdministradorArea',
+                        where: {
+                            areas_id: data.areas_id
+                        },
                         include: [
                             {
+                                required: true,
                                 attributes: [
                                     'uuid'
                                 ],
-                                model: AreaModel, as: 'Area'
+                                model: AreaModel, as: 'Area',
                             },
                         ]
                     }
@@ -65,7 +71,7 @@ export class AdministratorQueries {
                 },
                 include: [
                     {
-                        model: AdministratorAreaModel,
+                        model: AdministratorAreaModel, as: 'AdministradorArea',
                         include: [
                             {
                                 attributes: [

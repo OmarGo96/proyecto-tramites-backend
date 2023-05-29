@@ -5,8 +5,9 @@ import {ServicioModel} from "../models/servicio.model";
 
 export class AreaQueries {
     public async getAreas(data: any) {
-        let query: any
 
+        let query: any
+        console.log(data.auth)
         if (data.auth === true) {
             query = {
                 attributes: [
@@ -21,7 +22,7 @@ export class AreaQueries {
                         model: ServicioModel, as: 'Servicio',
                     },
                     {
-                        model: AdministratorAreaModel,
+                        model: AdministratorAreaModel, as: 'AdministradorArea',
                         where: {
                             administradores_id: data.administrador_id
                         },
@@ -30,6 +31,7 @@ export class AreaQueries {
                 ]
             }
         } else {
+            console.log("aqui")
             query = {
                 attributes: [
                     'uuid', 'nombre', 'descripcion', 'responsable', 'telefono', 'extension',
