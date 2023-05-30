@@ -1,6 +1,6 @@
 import moment from 'moment'
 import * as bcrypt from 'bcrypt';
-import * as validator from 'validator';
+import validator from 'validator';
 import {Request, Response} from 'express'
 import {AdministratorQueries} from '../queries/administrator.query'
 import {ContribuyenteQueries} from '../queries/contribuyente.query'

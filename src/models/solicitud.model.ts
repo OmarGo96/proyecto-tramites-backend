@@ -18,9 +18,8 @@ export class SolicitudModel extends Model{
     public fecha_final!: string
     public fecha_rechazo!: string
     public motivo_rechazo!: string
-
     public comentario!: string;
-    public Servicio!: string;
+
 }
 
 // Initialize the class with the properties exactly as they are in the Database.

@@ -1,4 +1,4 @@
-import {Op, QueryTypes} from 'sequelize'
+import sequelize, {Op, QueryTypes} from 'sequelize'
 import {SolicitudModel} from '../models/solicitud.model'
 import {DocumentacionModel} from '../models/documentacion.model'
 import {ServicioModel} from '../models/servicio.model'
@@ -16,6 +16,7 @@ import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model
 import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
 import {PaseCajaModel} from "../models/pase_caja.model";
 import {LicenciaModel} from "../models/licencia.model";
+import {AreaModel} from "../models/area.model";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -131,6 +132,59 @@ export class SolicitudQueries {
                 }
             })
             return {ok: true, solicitud}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
+    public async findSolicitudByDateRange(data: any ) {
+        try {
+            let where = {};
+            if(data.auth) {
+                where = {
+                    [Op.and]: [
+                        sequelize.where(sequelize.fn('date', sequelize.col('fecha_alta')), {
+                            [Op.between]: [data.startDate, data.endDate]
+                        })
+                    ],
+                    estatus_solicitud_id: {
+                        [Op.notIn]: [13]
+                    }
+                }
+            } else {
+                where = {
+                    [Op.and]: [
+                        sequelize.where(sequelize.fn('date', sequelize.col('fecha_alta')), {
+                            [Op.between]: [data.startDate, data.endDate]
+                        })
+                    ],
+                    area_id: data.area_id,
+                    estatus_solicitud_id: {
+                        [Op.notIn]: [13]
+                    }
+                }
+            }
+            const solicitudes = await SolicitudModel.findAll({
+                order: [
+                    ['id', 'ASC']
+                ],
+                where,
+                include: [
+                    {
+                        model: ServicioModel, as: 'Servicio',
+                        include: [
+                            {
+                                model: AreaModel, as: 'Area'
+                            }
+                        ]
+                    },
+                    { model: EstatusSolicitudModel, as: 'Estatus'},
+                    { model: ContribuyenteModel, as: 'Contribuyente' },
+                    { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                ]
+            })
+            return {ok: true, solicitudes}
         } catch (e) {
             console.log(e)
             return {ok: false}

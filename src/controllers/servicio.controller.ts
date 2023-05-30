@@ -1,4 +1,4 @@
-import * as validator from 'validator';
+import validator from 'validator';
 import moment from 'moment';
 import {v4 as uuidv4} from 'uuid';
 import {Request, Response} from 'express';

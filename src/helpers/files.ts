@@ -117,7 +117,8 @@ export class File {
 
         try {
             return {ok: true, pdf: fs.readFileSync(path + name)}
-        } catch {
+        } catch (e) {
+            console.log(e)
             return {ok: false, message: 'Existen problemas al momento de obtener el pdf!'}
         }
 

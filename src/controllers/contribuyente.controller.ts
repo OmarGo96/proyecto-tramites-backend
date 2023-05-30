@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import * as validator from 'validator';
+import validator from 'validator';
 import moment from 'moment';
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';

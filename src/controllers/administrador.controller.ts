@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import * as validator from 'validator';
+import validator from 'validator';
 import moment from 'moment';
 import {Request, Response} from 'express';
 import {v4 as uuidv4} from 'uuid';
@@ -46,8 +46,10 @@ export class AdministradorController {
     public async index(req: Request, res: Response) {
         const adminInfo = req.body.adminInfo;
         const errors = [];
-        console.log(adminInfo)
-        const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: adminInfo.id, areas_id: adminInfo.AdministradorArea[0].areas_id});
+
+        const auth = (adminInfo.rol === Roles.SUPERADMIN)
+
+        const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: adminInfo.id, areas_id: adminInfo.AdministradorArea[0].areas_id, auth});
 
         if (getAdministradores.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener a los usuarios.'})
