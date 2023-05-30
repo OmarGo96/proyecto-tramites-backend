@@ -52,7 +52,7 @@ export class DocumentacionComplementariaController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento de documentacion complementaria',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -107,7 +107,7 @@ export class DocumentacionComplementariaController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento de documentacion complementaria',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -186,7 +186,7 @@ export class DocumentacionComplementariaController {
             administrador_id,
             navegador: req.headers['user-agent'],
             accion: 'El administrador cambio el estatus del documento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -251,7 +251,7 @@ export class DocumentacionComplementariaController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente eliminó documento al requisito complementario',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

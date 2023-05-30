@@ -154,7 +154,7 @@ export class ClaveController {
             contribuyente_id: contribuyenteId,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente activo adjunto una nueva clave catastral a su cuenta',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -213,7 +213,7 @@ export class ClaveController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente deslindo la clave catastral',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

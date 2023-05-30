@@ -96,7 +96,7 @@ export class ContribuyenteController {
             contribuyente_id: findContribuyenteByCodAct.contribuyente ? findContribuyenteByCodAct.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente activo su cuenta',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -261,7 +261,7 @@ export class ContribuyenteController {
             contribuyente_id: createContribuyente.contribuyente ? createContribuyente.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente se ha dado de alta en el sistema',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -359,7 +359,7 @@ export class ContribuyenteController {
             contribuyente_id: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente solicito restablecer su contraseña',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -433,7 +433,7 @@ export class ContribuyenteController {
             contribuyente_id: findContribuyenteByCambioPassword.contribuyente ? findContribuyenteByCambioPassword.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente cambio su contraseña',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -601,7 +601,7 @@ export class ContribuyenteController {
             contribuyente_id: findContribuyenteByUUID.contribuyente ? findContribuyenteByUUID.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente actualizo su información',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -663,7 +663,7 @@ export class ContribuyenteController {
             contribuyente_id: findContribuyenteByUUID.contribuyente ? findContribuyenteByUUID.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente se dio de baja en el sistema',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

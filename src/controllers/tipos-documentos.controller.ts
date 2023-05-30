@@ -109,7 +109,7 @@ export class TiposDocumentosController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha creado un nuevo tipo de documento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

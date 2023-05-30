@@ -152,7 +152,7 @@ export class DocumentacionController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a adjuntado un nuevo documento a su cuenta',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -247,7 +247,7 @@ export class DocumentacionController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente elimino un documento de su cuenta',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

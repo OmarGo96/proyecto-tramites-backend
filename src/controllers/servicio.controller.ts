@@ -337,7 +337,7 @@ export class ServicioController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha creado un nuevo servicio/trámite',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -459,7 +459,7 @@ export class ServicioController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha actualizado la información del servicio/trámite',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -518,7 +518,7 @@ export class ServicioController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha eliminado un servicio/trámite con index: ' + findServicioByUUID.servicio.id,
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -626,7 +626,7 @@ export class ServicioController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador a adjuntado un nuevo documento de solicitud al servicio',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

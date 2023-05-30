@@ -154,7 +154,7 @@ export class MensajeController {
             administrador_id: req.body.administrador_id,
             navegador: req.headers['user-agent'],
             accion: 'El administrador adjunto un nuevo mensaje con el index: ' + createMensaje.mensaje.id,
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

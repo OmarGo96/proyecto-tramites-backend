@@ -63,7 +63,7 @@ export class DocumentosSolicitudRequisitoController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -122,7 +122,7 @@ export class DocumentosSolicitudRequisitoController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -201,7 +201,7 @@ export class DocumentosSolicitudRequisitoController {
             administrador_id,
             navegador: req.headers['user-agent'],
             accion: 'El administrador cambio el estatus del documento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -268,7 +268,7 @@ export class DocumentosSolicitudRequisitoController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente eliminó documento al requisito',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

@@ -167,7 +167,7 @@ export class AreaController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha creado una nueva área',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -295,7 +295,7 @@ export class AreaController {
             administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha actualizado la información del área',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

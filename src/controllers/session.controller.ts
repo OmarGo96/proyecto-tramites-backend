@@ -85,7 +85,7 @@ export class SessionController {
             contribuyente_id: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a iniciado sesión',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -155,7 +155,7 @@ export class SessionController {
             administrador_id: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.id : false,
             navegador: req.headers['user-agent'],
             accion: 'El administrador a iniciado sesión',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

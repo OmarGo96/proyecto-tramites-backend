@@ -135,7 +135,7 @@ export class SolicitudController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a iniciado una solicitud',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

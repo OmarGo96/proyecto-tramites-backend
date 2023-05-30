@@ -177,7 +177,7 @@ export class LicenciaController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente adjunto una licencia a su cuenta',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -372,7 +372,7 @@ export class LicenciaController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente adjunto una licencia para su renovación',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

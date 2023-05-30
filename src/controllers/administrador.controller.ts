@@ -214,7 +214,7 @@ export class AdministradorController {
             administrador_id: administradorId,
             navegador: req.headers['user-agent'],
             accion: 'Se ha dado de alta al administrador',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -364,7 +364,7 @@ export class AdministradorController {
             administrador_id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false,
             navegador: req.headers['user-agent'],
             accion: 'Se ha modificado la informacion del usuario',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

@@ -60,7 +60,7 @@ export class DocumentacionPagoController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento de documentacion de pago',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -119,7 +119,7 @@ export class DocumentacionPagoController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente a agregado un documento al requerimiento de documentacion de pago',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -198,7 +198,7 @@ export class DocumentacionPagoController {
             administrador_id,
             navegador: req.headers['user-agent'],
             accion: 'El administrador cambio el estatus del documento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -263,7 +263,7 @@ export class DocumentacionPagoController {
             contribuyente_id,
             navegador: req.headers['user-agent'],
             accion: 'El contribuyente eliminó documento al requisito de pago',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

@@ -136,7 +136,7 @@ export class RequerimientoController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha creado un nuevo requisito',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -188,7 +188,7 @@ export class RequerimientoController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha actualizado la información del requerimiento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -246,7 +246,7 @@ export class RequerimientoController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha ' + actionString + ' un requerimiento',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -323,7 +323,7 @@ export class RequerimientoController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha asignado el requerimiento al tramite',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -376,7 +376,7 @@ export class RequerimientoController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha desasignado un requerimiento del servicio',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
@@ -450,7 +450,7 @@ export class RequerimientoController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha editado el requerimiento del tramite',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

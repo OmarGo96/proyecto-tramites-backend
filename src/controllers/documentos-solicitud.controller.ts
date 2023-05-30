@@ -130,7 +130,7 @@ export class DocumentosSolicitudController {
             administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador a adjuntado el documento digital a la solicitud',
-            ip: req.connection.remoteAddress,
+            ip: req.socket.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 
