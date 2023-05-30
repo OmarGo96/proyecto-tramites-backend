@@ -50,17 +50,15 @@ export class ReportController {
             // @ts-ignore
             let data = {
                 folioSolicitud: solicitud.folio,
-                contribuyente: solicitud.Contribuyente.nombre + ' ' + solicitud.Contribuyente.apellidos,
-                area: solicitud.Servicio['Area'].nombre,
-                servicio: solicitud.Servicio.nombre,
-                licencia: (solicitud.LicenciaFuncionamiento) ? solicitud.LicenciaFuncionamiento.licencia_funcionamiento_id : 'N/A',
-                estatus: solicitud.Estatus.nombre,
+                contribuyente: solicitud['Contribuyente'].nombre + ' ' + solicitud['Contribuyente'].apellidos,
+                area: solicitud['Servicio']['Area'].nombre,
+                servicio: solicitud['Servicio'].nombre,
+                licencia: (solicitud['LicenciaFuncionamiento']) ? solicitud['LicenciaFuncionamiento'].licencia_funcionamiento_id : 'N/A',
+                estatus: solicitud['Estatus'].nombre,
                 fecha_alta: (solicitud.fecha_alta) ? moment(solicitud.fecha_alta).format('DD/MM/YYYY') : '',
                 fecha_envio: (solicitud.fecha_envio) ? moment(solicitud.fecha_envio).format('DD/MM/YYYY') : '',
                 fecha_recepcion: (solicitud.fecha_recepcion) ? moment(solicitud.fecha_recepcion).format('DD/MM/YYYY') : '',
                 fecha_rechazo: (solicitud.fecha_rechazo) ? moment(solicitud.fecha_rechazo).format('DD/MM/YYYY') : 'N/A',
-
-
             }
             solicitudesData.push(data);
         }
@@ -119,17 +117,15 @@ export class ReportController {
             // @ts-ignore
             let data = {
                 folioSolicitud: solicitud.folio,
-                contribuyente: solicitud.Contribuyente.nombre + ' ' + solicitud.Contribuyente.apellidos,
-                area: solicitud.Servicio['Area'].nombre,
-                servicio: solicitud.Servicio.nombre,
-                licencia: (solicitud.LicenciaFuncionamiento) ? solicitud.LicenciaFuncionamiento.licencia_funcionamiento_id : 'N/A',
-                estatus: solicitud.Estatus.nombre,
+                contribuyente: solicitud['Contribuyente'].nombre + ' ' + solicitud['Contribuyente'].apellidos,
+                area: solicitud['Servicio']['Area'].nombre,
+                servicio: solicitud['Servicio'].nombre,
+                licencia: (solicitud['LicenciaFuncionamiento']) ? solicitud['LicenciaFuncionamiento'].licencia_funcionamiento_id : 'N/A',
+                estatus: solicitud['Estatus'].nombre,
                 fecha_alta: (solicitud.fecha_alta) ? moment(solicitud.fecha_alta).format('DD/MM/YYYY') : '',
                 fecha_envio: (solicitud.fecha_envio) ? moment(solicitud.fecha_envio).format('DD/MM/YYYY') : '',
                 fecha_recepcion: (solicitud.fecha_recepcion) ? moment(solicitud.fecha_recepcion).format('DD/MM/YYYY') : '',
                 fecha_rechazo: (solicitud.fecha_rechazo) ? moment(solicitud.fecha_rechazo).format('DD/MM/YYYY') : 'N/A',
-
-
             }
             solicitudesData.push(data);
         }
