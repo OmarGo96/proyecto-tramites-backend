@@ -144,7 +144,7 @@ export class SolicitudQueries {
             if(data.auth) {
                 where = {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('date', sequelize.col('fecha_alta')), {
+                        sequelize.where(sequelize.fn('date', sequelize.col('SolicitudModel.fecha_alta')), {
                             [Op.between]: [data.startDate, data.endDate]
                         })
                     ],
@@ -155,7 +155,7 @@ export class SolicitudQueries {
             } else {
                 where = {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('date', sequelize.col('fecha_alta')), {
+                        sequelize.where(sequelize.fn('date', sequelize.col('SolicitudModel.fecha_alta')), {
                             [Op.between]: [data.startDate, data.endDate]
                         })
                     ],
