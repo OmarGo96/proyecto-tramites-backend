@@ -13,9 +13,76 @@ export class ReportController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static logs: Log = new Log()
 
-
-
     public async solicitudesReportByDateRange (req: Request, res: Response) {
+        const adminInfo = req.body.adminInfo;
+        const auth = (adminInfo.rol === Roles.SUPERADMIN)
+
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
+
+        const getSolicitudes = await ReportController.solicitudQueries.findSolicitudByDateRange({
+            auth,
+            area_id: adminInfo.AdministradorArea[0].areas_id,
+            startDate: moment(startDate).format('YYYY-MM-DD'),
+            endDate:  moment(endDate).format('YYYY-MM-DD'),
+        })
+
+        if (!getSolicitudes.ok) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{message: 'Action not available, please try again later.'}]
+            })
+        }
+
+        if (getSolicitudes.solicitudes.length === 0) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{message: 'No se encontraron registros'}]
+            })
+        }
+
+        const solicitudesData = []
+
+        for (const solicitud of getSolicitudes.solicitudes) {
+
+
+
+            // @ts-ignore
+            let data = {
+                folioSolicitud: solicitud.folio,
+                contribuyente: solicitud.Contribuyente.nombre + ' ' + solicitud.Contribuyente.apellidos,
+                area: solicitud.Servicio['Area'].nombre,
+                servicio: solicitud.Servicio.nombre,
+                licencia: (solicitud.LicenciaFuncionamiento) ? solicitud.LicenciaFuncionamiento.licencia_funcionamiento_id : 'N/A',
+                estatus: solicitud.Estatus.nombre,
+                fecha_alta: (solicitud.fecha_alta) ? moment(solicitud.fecha_alta).format('DD/MM/YYYY') : '',
+                fecha_envio: (solicitud.fecha_envio) ? moment(solicitud.fecha_envio).format('DD/MM/YYYY') : '',
+                fecha_recepcion: (solicitud.fecha_recepcion) ? moment(solicitud.fecha_recepcion).format('DD/MM/YYYY') : '',
+                fecha_rechazo: (solicitud.fecha_rechazo) ? moment(solicitud.fecha_rechazo).format('DD/MM/YYYY') : 'N/A',
+
+
+            }
+            solicitudesData.push(data);
+        }
+
+        try {
+            return res.status(200).json({
+                ok: true,
+                message: 'Solicitudes',
+                solicitudes: solicitudesData
+            })
+        } catch (e) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'Problemas para generar el reporte de excel de las solicitudes.' }]
+            })
+        }
+
+
+    }
+
+
+    public async solicitudesReportByDateRangeExcel (req: Request, res: Response) {
         const adminInfo = req.body.adminInfo;
         const auth = (adminInfo.rol === Roles.SUPERADMIN)
 

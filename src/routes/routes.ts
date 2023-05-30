@@ -21,11 +21,13 @@ import {DocumentosSolicitudController} from "../controllers/documentos-solicitud
 import {DocumentosAnuenciaController} from "../controllers/documentos-anuencia.controller";
 import {DocumentacionComplementariaController} from "../controllers/documentacion-complementaria.controller";
 import {PaseCajaController} from "../controllers/pase-caja.controller";
+import {ReportController} from "../controllers/report.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { CheckRoles } from '../middlewares/roles'
 import { GetValue } from '../middlewares/get-values'
+
 
 
 
@@ -50,6 +52,7 @@ export class Routes {
     public documentosAnuenciaController: DocumentosAnuenciaController = new DocumentosAnuenciaController();
     public documentacionComplementariaController: DocumentacionComplementariaController = new DocumentacionComplementariaController();
     public paseCajaController: PaseCajaController = new PaseCajaController();
+    public reportController: ReportController = new ReportController();
     /*
 
     public testController: TestController = new TestController();
@@ -179,6 +182,12 @@ export class Routes {
         // Routes for solicitudes history
         app.route('/api/solicitud/history/:id').get(this.solicitudController.history);
         app.route('/api/solicitud/messages/:id').get(this.solicitudController.messages);
+
+        // Routes for reports
+        app.route('/api/reportes/generateByDateRange')
+            .post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.reportController.solicitudesReportByDateRange)
+        app.route('/api/reportes/generateByDateRange/excel')
+            .post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.reportController.solicitudesReportByDateRangeExcel)
 
         /* app.route('/api/example/mail/activation').get(this.exampleController.mailActivation);
         app.route('/api/example/mail/reset').get(this.exampleController.mailReset); */
