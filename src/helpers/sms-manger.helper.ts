@@ -6,7 +6,7 @@ export class SmsMangerHelper {
     // declaramos variables con credenciales
     private accountID: string = process.env.TWILIO_ACCOUNT_SID;
     private authToken: string = process.env.TWILIO_AUTH_TOKEN;
-    private messagingServiceSID = process.env.TWILIO_MESSAGINSERVICE_SID;
+    //private messagingServiceSID = process.env.TWILIO_MESSAGINSERVICE_SID;
 
     //endregion
 
@@ -20,7 +20,7 @@ export class SmsMangerHelper {
             const clientResponse = await client.messages.create({
                 to: contribuyenteNumber,
                 body: message,
-                messagingServiceSid: this.messagingServiceSID
+                from: '+13203810700'
             });
 
             return {ok: true, clientResponse}
