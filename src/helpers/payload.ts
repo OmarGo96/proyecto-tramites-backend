@@ -10,7 +10,7 @@ export class Payload {
             let privateKey: any
 
             if (process.env.MODE !== 'dev') {
-                privateKey = fs.readFileSync(process.env.PRIVATE_KEY || './src/keys/private.pem', 'utf8')
+                privateKey = fs.readFileSync(process.env.PRIVATE_KEY, 'utf8')
             } else {
                 privateKey = fs.readFileSync('./src/keys/private.pem', 'utf8')
             }
