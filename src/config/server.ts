@@ -2,15 +2,17 @@
 require('dotenv').config()
 // require('dotenv').config({ path: '/root/envs/proyecto-tramites-backend/.env' })
 import express, { Application } from 'express';
-import Relationship from './relationships';
-import { Routes } from "../routes/routes";
-import { Database } from './database';
-import bodyParser from 'body-parser';
+import https from 'https'
+import http from 'http'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import helmet from 'helmet'
 import fs from 'fs'
 import fileUpload from 'express-fileupload'
-import https from 'https';
-import http from 'http';
-import cors from 'cors';
+import useragent from 'express-useragent'
+import Relationship from './relationships'
+import { Routes } from '../routes/routes'
+import { Database } from './database'
 
 class App {
     public app: Application;
@@ -32,15 +34,17 @@ class App {
     private config(): void { // configuración inicial del servidor
         Relationship.init();
 
-        // CORS
-        this.app.use(cors());
+        this.app.use(cors())
 
+        this.app.use(useragent.express())
+        this.app.use(fileUpload())
+        this.app.use(helmet())
+        /** Denega el control de "X-Permitted-Cross-Domain-Policies" */
+        this.app.use(helmet.permittedCrossDomainPolicies())
         /** Establecemos nuestras "Referrer Policy" */
+        this.app.use(helmet.referrerPolicy({ policy: 'strict-origin' }))
         this.app.use(bodyParser.json({ limit: '50mb' }))
         this.app.use(bodyParser.urlencoded({ extended: false }))
-
-        // Aqui podemos meter más seguridad con Helmet
-        this.app.use(fileUpload());
     }
 
     private securityProtocol() {

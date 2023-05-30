@@ -1,4 +1,6 @@
 import server from './config/server';
-const PORT = process.env.LISTEN_PORT
+const port = process.env.LISTEN_PORT
+const version = process.version
 
-server.listen(PORT, () => console.log(`API is running. Port: ${PORT}`))
+/** Activamos el servidor */
+server.listen(port, () => console.log(`API is running. port: ${port}, Version node: ${version}`))
