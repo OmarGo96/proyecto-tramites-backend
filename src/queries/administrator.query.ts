@@ -9,7 +9,12 @@ export class AdministratorQueries {
             const administrator = await AdministratorModel.findOne({
                 where: {
                     usuario: data.usuario
-                }
+                },
+                include: [
+                    {
+                        model: AreaModel, as: 'Area',
+                    },
+                ]
             })
             return {ok: true, administrator}
         } catch (e) {
@@ -24,7 +29,16 @@ export class AdministratorQueries {
 
             if(data.auth === false) {
                 where = {
-                    areas_id: data.areas_id
+                    id: {
+                        [Op.ne]: data.id
+                    },
+                    area_id: data.area_id
+                }
+            }else {
+                where = {
+                    id: {
+                        [Op.ne]: data.id
+                    },
                 }
             }
 
@@ -36,26 +50,12 @@ export class AdministratorQueries {
                 order: [
                     ['nombre', 'ASC']
                 ],
-                where: {
-                    id: {
-                        [Op.ne]: data.id
-                    }
-                },
+                where,
                 include: [
                     {
-                        required: true,
-                        model: AdministratorAreaModel, as: 'AdministradorArea',
-                        where,
-                        include: [
-                            {
-                                required: true,
-                                attributes: [
-                                    'uuid'
-                                ],
-                                model: AreaModel, as: 'Area',
-                            },
-                        ]
-                    }
+
+                        model: AreaModel, as: 'Area',
+                    },
                 ]
             })
             return {ok: true, administrators}
@@ -73,16 +73,8 @@ export class AdministratorQueries {
                 },
                 include: [
                     {
-                        model: AdministratorAreaModel, as: 'AdministradorArea',
-                        include: [
-                            {
-                                attributes: [
-                                    'uuid'
-                                ],
-                                model: AreaModel, as: 'Area'
-                            },
-                        ]
-                    }
+                        model: AreaModel, as: 'Area'
+                    },
                 ]
             })
             return {ok: true, administrator}
@@ -109,6 +101,7 @@ export class AdministratorQueries {
     public async create(data: any) {
         try {
             const administrator = await AdministratorModel.create({
+                area_id: data.area_id,
                 rol: data.rol,
                 uuid: data.uuid,
                 nombre: data.nombre,
@@ -128,6 +121,7 @@ export class AdministratorQueries {
     public async update(data: any) {
         try {
             const administrator = await AdministratorModel.update({
+                area_id: data.area_id,
                 nombre: data.nombre,
                 apellidos: data.apellidos,
                 rol: data.rol,

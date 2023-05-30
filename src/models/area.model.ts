@@ -6,7 +6,6 @@ export class AreaModel extends Model{
     // Note the ! at the end of each property
     //example:
     public id!: number;
-    public administradoresId!: number;
     public uuid!: string;
     public nombre!: string;
     public descripcion!: string;
@@ -29,9 +28,6 @@ AreaModel.init({
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
-    },
-    administradores_id: {
-        type: DataTypes.INTEGER
     },
     uuid: {
         type: DataTypes.STRING

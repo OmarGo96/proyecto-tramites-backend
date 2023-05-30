@@ -540,9 +540,9 @@ export class SolicitudController {
             fecha_envio: (estatus === "2") ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_envio,
             fecha_recepcion: (estatus === '3' || estatus === '12') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_recepcion,
             fecha_final: (estatus === '18') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_final,
-            fecha_rechazo: (estatus === '5' || estatus === '6' || estatus === '7') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_rechazo,
-            motivo_rechazo: (estatus === '5' || estatus === '6' || estatus === '7') ? motivoRechazo : null,
-            comentario: (comentario) ? comentario : null
+            fecha_rechazo: (estatus === '7') ? moment().format('YYYY-MM-DD HH:mm:ss') : findSolicitudById.solicitud.fecha_rechazo,
+            motivo_rechazo: (estatus === '7') ? motivoRechazo : null,
+            comentario: (comentario) ? comentario : findSolicitudById.solicitud.comentario
         })
 
         if (!changeStatus.ok) {
@@ -562,7 +562,7 @@ export class SolicitudController {
                 contribuyente_id: contribuyenteId,
                 navegador: req.headers['user-agent'],
                 accion: 'El contribuyente a enviado la solicitud',
-                ip: req.connection.remoteAddress,
+                ip: req.socket.remoteAddress,
                 fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
             })
         } else if (estatus !== '2' && contribuyenteId == null) {
@@ -570,7 +570,7 @@ export class SolicitudController {
                 administrador_id: req.body.administrador_id || null,
                 navegador: req.headers['user-agent'],
                 accion: 'El administrador cambio el estatus de la solicitud a ' + estatus,
-                ip: req.connection.remoteAddress,
+                ip: req.socket.remoteAddress,
                 fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
             })
         }
@@ -685,39 +685,6 @@ export class SolicitudController {
                 errors
             })
         }
-
-        /*totalSolicitudes.forEach((solicitud: any) => {
-            const data = {
-                // Solicitud
-                id: solicitud.id,
-                folio: solicitud.folio,
-                comentario: solicitud.comentario,
-                referencia: solicitud.referencia,
-                fecha_alta: moment(solicitud.fecha_alta).format('YYYY-MM-DD HH:mm:ss'),
-                fecha_envio: (solicitud.fecha_envio != null) ? moment(solicitud.fecha_envio).format('YYYY-MM-DD HH:mm:ss') : null,
-                fecha_recepcion: (solicitud.fecha_recepcion != null) ? moment(solicitud.fecha_recepcion).format('YYYY-MM-DD HH:mm:ss') : null,
-                fecha_final: (solicitud.fecha_final != null) ? moment(solicitud.fecha_final).format('YYYY-MM-DD HH:mm:ss') : null,
-                fecha_rechazo: (solicitud.fecha_rechazo != null) ? moment(solicitud.fecha_rechazo).format('YYYY-MM-DD HH:mm:ss') : null,
-                motivo_rechazo: solicitud.motivo_rechazo,
-                // Servicio
-                servicio: solicitud.Servicio.nombre,
-                // Estatus del servicio
-                estatus_del_servicio: solicitud.Servicio.EstatusServicioModels,
-                // Contribuyente
-                contribuyente: {
-                    nombre: solicitud.Contribuyente.nombre,
-                    apellido: solicitud.Contribuyente.apellido,
-                    email: solicitud.Contribuyente.email,
-                    telefono: solicitud.Contribuyente.telefono,
-                    telefono_referencia: solicitud.Contribuyente.telefono_referencia,
-                },
-                estatus: solicitud.Estatus.nombre,
-                color: solicitud.Estatus.color,
-                documentacion: solicitud.DocumentacionModels,
-                mensajes: solicitud.MensajeModels,
-            }
-            solicitudes.push(data)
-        })*/
 
         return res.status(200).json({
             ok: true,

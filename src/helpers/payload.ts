@@ -24,7 +24,7 @@ export class Payload {
                 const token = jwt.sign({
                     contribuyenteId,
                     userType,
-                }, privateKey, {algorithm: 'RS256', expiresIn: '9h'})
+                }, privateKey, {algorithm: 'RS256', expiresIn: '9h', allowInsecureKeySizes: true})
 
                 return {ok: true, token}
             }
@@ -38,7 +38,7 @@ export class Payload {
                     administradorId,
                     rol,
                     userType,
-                }, privateKey, {algorithm: 'RS256', expiresIn: '9h'})
+                }, privateKey, {algorithm: 'RS256', expiresIn: '9h', allowInsecureKeySizes: true})
 
                 return {ok: true, token}
             }

@@ -49,7 +49,7 @@ export class AdministradorController {
 
         const auth = (adminInfo.rol === Roles.SUPERADMIN)
 
-        const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: adminInfo.id, areas_id: adminInfo.AdministradorArea[0].areas_id, auth});
+        const getAdministradores = await AdministradorController.administradorQueries.getAdministrators({id: adminInfo.id, area_id: adminInfo.area_id, auth});
 
         if (getAdministradores.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener a los usuarios.'})
@@ -74,13 +74,12 @@ export class AdministradorController {
         const errors = [];
         const areas: any = [];
 
-        const rol: number = body.rol == null || validator.isEmpty(body.rol + '') ?
-            errors.push({message: 'Favor de proporcionar el rol'}) : Number(body.rol)
+        const rol: number = body.role == null || validator.isEmpty(body.role + '') ?
+            errors.push({message: 'Favor de proporcionar el rol'}) : Number(body.role)
 
-        const areaUuid: string = body.area_uuid == null ?
-            null : body.area_uuid
+        const areaUuid: string = body.area_uuid == null || validator.isEmpty(body.area_uuid + '') ?
+            errors.push({message: 'Favor de proporcionar el area/dependencia'}) : body.area_uuid
 
-        /*areas = (body.areas == null) ? null : body.areas*/
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) ?
             errors.push({message: 'Favor de proporcionar su nombre'}) : body.nombre
@@ -142,45 +141,19 @@ export class AdministradorController {
             })
         }
 
-        let singleFindAreaByUUID: any;
-        let multiFindAreaByUUID: any;
-        const areasBuscadas: any = [];
-        if (areaUuid != null) {
-            /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
-            singleFindAreaByUUID = await AdministradorController.areaQueries.findAreaByUUID({uuid: areaUuid});
+        const singleFindAreaByUUID = await AdministradorController.areaQueries.findAreaByUUID({uuid: areaUuid});
 
-            if (singleFindAreaByUUID.ok === false) {
-                errors.push({message: 'Existen problemas al momento de validar el área proporcionada.'})
-            } else if (singleFindAreaByUUID.area == null) {
-                errors.push({message: 'El área proporcionada no existe.'})
-            }
-
-            if (errors.length > 0) {
-                return res.status(400).json({
-                    ok: false,
-                    errors
-                })
-            }
+        if (singleFindAreaByUUID.ok === false) {
+            errors.push({message: 'Existen problemas al momento de validar el área proporcionada.'})
+        } else if (singleFindAreaByUUID.area == null) {
+            errors.push({message: 'El área proporcionada no existe.'})
         }
 
-        if (areas.length > 0) {
-            for (const area of areas) {
-                multiFindAreaByUUID = await AdministradorController.areaQueries.findAreaByUUID({uuid: area.uuid})
-
-                if (multiFindAreaByUUID.ok === false) {
-                    errors.push({message: 'Existen problemas al momento de validar el área proporcionada.'})
-                } else if (multiFindAreaByUUID.area == null) {
-                    errors.push({message: 'El área proporcionada no existe.'})
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-                areasBuscadas.push(multiFindAreaByUUID.area)
-            }
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
         }
 
         const findAdministradorByUsuario = await AdministradorController.administradorQueries.findAdministradorByUsuario({usuario});
@@ -201,6 +174,7 @@ export class AdministradorController {
         /** Damos de alta al contribuyente en la base de datos */
         const createAdministrador = await AdministradorController.administradorQueries.create({
             uuid: uuidv4(),
+            area_id: singleFindAreaByUUID.area.id,
             rol,
             nombre,
             apellidos,
@@ -220,44 +194,20 @@ export class AdministradorController {
             })
         }
 
-        let createAdministradorArea: any
+        const createAdministradorArea = await AdministradorController.administradorAreaQueries.create({
+            administrador_id: createAdministrador.administrator ? createAdministrador.administrator.id : false,
+            area_id: singleFindAreaByUUID.area.id
+        })
 
-        if (areaUuid != null) {
-            createAdministradorArea = await AdministradorController.administradorAreaQueries.create({
-                administrador_id: createAdministrador.administrator ? createAdministrador.administrator.id : false,
-                area_id: singleFindAreaByUUID.area.id
-            })
-
-            if (createAdministradorArea.ok === false) {
-                errors.push({message: 'Existen problemas al momento de dar de alta su cuenta, intente más tarde'})
-            }
-
-            if (errors.length > 0) {
-                return res.status(400).json({
-                    ok: false,
-                    errors
-                })
-            }
+        if (createAdministradorArea.ok === false) {
+            errors.push({message: 'Existen problemas al momento de dar de alta su cuenta, intente más tarde'})
         }
 
-        if (areasBuscadas.length > 0) {
-            for (const area of areasBuscadas) {
-                createAdministradorArea = await AdministradorController.administradorAreaQueries.create({
-                    administrador_id: createAdministrador.administrator ? createAdministrador.administrator.id : false,
-                    area_id: area.id
-                })
-
-                if (createAdministradorArea.ok === false) {
-                    errors.push({message: 'Existen problemas al momento de dar de alta su cuenta, intente más tarde'})
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-            }
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
         }
 
         const createLogAdministrador = await AdministradorController.log.administrador({
@@ -277,10 +227,14 @@ export class AdministradorController {
     public async update(req: Request, res: Response) {
         const body = req.body;
         const errors = [];
+        const auth = (req.body.rol === Roles.SUPERADMIN);
 
         const administradorUuid = req.params.administrador_uuid == null ? null : validator.isEmpty(req.params.administrador_uuid) ?
             errors.push({message: 'Favor de proporcionar al administrador'}) :
             req.params.administrador_uuid
+
+        const areaUuid: string = body.area_uuid == null || validator.isEmpty(body.area_uuid + '') ?
+            errors.push({message: 'Favor de proporcionar el area/dependencia'}) : body.area_uuid
 
         const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) === true ?
             errors.push({message: 'Favor de proporcionar su nombre'}) : body.nombre
@@ -288,8 +242,8 @@ export class AdministradorController {
         const apellidos: string = body.apellidos == null || validator.isEmpty(body.apellidos) === true ?
             errors.push({message: 'Favor de proporcionar su(s) apellidos.'}) : body.apellidos
 
-        const rol: number = body.rol == null || validator.isEmpty(body.rol + '') === true ?
-            errors.push({message: 'Favor de proporcionar su rol.'}) : Number(body.rol)
+        const rol: number = body.role == null || validator.isEmpty(body.role + '') === true ?
+            errors.push({message: 'Favor de proporcionar su rol.'}) : Number(body.role)
 
         const usuario: string = body.usuario == null || validator.isEmpty(body.usuario) === true ?
             errors.push({message: 'Favor de proporcionar el usuario.'}) : body.usuario
@@ -337,6 +291,21 @@ export class AdministradorController {
             })
         }
 
+        const singleFindAreaByUUID = await AdministradorController.areaQueries.findAreaByUUID({uuid: areaUuid});
+
+        if (singleFindAreaByUUID.ok === false) {
+            errors.push({message: 'Existen problemas al momento de validar el área proporcionada.'})
+        } else if (singleFindAreaByUUID.area == null) {
+            errors.push({message: 'El área proporcionada no existe.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
         const findAdministradorByUUID = await AdministradorController.administradorQueries.findAdministradorByUUID({
             uuid: administradorUuid
         })
@@ -354,7 +323,24 @@ export class AdministradorController {
             })
         }
 
+        const updateAdministradorAreas = await AdministradorController.administradorAreaQueries.update({
+            area_id: singleFindAreaByUUID.area.id,
+            administrador_id: findAdministradorByUUID.administrator.id,
+        })
+
+        if (updateAdministradorAreas.ok === false) {
+            errors.push({message: 'Existen problemas al momento de actualizar la información del usuario.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
         const updateAdministrador = await AdministradorController.administradorQueries.update({
+            area_id: singleFindAreaByUUID.area.id,
             nombre,
             apellidos,
             rol,
@@ -364,7 +350,7 @@ export class AdministradorController {
         })
 
         if (updateAdministrador.ok === false) {
-            errors.push({message: 'Existen problemas al momento de actualizar la información del administrador.'})
+            errors.push({message: 'Existen problemas al momento de actualizar la información del usuario.'})
         }
 
         if (errors.length > 0) {
@@ -377,7 +363,7 @@ export class AdministradorController {
         const createLogAdministrador = await AdministradorController.log.administrador({
             administrador_id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false,
             navegador: req.headers['user-agent'],
-            accion: 'Se ha modificado la informacion del administrador',
+            accion: 'Se ha modificado la informacion del usuario',
             ip: req.connection.remoteAddress,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })

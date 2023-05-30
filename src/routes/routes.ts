@@ -78,12 +78,13 @@ export class Routes {
         app.route('/api/info_administrador').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.show)
         app.route('/api/administradores/:administrador_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.update)
         // Routes for areas methods
-        app.route('/api/areas').get(CheckHeaders.validateJWTByTypeUser, this.areaController.index)
+        app.route('/api/contribuyente/areas').get(CheckHeaders.validateJWTContribuyente, this.areaController.index)
+        app.route('/api/areas').get(CheckHeaders.validateJWTAdministrador, GetValue.administrador, this.areaController.index)
         app.route('/api/area/:uuid').get(CheckHeaders.validateJWTByTypeUser,this.areaController.show)
         app.route('/api/areas').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.areaController.store)
         app.route('/api/areas/:area_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.areaController.update)
         // Routes for servicios methods
-        app.route('/api/servicios/:area_uuid').get(CheckHeaders.contentAuthorization, CheckHeaders.contentAuthorization, this.servicioController.index)
+        app.route('/api/servicios/:area_uuid').get(CheckHeaders.contentAuthorization, this.servicioController.index)
         app.route('/api/servicio/:uuid').get(this.servicioController.show)
         app.route('/api/servicio/delete/:uuid').delete(CheckHeaders.validateJWTAdministrador, this.servicioController.delete)
         app.route('/api/servicios').get(this.servicioController.getAll);
@@ -110,7 +111,7 @@ export class Routes {
         app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pasecaja)
         app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkpago)
         app.route('/api/solicitud/respuesta_intento_pago/:referencia').post(this.solicitudController.respuestaIntentoPago)
-        app.route('/api/cambiar_solicitud_estatus').post(CheckHeaders.validateJWTByTypeUser, this.solicitudController.changeStatus);
+        app.route('/api/cambiar_solicitud_estatus').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
         app.route('/api/todas_solicitudes').post(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.findOneAdmin)
         app.route('/api/solicitud/get-documents-zip/:id').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.downloadDocumentsZip)
@@ -185,9 +186,9 @@ export class Routes {
 
         // Routes for reports
         app.route('/api/reportes/generateByDateRange')
-            .post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.reportController.solicitudesReportByDateRange)
+            .post(CheckHeaders.validateJWTAdministrador, GetValue.administrador, this.reportController.solicitudesReportByDateRange)
         app.route('/api/reportes/generateByDateRange/excel')
-            .post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.reportController.solicitudesReportByDateRangeExcel)
+            .post(CheckHeaders.validateJWTAdministrador, GetValue.administrador, this.reportController.solicitudesReportByDateRangeExcel)
 
         /* app.route('/api/example/mail/activation').get(this.exampleController.mailActivation);
         app.route('/api/example/mail/reset').get(this.exampleController.mailReset); */

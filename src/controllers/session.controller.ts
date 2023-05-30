@@ -162,6 +162,8 @@ export class SessionController {
         return res.status(200).json({
             ok: true,
             token: result ? result.token : false,
+            name: findAdministradorByUsuario.administrator.nombre + ' ' + findAdministradorByUsuario.administrator.apellidos,
+            dependencia: (findAdministradorByUsuario.administrator['Area']) ? findAdministradorByUsuario.administrator['Area'].nombre : 'Todas las direcciones',
             rol: findAdministradorByUsuario.administrator ? findAdministradorByUsuario.administrator.rol : false,
             message: "Inicio de sesión"
         })

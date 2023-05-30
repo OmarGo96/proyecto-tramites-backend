@@ -34,6 +34,22 @@ export class AdministradorAreaQueries {
         }
     }
 
+    public async update(data: any) {
+        try {
+            const administratorArea = await AdministratorAreaModel.update({
+                areas_id: data.area_id
+            },{
+                where: {
+                    administradores_id: data.administrador_id,
+                }
+            })
+            return {ok: true, administratorArea}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async inactive(data: any) {
         try {
             const administratorArea = await AdministratorAreaModel.update({

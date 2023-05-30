@@ -2,13 +2,22 @@ import {Op, where} from 'sequelize'
 import {AreaModel} from '../models/area.model'
 import {AdministratorAreaModel} from "../models/administrator_area.model";
 import {ServicioModel} from "../models/servicio.model";
+import {AdministratorModel} from "../models/administrator.model";
+import {Roles} from "../enums/roles";
 
 export class AreaQueries {
     public async getAreas(data: any) {
 
         let query: any
-        console.log(data.auth)
         if (data.auth === true) {
+            let where = {}
+            let required = false;
+            if (data.adminInfo.rol === Roles.ADMINISTRADOR || data.adminInfo.rol === Roles.REVISOR ) {
+                required = true;
+                where = {
+                    area_id: data.adminInfo.area_id
+                }
+            }
             query = {
                 attributes: [
                     'uuid', 'nombre', 'descripcion', 'responsable', 'telefono', 'extension',
@@ -22,16 +31,13 @@ export class AreaQueries {
                         model: ServicioModel, as: 'Servicio',
                     },
                     {
-                        model: AdministratorAreaModel, as: 'AdministradorArea',
-                        where: {
-                            administradores_id: data.administrador_id
-                        },
-                        required: true
+                        required,
+                        model: AdministratorModel, as: 'Administrador',
+                        where
                     }
                 ]
             }
         } else {
-            console.log("aqui")
             query = {
                 attributes: [
                     'uuid', 'nombre', 'descripcion', 'responsable', 'telefono', 'extension',
@@ -84,7 +90,6 @@ export class AreaQueries {
     public async create(data: any) {
         try {
             const area = await AreaModel.create({
-                administradores_id: data.administratorId,
                 uuid: data.uuid,
                 nombre: data.nombre,
                 descripcion: data.descripcion,

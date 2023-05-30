@@ -12,10 +12,10 @@ export class GetValue {
     static async solicitud(req: Request, res: Response, next: NextFunction) {
         const errors = []
 
-        let solicitud_id: number = req.params.solicitud_id == null || (!req.params.solicitud_id)
-            || !Number.isInteger(+req.params.solicitud_id) ?
+        let solicitud_id: number = req.body.solicitud_id == null || (!req.body.solicitud_id)
+            || !Number.isInteger(+req.body.solicitud_id) ?
             errors.push({ message: 'Favor de proporcionar la solicitud' }) :
-            +req.params.solicitud_id
+            +req.body.solicitud_id
 
         if(errors.length > 0){
             return res.status(JsonResponse.BAD_REQUEST).json({

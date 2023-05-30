@@ -171,14 +171,8 @@ export class SolicitudQueries {
                 ],
                 where,
                 include: [
-                    {
-                        model: ServicioModel, as: 'Servicio',
-                        include: [
-                            {
-                                model: AreaModel, as: 'Area'
-                            }
-                        ]
-                    },
+                    { model: ServicioModel, as: 'Servicio' },
+                    { model: AreaModel, as: 'Area' },
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },

@@ -41,10 +41,10 @@ export class AreaController {
     }
 
     public async index(req: Request, res: Response) {
-        const auth = (req.body.rol === Roles.SUPERADMIN || req.body.rol === Roles.ADMINISTRADOR);
-        const administrador_id = req.body.administrador_id
+        const auth = (req.body.rol === Roles.SUPERADMIN || req.body.rol === Roles.ADMINISTRADOR || req.body.rol === Roles.REVISOR);
+        const adminInfo = req.body.adminInfo
         const errors = []
-        const getAreas = await AreaController.areaQueries.getAreas({auth, administrador_id})
+        const getAreas = await AreaController.areaQueries.getAreas({auth,  adminInfo})
 
         if (getAreas.ok === false) {
             errors.push({message: 'Existen problemas al momento de obtener las áreas.'})

@@ -40,6 +40,11 @@ export default class Relationship {
         AdministratorModel.hasMany(AdministratorAreaModel, {foreignKey: 'administradores_id', as: 'AdministradorArea'})
         AreaModel.hasMany(AdministratorAreaModel, {foreignKey: 'areas_id', as: 'AdministradorArea'})
 
+
+        AdministratorModel.belongsTo(AreaModel, {foreignKey: 'area_id', as: 'Area'})
+        AreaModel.hasOne(AdministratorModel, {foreignKey: 'area_id', as: 'Administrador'})
+
+
         /*BitacoraSolicitudModel.belongsTo(SolicitudModel, { foreignKey: 'solicitud_id', as: 'Solicitud' })
         DocumentacionModel.belongsTo(SolicitudModel, { foreignKey: 'solicitud_id', as: 'Solicitud' })
         DocumentacionModel.belongsTo(RequisitoModel, { foreignKey: 'requisito_id', as: 'Requisito' })*/
@@ -77,6 +82,7 @@ export default class Relationship {
 
 
         SolicitudModel.belongsTo(ContribuyenteModel, { foreignKey: 'contribuyente_id', as: 'Contribuyente' })
+        SolicitudModel.belongsTo(AreaModel, { foreignKey: 'area_id', as: 'Area' })
         SolicitudModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
         SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
         SolicitudModel.hasMany(DocumentacionPagoModel, {foreignKey:'solicitud_id', as: 'DocumentosPago'})
