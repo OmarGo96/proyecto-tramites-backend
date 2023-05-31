@@ -42,6 +42,7 @@ export class ReportController {
         for (const solicitud of getSolicitudes.solicitudes) {
 
             let data = {
+                id: solicitud.id,
                 folioSolicitud: solicitud.folio,
                 contribuyente: solicitud['Contribuyente'].nombre + ' ' + solicitud['Contribuyente'].apellidos,
                 area: solicitud['Area'].nombre,
@@ -82,7 +83,7 @@ export class ReportController {
 
         const getSolicitudes = await ReportController.solicitudQueries.findSolicitudByDateRange({
             auth,
-            area_id: adminInfo.AdministradorArea[0].areas_id,
+            area_id:  adminInfo.area_id,
             startDate: moment(startDate).format('YYYY-MM-DD'),
             endDate:  moment(endDate).format('YYYY-MM-DD'),
         })

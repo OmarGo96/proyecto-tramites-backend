@@ -176,31 +176,44 @@ export class SolicitudController {
             })
         }
 
-        /* let solicitudes: any[];
-         solicitudes = [];
+        const solicitudesData = []
 
-         findSolicitudesByContribuyente.solicitudes.forEach(solicitud => {
-             const data = {
-                 id: solicitud.id,
-                 comentario: solicitud.comentario,
-                 referencia: solicitud.referencia,
-                 servicio: solicitud.Servicio.nombre,
-                 fecha_alta: moment(solicitud.fecha_alta).format('YYYY-MM-DD HH:mm:ss'),
-                 fecha_envio: (solicitud.fecha_envio != null) ? moment(solicitud.fecha_envio).format('YYYY-MM-DD HH:mm:ss') : null,
-                 fecha_recepcion: (solicitud.fecha_recepcion != null) ? moment(solicitud.fecha_recepcion).format('YYYY-MM-DD HH:mm:ss') : null,
-                 fecha_final: (solicitud.fecha_final != null) ? moment(solicitud.fecha_final).format('YYYY-MM-DD HH:mm:ss') : null,
-                 fecha_rechazo: (solicitud.fecha_rechazo != null) ? moment(solicitud.fecha_rechazo).format('YYYY-MM-DD HH:mm:ss') : null,
-                 estatus: solicitud.Estatus.nombre,
-                 color: solicitud.Estatus.color,
-                 documentacion: solicitud.DocumentacionModels,
-                 mensajes: solicitud.MensajeModels
-             }
-             solicitudes.push(data)
-         })*/
+        for (const solicitud of findSolicitudesByContribuyente.solicitudes) {
+
+            let data = {
+                id: solicitud.id,
+                folio: solicitud.folio,
+                contribuyente_id: solicitud.contribuyente_id,
+                contribuyente: solicitud['Contribuyente'].nombre + ' ' + solicitud['Contribuyente'].apellidos,
+                area_id: solicitud.area_id,
+                area: solicitud['Area'].nombre,
+                servicio_id: solicitud.servicio_id,
+                servicio: solicitud['Servicio'].nombre,
+                licencia_id: solicitud.licencia_id,
+                licencia: (solicitud['LicenciaFuncionamiento']) ? solicitud['LicenciaFuncionamiento'].licencia_funcionamiento_id : 'N/A',
+                estatus_solicitud_id: solicitud.estatus_solicitud_id,
+                estatus: solicitud['Estatus'].nombre,
+                fecha_alta: (solicitud.fecha_alta) ? moment(solicitud.fecha_alta).format('DD/MM/YYYY HH:mm:ss') : '',
+                fecha_envio: (solicitud.fecha_envio) ? moment(solicitud.fecha_envio).format('DD/MM/YYYY HH:mm:ss') : '',
+                fecha_recepcion: (solicitud.fecha_recepcion) ? moment(solicitud.fecha_recepcion).format('DD/MM/YYYY HH:mm:ss') : '',
+                fecha_rechazo: (solicitud.fecha_rechazo) ? moment(solicitud.fecha_rechazo).format('DD/MM/YYYY HH:mm:ss') : '',
+                motivo_rechazo: solicitud.motivo_rechazo,
+                comentario: solicitud.comentario,
+                DocumentosSolicitudRequisito: solicitud['DocumentosSolicitudRequisito'],
+                Servicio: solicitud['Servicio'],
+                Area: solicitud['Area'],
+                Estatus: solicitud['Estatus'],
+                Contribuyente: solicitud['Contribuyente'],
+                LicenciaFuncionamiento: solicitud['LicenciaFuncionamiento']
+
+
+            }
+            solicitudesData.push(data);
+        }
 
         return res.status(200).json({
             ok: true,
-            solicitudes: findSolicitudesByContribuyente.solicitudes
+            solicitudes: solicitudesData
         })
     }
 
@@ -660,8 +673,8 @@ export class SolicitudController {
             errors.push({message: 'Actualmente este perfil no cuenta con areas adjuntas'})
         }
 
-        const totalSolicitudes: any = []
-        const solicitudes: any = []
+        const solicitudesData = []
+
         for (const value of areas) {
             const findAllSolicitudes = await SolicitudController.solicitudQueries.findAllSolicitudes({
                 // @ts-ignore
@@ -669,15 +682,45 @@ export class SolicitudController {
                 estatus
             })
 
-            // tslint:disable-next-line:no-shadowed-variable
-            const solicitudes = findAllSolicitudes.solicitudes || [''];
-
             if (!findAllSolicitudes.ok) {
                 errors.push({message: 'Existen problemas al momento de obtener sus solicitudes.'})
             }
 
-            totalSolicitudes.push(...solicitudes)
+
+            for (const solicitud of findAllSolicitudes.solicitudes) {
+
+                let data = {
+                    id: solicitud.id,
+                    folio: solicitud.folio,
+                    contribuyente_id: solicitud.contribuyente_id,
+                    contribuyente: solicitud['Contribuyente'].nombre + ' ' + solicitud['Contribuyente'].apellidos,
+                    area_id: solicitud.area_id,
+                    area: solicitud['Area'].nombre,
+                    servicio_id: solicitud.servicio_id,
+                    servicio: solicitud['Servicio'].nombre,
+                    licencia_id: solicitud.licencia_id,
+                    licencia: (solicitud['LicenciaFuncionamiento']) ? solicitud['LicenciaFuncionamiento'].licencia_funcionamiento_id : 'N/A',
+                    estatus_solicitud_id: solicitud.estatus_solicitud_id,
+                    estatus: solicitud['Estatus'].nombre,
+                    fecha_alta: (solicitud.fecha_alta) ? moment(solicitud.fecha_alta).format('DD/MM/YYYY HH:mm:ss') : '',
+                    fecha_envio: (solicitud.fecha_envio) ? moment(solicitud.fecha_envio).format('DD/MM/YYY HH:mm:ss') : '',
+                    fecha_recepcion: (solicitud.fecha_recepcion) ? moment(solicitud.fecha_recepcion).format('DD/MM/YYY HH:mm:ss') : '',
+                    fecha_rechazo: (solicitud.fecha_rechazo) ? moment(solicitud.fecha_rechazo).format('DD/MM/YYY HH:mm:ss') : '',
+                    motivo_rechazo: solicitud.motivo_rechazo,
+                    comentario: solicitud.comentario,
+                    DocumentosSolicitudRequisito: solicitud['DocumentosSolicitudRequisito'],
+                    Servicio: solicitud['Servicio'],
+                    Area: solicitud['Area'],
+                    Estatus: solicitud['Estatus'],
+                    Contribuyente: solicitud['Contribuyente'],
+                    LicenciaFuncionamiento: solicitud['LicenciaFuncionamiento']
+
+
+                }
+                solicitudesData.push(data);
+            }
         }
+
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -688,7 +731,7 @@ export class SolicitudController {
 
         return res.status(200).json({
             ok: true,
-            solicitudes: totalSolicitudes
+            solicitudes: solicitudesData
         })
 
 

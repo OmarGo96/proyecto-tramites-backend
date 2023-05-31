@@ -38,8 +38,11 @@ export class SolicitudQueries {
                         ]
                     },
                     {model: MensajeModel},
-                    {model: ServicioModel, as: 'Servicio'},
-                    {model: EstatusSolicitudModel, as: 'Estatus'},
+                    { model: ServicioModel, as: 'Servicio' },
+                    { model: AreaModel, as: 'Area' },
+                    { model: EstatusSolicitudModel, as: 'Estatus'},
+                    { model: ContribuyenteModel, as: 'Contribuyente' },
+                    { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
                 ]
             })
             return {ok: true, solicitudes}
@@ -66,9 +69,11 @@ export class SolicitudQueries {
                             {model: DocumentacionModel, as: 'Documentacion'}
                         ]
                     },
-                    {model: MensajeModel},
-                    {model: ServicioModel, as: 'Servicio'},
-                    {model: EstatusSolicitudModel, as: 'Estatus'},
+                    { model: ServicioModel, as: 'Servicio' },
+                    { model: AreaModel, as: 'Area' },
+                    { model: EstatusSolicitudModel, as: 'Estatus'},
+                    { model: ContribuyenteModel, as: 'Contribuyente' },
+                    { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
                 ]
             })
             return {ok: true, solicitudes}
@@ -93,15 +98,12 @@ export class SolicitudQueries {
 
                 },
                 include: [
-                    {model: ServicioModel, as: 'Servicio'},
-                    {model: EstatusSolicitudModel, as: 'Estatus'},
-                ]
-                /*include: [
-                    { model: MensajeModel },
                     { model: ServicioModel, as: 'Servicio' },
+                    { model: AreaModel, as: 'Area' },
+                    { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
-                    { model: EstatusSolicitudModel, as: 'Estatus' },
-                ]*/
+                    { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                ]
             })
             return {ok: true, solicitudes}
         } catch (e) {

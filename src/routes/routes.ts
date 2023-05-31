@@ -112,12 +112,14 @@ export class Routes {
         app.route('/api/solicitud/:id').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.findOne)
         app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pasecaja)
         app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkpago)
+
         app.route('/api/solicitud/respuesta_intento_pago/:referencia').post(this.solicitudController.respuestaIntentoPago)
-        app.route('/api/cambiar_solicitud_estatus').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
+        app.route('/api/cambiar_solicitud_estatus/:solicitud_id').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
+
         app.route('/api/todas_solicitudes').post(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.findOneAdmin)
         app.route('/api/solicitud/get-documents-zip/:id').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.downloadDocumentsZip)
-        app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.estatusesController.index)
+        // app.route('/api/estatuses/:id').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.estatusesController.index)
         app.route('/api/estatusesById/:servicio_id/:estatus_id').get(CheckHeaders.validateJWTAdministrador, this.estatusesController.indexByEstatusId)
         app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
         app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
