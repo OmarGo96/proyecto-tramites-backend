@@ -22,6 +22,7 @@ import {DocumentosAnuenciaController} from "../controllers/documentos-anuencia.c
 import {DocumentacionComplementariaController} from "../controllers/documentacion-complementaria.controller";
 import {PaseCajaController} from "../controllers/pase-caja.controller";
 import {ReportController} from "../controllers/report.controller";
+import {TestController} from "../controllers/test.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
@@ -53,6 +54,7 @@ export class Routes {
     public documentacionComplementariaController: DocumentacionComplementariaController = new DocumentacionComplementariaController();
     public paseCajaController: PaseCajaController = new PaseCajaController();
     public reportController: ReportController = new ReportController();
+    public testController: TestController = new TestController();
     /*
 
     public testController: TestController = new TestController();
@@ -192,5 +194,7 @@ export class Routes {
 
         /* app.route('/api/example/mail/activation').get(this.exampleController.mailActivation);
         app.route('/api/example/mail/reset').get(this.exampleController.mailReset); */
+
+        app.route('/api/test/twilio').get(this.testController.twilio);
     }
 }
