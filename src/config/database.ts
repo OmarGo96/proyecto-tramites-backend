@@ -7,6 +7,7 @@ export const database = new Sequelize({
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     dialect: 'mysql',
+    timezone: '-05:00',
     logging: false, // Cambia este valor si deseas ver las consultas que estas ejecutando
     pool: {
         max: 5,
