@@ -40,7 +40,7 @@ export class GetValue {
             })
         }
 
-        req.body.negotiation = getSolicitudById.solicitud
+        req.body.solicitud = getSolicitudById.solicitud
         next()
     }
 

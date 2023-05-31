@@ -377,13 +377,11 @@ export class SolicitudController {
 
     public async changeStatus(req: Request, res: Response) {
         const body = req.body
+        const solicitud = req.body.solicitud
 
         const errors = [];
 
         const contribuyenteId: any = (req.body.contribuyente_id) ? req.body.contribuyente_id : null
-
-        const solicitudId: string = body.solicitud_id == null || validator.isEmpty(body.solicitud_id + '') ?
-            errors.push({message: 'Favor de proporcionar la solicitud al cual se le cambiara el estatus'}) : body.solicitud_id
 
         const motivoRechazo = body.motivo_rechazo == null || validator.isEmpty(body.motivo_rechazo) ? null : body.motivo_rechazo;
 
@@ -400,7 +398,7 @@ export class SolicitudController {
         }
 
         const findSolicitudById = await SolicitudController.solicitudQueries.findSolicitudById({
-            id: solicitudId
+            id: solicitud.id
         })
 
         if (!findSolicitudById.ok) {
@@ -630,7 +628,7 @@ export class SolicitudController {
         }
 
         const createLogSolicitud = await SolicitudController.log.solicitud({
-            solicitud_id: solicitudId,
+            solicitud_id: solicitud.id,
             estatus_solicitud_id: estatus,
             administrador_id: req.body.administradorId || null,
             contribuyente_id: (contribuyenteId) ? contribuyenteId : null,
