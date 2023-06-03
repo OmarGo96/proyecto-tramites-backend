@@ -6,10 +6,12 @@ import {SolicitudQueries} from '../queries/solicitud.query';
 import {Log} from '../helpers/logs';
 import {File} from '../helpers/files';
 import {PaseCajaQueries} from "../queries/pase_caja.query";
+import {Soap} from "../helpers/soap";
 
 export class PaseCajaController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static paseCajaQueries: PaseCajaQueries = new PaseCajaQueries()
+    static soap: Soap = new Soap()
     static log: Log = new Log()
     static file: File = new File()
 
@@ -146,6 +148,74 @@ export class PaseCajaController {
         }
 
         return res.status(200).contentType('application/pdf').send(downloadFile.pdf)
+    }
+
+    public async checkPCFolio(req: Request, res: Response) {
+        /** Obtenemos el id del administrador */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const folioPaseCaja: string = body.folioPaseCaja == null || validator.isEmpty(body.folioPaseCaja + '')  ?
+            errors.push({ message: 'El folio es obligatorio' }) : body.folioPaseCaja
+
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+        const data = {
+            url: process.env.VALIDAR_FOLIO_PC,
+            function: 'daoValidaPagoPaseCaja',
+            args: {
+                // tslint:disable-next-line:radix
+                parStrFolioPaseCaja: parseInt(folioPaseCaja),
+            }
+        }
+
+        const soap: any = await PaseCajaController.soap.request(data)
+
+        if (soap.ok === false) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: soap.message }]
+            })
+        }
+
+        if (!soap.result[0].daoValidaPagoPaseCajaResult) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'La folio proporcionado no existe' }]
+            })
+        }
+
+
+        if (!soap.result[0].daoValidaPagoPaseCajaResult) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'No es posible renovar su licencia en estos momentos.' }]
+            })
+
+        }
+
+
+        const Importe = soap.result[0].daoValidaPagoPaseCajaResult.Importe
+        const SolicitudVencimientoFecha = soap.result[0].daoValidaPagoPaseCajaResult.SolicitudVencimientoFecha
+
+        return res.status(200).json({
+            ok: true,
+            data: {
+                Importe,
+                SolicitudVencimientoFecha
+            },
+            message: 'Folio encontrado'
+        })
     }
 
 }

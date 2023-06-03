@@ -184,6 +184,7 @@ export class Routes {
         // Routes for pase a caja
         app.route('/api/solicitud/pase-caja/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.paseCajaController.upload)
         app.route('/api/solicitud/pase-caja/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.paseCajaController.getFile)
+        app.route('/api/solicitud/pase-caja/check').post(CheckHeaders.validateJWTContribuyente, this.paseCajaController.checkPCFolio)
         // Routes for solicitudes history
         app.route('/api/solicitud/history/:id').get(this.solicitudController.history);
         app.route('/api/solicitud/messages/:id').get(this.solicitudController.messages);
