@@ -181,6 +181,8 @@ export class PaseCajaController {
 
         const soap: any = await PaseCajaController.soap.request(data)
 
+        console.log(soap.result[0].daoValidaPagoPaseCajaResult)
+
         if (soap.ok === false) {
             return res.status(400).json({
                 ok: false,
