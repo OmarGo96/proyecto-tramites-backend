@@ -198,10 +198,10 @@ export class PaseCajaController {
         }
 
 
-        if (!soap.result[0].daoValidaPagoPaseCajaResult) {
+        if (soap.result[0].daoValidaPagoPaseCajaResult.CveFolio === 0) {
             return res.status(400).json({
                 ok: false,
-                message: [{ message: 'No es posible renovar su licencia en estos momentos.' }]
+                message: [{ message: 'La folio proporcionado no existe' }]
             })
 
         }
