@@ -196,10 +196,10 @@ export class PaseCajaController {
         }
 
 
-        if (soap.result[0].daoValidaPagoPaseCajaResult.CveFolio === 0) {
+        if (soap.result[0].daoValidaPagoPaseCajaResult.CveError !== 200) {
             return res.status(400).json({
                 ok: false,
-                message: [{ message: 'El folio proporcionado no existe' }]
+                message: [{ message: soap.result[0].daoValidaPagoPaseCajaResult.DescripcionError }]
             })
 
         }
