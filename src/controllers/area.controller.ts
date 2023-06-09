@@ -210,8 +210,8 @@ export class AreaController {
         const ubicacion: string = body.ubicacion == null || validator.isEmpty(body.ubicacion) === true ?
             errors.push({message: 'Favor de proporcionar la ubicación'}) : body.ubicacion
 
-        const activo: string = body.activo == null || validator.isEmpty(body.activo) === true ?
-            errors.push({message: 'Favor de proporcionar si el area esta activa'}) : body.activo
+        // const activo: string = body.activo == null || validator.isEmpty(body.activo) === true ?
+        //     errors.push({message: 'Favor de proporcionar si el area esta activa'}) : body.activo
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
@@ -238,13 +238,13 @@ export class AreaController {
             errors.push({message: 'Favor de solo proporcionar números para el campo de teléfono'})
         }
 
-        if (validator.isNumeric(activo) === false) {
-            errors.push({message: 'Favor de solo proporcionar números para el campo de activo'})
-        }
+        // if (validator.isNumeric(activo) === false) {
+        //     errors.push({message: 'Favor de solo proporcionar números para el campo de activo'})
+        // }
 
-        if (activo !== "1" && activo !== "0") {
-            errors.push({message: 'Favor de solo proporcionar un valor valido para el campo de activo'})
-        }
+        // if (activo !== "1" && activo !== "0") {
+        //     errors.push({message: 'Favor de solo proporcionar un valor valido para el campo de activo'})
+        // }
 
         if (extension !== null && validator.isNumeric(extension) === false) {
             errors.push({message: 'Favor de solo proporcionar números para el campo extensión'})
@@ -283,8 +283,7 @@ export class AreaController {
             extension,
             email,
             horario,
-            ubicacion,
-            activo
+            ubicacion
         })
 
         if (updateArea.ok === false) {
@@ -292,7 +291,7 @@ export class AreaController {
         }
 
         const createLogAdministrador = await AreaController.log.administrador({
-            administratorId,
+            administrador_id: administratorId,
             navegador: req.headers['user-agent'],
             accion: 'El administrador ha actualizado la información del área',
             ip: req.socket.remoteAddress,
