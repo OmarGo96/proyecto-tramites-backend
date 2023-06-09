@@ -329,7 +329,7 @@ export class ContribuyenteController {
             })
         }
 
-        const smsMessage = 'Ingresa al siguiente link para cambiar tu contraseña: ' + process.env.PLATAFORMA_WEB + 'restablecer/' + findContribuyenteByEmail.contribuyente.restablecerPassword
+        const smsMessage = 'Ingresa al siguiente link para cambiar tu contraseña: ' + process.env.PLATAFORMA_WEB + 'restablecer/' + restablecerPassword
 
         const sendSMS = await ContribuyenteController.smsTwilio.sendSMS(findContribuyenteByEmail.contribuyente.telefono, smsMessage);
 
