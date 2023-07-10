@@ -322,6 +322,22 @@ export class SolicitudQueries {
         }
     }
 
+    public async addVisitDate(data: any) {
+        try {
+            const solicitud = await SolicitudModel.update({
+                fecha_visita: data.fecha_visita
+            }, {
+                where: {
+                    id: data.id
+                }
+            })
+            return {ok: true, solicitud}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async destroy(data: any) {
         try {
             const logs = await SolicitudModel.destroy(
