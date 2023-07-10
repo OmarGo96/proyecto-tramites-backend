@@ -3,11 +3,15 @@ import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 import { Request, Response } from 'express'
 import { SolicitudQueries } from '../queries/solicitud.query'
-import { AreaQueries } from '../queries/area.query'
 import { Log } from '../helpers/logs'
+import {PaseCajaQueries} from "../queries/pase_caja.query";
+import {Soap} from "../helpers/soap";
 
 export class PagoController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
+    static paseCajaQueries: PaseCajaQueries = new PaseCajaQueries()
+    static soap: Soap = new Soap()
+    static log: Log = new Log()
 
     public async simulate(req: Request, res: Response) {
         /** Obtenemos toda la información que nos envia el cliente */
@@ -33,5 +37,9 @@ export class PagoController {
             ok: true,
             message:  'Pago realizado'
         })
+    }
+
+    public async onlinePayment(req: Request, res: Response) {
+
     }
 }

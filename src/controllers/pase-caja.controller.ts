@@ -127,6 +127,8 @@ export class PaseCajaController {
 
         if (!findDocumentacionBySolicitudId.ok) {
             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' })
+        } else if(findDocumentacionBySolicitudId.documento.fecha_vencimiento < moment().format('YYYY-MM-DD')) {
+            errors.push({ message: 'La pase a caja venció, favor de solicitar otro.' })
         } else if (findDocumentacionBySolicitudId.documento == null) {
             errors.push({ message: 'La documentación proporcionada no existe.' })
         }
