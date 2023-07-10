@@ -658,23 +658,6 @@ export class SolicitudController {
             });
         }
 
-        const findSolicitudById = await SolicitudController.solicitudQueries.findSolicitudById({
-            id: solicitud.id
-        })
-
-        if (!findSolicitudById.ok) {
-            errors.push({message: 'Existen problemas al momento de obtener la solicitud proporcionada.'})
-        } else if (findSolicitudById.solicitud === null) {
-            errors.push({message: 'La solicitud proporcionada no existe.'})
-        }
-
-        if (errors.length > 0) {
-            return res.status(400).json({
-                ok: false,
-                errors
-            })
-        }
-
         const addVisitDate = await SolicitudController.solicitudQueries.addVisitDate({
             fecha_visita: moment(fecha_visita).format('YYYY-MM-DD')
         })
