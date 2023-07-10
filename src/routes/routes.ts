@@ -115,6 +115,8 @@ export class Routes {
 
         app.route('/api/solicitud/respuesta_intento_pago/:referencia').post(this.solicitudController.respuestaIntentoPago)
         app.route('/api/cambiar_solicitud_estatus/:solicitud_id').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
+        app.route('/api/solicitud/fecha-visita/:solicitud_id').post(CheckHeaders.validateJWTAdministrador,GetValue.solicitud, this.solicitudController.addVisitDate)
+
 
         app.route('/api/todas_solicitudes').post(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
         app.route('/api/solicitud-detalle/:id').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.findOneAdmin)

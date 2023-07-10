@@ -642,6 +642,58 @@ export class SolicitudController {
         })
     }
 
+    public async addVisitDate(req: Request, res: Response) {
+        const body = req.body
+        const solicitud = req.body.solicitud
+
+        const errors = [];
+
+        const fecha_visita: string = body.fecha_visita == null || validator.isEmpty(body.fecha_visita + '') ?
+            errors.push({message: 'Favor de proporcionar la fecha de visita'}) : body.fecha_visita
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            });
+        }
+
+        const findSolicitudById = await SolicitudController.solicitudQueries.findSolicitudById({
+            id: solicitud.id
+        })
+
+        if (!findSolicitudById.ok) {
+            errors.push({message: 'Existen problemas al momento de obtener la solicitud proporcionada.'})
+        } else if (findSolicitudById.solicitud === null) {
+            errors.push({message: 'La solicitud proporcionada no existe.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const addVisitDate = await SolicitudController.solicitudQueries.addVisitDate({
+            fecha_visita
+        })
+
+        const createLogSolicitud = await SolicitudController.log.solicitud({
+            solicitud_id: solicitud.id,
+            estatus_solicitud_id: 27,
+            administrador_id: req.body.administradorId || null,
+            contribuyente_id: (req.body.contribuyenteId) ? req.body.contribuyenteId : null,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+            comentario: 'Se agrego una fecha para visita topográfica en la siguiente fecha ' + moment(fecha_visita).format('DD/MM/YYYY')
+        });
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha agregado la fecha correctamente.'
+        })
+    }
+
     public async index(req: Request, res: Response) {
         const administrador_id = req.body.administrador_id
         const errors = []
