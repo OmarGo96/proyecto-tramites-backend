@@ -659,8 +659,16 @@ export class SolicitudController {
         }
 
         const addVisitDate = await SolicitudController.solicitudQueries.addVisitDate({
-            fecha_visita: moment(fecha_visita).format('YYYY-MM-DD')
+            fecha_visita: moment(fecha_visita).format('YYYY-MM-DD'),
+            id: solicitud.id
         })
+
+        if (!addVisitDate.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: "No se puede agregar la fecha de visita en este momento."}]
+            });
+        }
 
         const createLogSolicitud = await SolicitudController.log.solicitud({
             solicitud_id: solicitud.id,
