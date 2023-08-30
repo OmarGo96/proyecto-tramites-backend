@@ -18,6 +18,7 @@ export class SolicitudModel extends Model{
     public fecha_final!: string
     public fecha_rechazo!: string
     public fecha_visita!: string
+    public fecha_pago!: string
     public motivo_rechazo!: string
     public comentario!: string;
 
@@ -66,6 +67,9 @@ SolicitudModel.init({
         type: DataTypes.DATE
     },
     fecha_visita: {
+        type: DataTypes.DATE
+    },
+    fecha_pago: {
         type: DataTypes.DATE
     },
     motivo_rechazo: {

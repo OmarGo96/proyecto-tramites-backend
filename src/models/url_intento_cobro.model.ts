@@ -7,8 +7,8 @@ export class UrlIntentoCobroModel extends Model{
     //example:
     public id!: number
     public solicitud_id!: number
-    public licencias_funcionamiento_id!: number
-    public claves_id!: number
+    public licencia_funcionamiento_id!: number
+    public clave_id!: number
     public grupo_tramite_id!: number
     public tramite_id!: number
     public solicitud_tramite_id!: number
@@ -16,6 +16,8 @@ export class UrlIntentoCobroModel extends Model{
     public folio_intencion_cobro!: string
     public url_intencion_cobro!: string
     public status!: number
+    public confirmacion_pago!: string
+    public fecha_pago!: string
     public codigo_error!: string
     public mensaje_error!: string
     public fecha_alta!: string
@@ -34,10 +36,10 @@ UrlIntentoCobroModel.init({
     solicitud_id: {
         type: DataTypes.INTEGER
     },
-    licencias_funcionamiento_id: {
+    licencia_funcionamiento_id: {
         type: DataTypes.INTEGER
     },
-    claves_id: {
+    clave_id: {
         type: DataTypes.INTEGER
     },
     grupo_tramite_id: {
@@ -66,6 +68,12 @@ UrlIntentoCobroModel.init({
     },
     mensaje_error: {
         type: DataTypes.STRING
+    },
+    confirmacion_pago: {
+        type: DataTypes.STRING
+    },
+    fecha_pago: {
+        type: DataTypes.DATE
     },
     fecha_alta: {
         type: DataTypes.DATE

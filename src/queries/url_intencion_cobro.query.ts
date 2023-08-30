@@ -9,7 +9,8 @@ export class UrlIntencionCobroQueries {
         try {
             const urlIntencionCobro = await UrlIntentoCobroModel.create(data)
             return { ok: true, urlIntencionCobro }
-        } catch{
+        } catch(e){
+            console.log(e)
             return { ok: false }
         }
     }
@@ -18,11 +19,12 @@ export class UrlIntencionCobroQueries {
         try {
             const urlIntencionCobro = await UrlIntentoCobroModel.findOne({
                 where: {
-                    referencia: data.referencia
+                    folio_intencion_cobro: data.folio_intencion_cobro
                 }
             })
             return { ok: true, urlIntencionCobro }
-        } catch{
+        } catch(e){
+            console.log(e)
             return { ok: false }
         }
     }
@@ -35,7 +37,8 @@ export class UrlIntencionCobroQueries {
                 }
             })
             return { ok: true, urlIntencionCobro }
-        } catch{
+        } catch(e){
+            console.log(e)
             return { ok: false }
         }
     }

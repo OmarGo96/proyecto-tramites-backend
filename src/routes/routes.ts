@@ -113,7 +113,6 @@ export class Routes {
         app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pasecaja)
         app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkpago)
 
-        app.route('/api/solicitud/respuesta_intento_pago/:referencia').post(this.solicitudController.respuestaIntentoPago)
         app.route('/api/cambiar_solicitud_estatus/:solicitud_id').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
         app.route('/api/solicitud/fecha-visita/:solicitud_id').post(CheckHeaders.validateJWTAdministrador,GetValue.solicitud, this.solicitudController.addVisitDate)
 
@@ -126,6 +125,11 @@ export class Routes {
         app.route('/api/solicitudes/badges/count').get(CheckHeaders.validateJWTAdministrador, this.solicitudController.getBadgesByEstatusSolicitud)
         app.route('/api/solicitud/documento-digital/:solicitud_id').post(CheckHeaders.validateJWTAdministrador, this.documentosSolicitudController.upload)
         app.route('/api/solicitud/documento-digital/:solicitud_id').get(CheckHeaders.validateJWTByTypeUser, this.documentosSolicitudController.getFile)
+
+        // PAGO CONTROLLER
+
+        app.route('/api/solicitud/pago_online').post(CheckHeaders.validateJWTContribuyente, this.pagoController.onlinePayment)
+        app.route('/api/solicitud/respuesta_intento_pago/:referencia').post(this.pagoController.respuestaIntentoPago)
 
 
 
