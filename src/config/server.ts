@@ -14,6 +14,7 @@ import Relationship from './relationships'
 import { Routes } from '../routes/routes'
 import { Database } from './database'
 
+
 class App {
     public app: Application;
     public port: string;
