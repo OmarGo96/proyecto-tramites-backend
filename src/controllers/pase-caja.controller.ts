@@ -150,7 +150,7 @@ export class PaseCajaController {
             })
         }
 
-        return res.status(200).contentType('application/pdf').send(downloadFile.pdf)
+        return res.status(200).contentType('application/pdf').send(downloadFile.file)
     }
 
     public async checkPCFolio(req: Request, res: Response) {

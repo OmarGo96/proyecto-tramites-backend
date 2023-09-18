@@ -11,6 +11,7 @@ import { File } from '../helpers/files'
 import {DocumentacionPagoQueries} from "../queries/documentacion-pago.query";
 import {DocumentacionAnuenciaQueries} from "../queries/documentacion_anuencia.query";
 import {DocumentacionComplementariaQueries} from "../queries/documentacion_complementaria.query";
+import fs from "fs";
 
 export class DocumentacionController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
@@ -205,7 +206,19 @@ export class DocumentacionController {
             })
         }
 
-        return res.status(200).contentType('application/pdf').send(downloadFile.pdf)
+        let ext = downloadFile.name.split(".").pop()
+
+        if (ext == 'dwg') {
+            return res.status(200).contentType('application/dwg').send(downloadFile.file)
+
+        } else if (ext == 'dxf') {
+            return res.status(200).contentType('application/dxf').send(downloadFile.file)
+
+        } else {
+            return res.status(200).contentType('application/pdf').send(downloadFile.file)
+        }
+
+
     }
 
     public async deleteDocument(req: Request, res: Response) {

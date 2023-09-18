@@ -2,7 +2,9 @@ import moment from 'moment'
 import fs from 'fs'
 
 export class File {
+
     public async upload(data: any, lastFile: any, type: any) {
+
         if (data.files == null) {
             return {
                 ok: false,
@@ -13,17 +15,18 @@ export class File {
                 ok: false,
                 message: 'Si desea adjuntar un archivo pdf, es necesario proporcionar uno'
             }
-        } else if (data.files.file === null) {
-            return {
-                ok: false,
-                message: 'Favor de proporcionar un archivo a procesar'
-            }
         }
 
-        if (data.files.file.mimetype !== 'application/pdf') {
+        const file: any = data.files.file
+
+        let allowed_ext = ['.pdf','.dwg','.dxf']
+
+        const ext = '.' + file.name.split(".").pop()
+
+        if (!allowed_ext.includes(ext)) {
             return {
                 ok: false,
-                message: 'Favor de proporcionar un archivo con extensión ".pdf"'
+                message: 'Favor de proporcionar un archivo con extensión valida'
             }
         }
 
@@ -31,14 +34,14 @@ export class File {
         const bytes: number = 1048576;
         const totalSize: number = (size / bytes)
 
-        if (totalSize > 5.00) {
+        if (totalSize > 30.00) {
             return {
                 ok: false,
-                message: 'Favor de proporcionar un archivo menor o igual a 5 mb.'
+                message: 'Favor de proporcionar un archivo menor o igual a 30 Mb.'
             }
         }
 
-        const file: any = data.files.file
+
         const nameFile: number = moment().unix()
         let path: any;
 
@@ -76,7 +79,7 @@ export class File {
             }
         }
 
-        file.mv(path + nameFile + '.pdf', (err: any) => {
+        file.mv(path + nameFile + ext, (err: any) => {
             if (err) {
                 return {
                     ok: false,
@@ -85,7 +88,7 @@ export class File {
             }
         })
 
-        return {ok: true, nameFile: nameFile + '.pdf'}
+        return {ok: true, nameFile: nameFile + ext}
     }
 
     public async download(name: any, type: any) {
@@ -116,7 +119,7 @@ export class File {
         }
 
         try {
-            return {ok: true, pdf: fs.readFileSync(path + name)}
+            return {ok: true, file: fs.readFileSync(path + name), path: path + name, name}
         } catch (e) {
             console.log(e)
             return {ok: false, message: 'Existen problemas al momento de obtener el pdf!'}

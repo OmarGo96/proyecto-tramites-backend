@@ -76,7 +76,18 @@ export class MensajeController {
             })
         }
 
-        return res.status(200).contentType('application/pdf').send(downloadFile.pdf)
+        let ext = downloadFile.name.split(".").pop()
+
+        if (ext == 'dwg') {
+            return res.status(200).contentType('application/dwg').send(downloadFile.file)
+
+        } else if (ext == 'dxf') {
+            return res.status(200).contentType('application/dxf').send(downloadFile.file)
+
+        } else {
+            return res.status(200).contentType('application/pdf').send(downloadFile.file)
+        }
+
     }
 
     /** Función que permite dar de alta a un mensaje */

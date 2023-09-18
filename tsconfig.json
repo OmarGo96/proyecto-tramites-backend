@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "locale": "es",
     "module": "commonjs",
     "moduleResolution": "node",
     "pretty": true,
