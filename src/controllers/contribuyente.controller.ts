@@ -409,7 +409,7 @@ export class ContribuyenteController {
             errors.push({ message: 'Existen problemas al momento de cambiar contraseña.' })
         } else if (findContribuyenteByCambioPassword.contribuyente == null) {
             errors.push({ message: 'No es posible hacer el cambio de contraseña.' })
-        } else if (findContribuyenteByCambioPassword.contribuyente.cambioPassword !== 1) {
+        } else if (findContribuyenteByCambioPassword.contribuyente.cambio_password !== 1) {
             errors.push({ message: 'Si usted no ha solicitado hacer un cambio de contraseña, favor de ponerse en contacto con el administrador.' })
         }
 
