@@ -94,7 +94,7 @@ export class SessionController {
             ok: true,
             token: result ? result.token : false,
             activo: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.activo === 1 ? true : false : false,
-            cambio_password: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.cambioPassword === 1 ? true : false : false,
+            cambio_password: findContribuyenteByEmail.contribuyente ? findContribuyenteByEmail.contribuyente.cambio_password === 1 ? true : false : false,
             message: "Inicio de sesión"
         })
     }
