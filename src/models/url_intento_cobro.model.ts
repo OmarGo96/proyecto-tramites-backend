@@ -17,9 +17,11 @@ export class UrlIntentoCobroModel extends Model{
     public url_intencion_cobro!: string
     public status!: number
     public confirmacion_pago!: string
+    public importe!: number
+    public confirmacion_url!: string
     public fecha_pago!: string
-    public codigo_error!: string
-    public mensaje_error!: string
+    public codigo_result!: string
+    public mensaje_result!: string
     public fecha_alta!: string
 
 }
@@ -63,17 +65,22 @@ UrlIntentoCobroModel.init({
     status: {
         type: DataTypes.TINYINT
     },
-    codigo_error: {
-        type: DataTypes.STRING
-    },
-    mensaje_error: {
-        type: DataTypes.STRING
-    },
     confirmacion_pago: {
         type: DataTypes.STRING
     },
+    confirmacion_url: {
+        type: DataTypes.STRING
+    },
+    importe: {
+        type: DataTypes.NUMBER    },
     fecha_pago: {
         type: DataTypes.DATE
+    },
+    codigo_result: {
+        type: DataTypes.STRING
+    },
+    mensaje_result: {
+        type: DataTypes.STRING
     },
     fecha_alta: {
         type: DataTypes.DATE
