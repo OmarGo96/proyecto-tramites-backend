@@ -659,7 +659,7 @@ export class SolicitudController {
         }
 
         const addVisitDate = await SolicitudController.solicitudQueries.addVisitDate({
-            fecha_visita: moment(fecha_visita).format('YYYY-MM-DD'),
+            fecha_visita: moment(fecha_visita).format(),
             id: solicitud.id
         })
 

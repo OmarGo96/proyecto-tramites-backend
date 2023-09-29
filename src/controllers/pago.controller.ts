@@ -76,7 +76,6 @@ export class PagoController {
         }
 
         const referencia = moment().unix().toString() + solicitudId
-        console.log(pase_caja.documento.folio_pase_caja)
         const data = {
             url: process.env.GLOBAL_PAYMENT,
             function: 'daoGeneraIntenciondecobroGlobal',
@@ -167,11 +166,13 @@ export class PagoController {
 
         const processPaymentResponse = await PagoController.urlIntencionCobroQueries.update({
             status: (body.ok === false) ? -1 : 1,
-            codigo_error: (body.codigo) ? body.codigo : null,
-            mensaje_error: (body.mensaje) ? body.mensaje : null,
-            importe: (body.importe) ? body.importe : null,
+            confirmacion_pago: (body.confirmacion_pago) ? body.confirmacion_pago : null,
+            confirmacion_url: (body.confirmacion_url) ? body.confirmacion_url : null,
             fecha_pago: (body.fecha_pago) ? moment(body.fecha_pago).format('YYYY-MM-DD HH:mm:ss') : null,
-            confirmacion_pago: (body.confirmacion_pago) ? body.confirmacion_pago : null
+            codigo_result: (body.codigo) ? body.codigo : null,
+            mensaje_result: (body.mensaje) ? body.mensaje : null,
+            importe: (body.importe) ? body.importe : null,
+
 
         }, findUrlIntentoCobro.urlIntencionCobro.id)
 
