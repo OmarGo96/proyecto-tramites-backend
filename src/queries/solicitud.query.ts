@@ -338,6 +338,22 @@ export class SolicitudQueries {
         }
     }
 
+    public async addReciboPago(data: any) {
+        try {
+            const solicitud = await SolicitudModel.update({
+                recibo_pago: 1
+            }, {
+                where: {
+                    id: data.id
+                }
+            })
+            return {ok: true, solicitud}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async destroy(data: any) {
         try {
             const logs = await SolicitudModel.destroy(

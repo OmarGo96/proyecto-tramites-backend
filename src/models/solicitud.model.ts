@@ -21,6 +21,7 @@ export class SolicitudModel extends Model{
     public fecha_pago!: string
     public motivo_rechazo!: string
     public comentario!: string;
+    public recibo_pago!: number;
 
 }
 
@@ -77,6 +78,9 @@ SolicitudModel.init({
     },
     comentario: {
         type: DataTypes.STRING
+    },
+    recibo_pago: {
+        type: DataTypes.TINYINT
     }
 }, {
     // Then add the configuration:

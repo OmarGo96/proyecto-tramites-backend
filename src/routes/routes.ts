@@ -115,6 +115,7 @@ export class Routes {
 
         app.route('/api/cambiar_solicitud_estatus/:solicitud_id').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
         app.route('/api/solicitud/fecha-visita/:solicitud_id').post(CheckHeaders.validateJWTAdministrador,GetValue.solicitud, this.solicitudController.addVisitDate)
+        app.route('/api/solicitud/recibo-pago/:solicitud_id').put(CheckHeaders.validateJWTAdministrador,GetValue.solicitud, this.solicitudController.addReceiptPayment)
 
 
         app.route('/api/todas_solicitudes').post(CheckHeaders.validateJWTAdministrador, this.solicitudController.index)
@@ -142,7 +143,7 @@ export class Routes {
         app.route('/api/mensajes').post(CheckHeaders.validateJWTAdministrador, this.mensajeController.store)
         app.route('/api/archivo_mensajes/:mensaje_id').get(CheckHeaders.validateJWTByTypeUser, this.mensajeController.getFile)
         // Routes for documentacion methods
-        app.route('/api/documentacion').post(CheckHeaders.validateJWTContribuyente, this.documentacionController.attachFile)
+        app.route('/api/documentacion').post(CheckHeaders.validateJWTByTypeUser, this.documentacionController.attachFile)
         app.route('/api/documentacion').get(CheckHeaders.validateJWTContribuyente, this.documentacionController.index)
         app.route('/api/archivo_documentacion/:documentacion_id').get(/*CheckHeaders.validateJWTByTypeUser, */this.documentacionController.getFile)
         app.route('/api/documentacion/:documentacion_id').post(CheckHeaders.validateJWTContribuyente,this.documentacionController.deleteDocument)

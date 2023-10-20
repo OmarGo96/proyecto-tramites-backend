@@ -37,13 +37,13 @@ export class DocumentacionController {
         const auth = req.body.auth;
         const errors = [];
 
-        const findRequerimientosByContribuyente = await DocumentacionController.documentacionQueries.findRequerimientosByContribuyente({
+        const findRequerimientosByContribuyente = await DocumentacionController.documentacionQueries.findDocumentosByContribuyente({
             auth,
             contribuyente_id
         });
 
         if (!findRequerimientosByContribuyente.ok) {
-            errors.push({message: 'Existen problemas al momento de obtener los requerimientos por servicio/trámite.'})
+            errors.push({message: 'Existen problemas al momento de obtener los documentos.'})
         }
 
         if (errors.length > 0) {
