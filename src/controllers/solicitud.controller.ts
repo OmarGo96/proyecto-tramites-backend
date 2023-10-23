@@ -1126,4 +1126,36 @@ export class SolicitudController {
         })
     }
 
+    public async addReceiptPayment(req: Request, res: Response) {
+        const body = req.body
+        const solicitud = req.body.solicitud
+
+        const errors = [];
+
+        const addReciboPago = await SolicitudController.solicitudQueries.addReciboPago({
+            id: solicitud.id
+        })
+
+        if (!addReciboPago.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: "No se puede actualizar la solicitud en estos momentos"}]
+            });
+        }
+
+        const createLogSolicitud = await SolicitudController.log.solicitud({
+            solicitud_id: solicitud.id,
+            estatus_solicitud_id: 20,
+            administrador_id: req.body.administradorId || null,
+            contribuyente_id: (req.body.contribuyenteId) ? req.body.contribuyenteId : null,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+            comentario: 'Se agrego un recibo de pago a la solicitud'
+        });
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha indicado que la solicitud tiene recibo de pago correctamente.'
+        })
+    }
+
 }

@@ -6,16 +6,19 @@ import {TiposDocumentosModel} from "../models/tipos-documentos.model";
 
 export class DocumentacionQueries {
 
-    public async findRequerimientosByContribuyente(data: any) {
+    public async findDocumentosByContribuyente(data: any) {
         try {
-            const documentacion = await DocumentacionModel.findAll({
-                where: {
-                    contribuyentes_id: data.contribuyente_id,
-                    status: 1
-                },
+            const documentacion = await TiposDocumentosModel.findAll({
                 include: [
                     {
-                        model: TiposDocumentosModel, as: 'Tipo',
+                        model: DocumentacionModel, as: 'Documentacion',
+                        where: {
+                            contribuyentes_id: data.contribuyente_id,
+                            status: 1
+                        },
+                        order: [
+                            ['fecha_alta','DESC']
+                        ]
                     }
                 ]
             })

@@ -79,6 +79,8 @@ export default class Relationship {
         DocumentacionAnuenciaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionComplementariaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
 
+        TiposDocumentosModel.hasMany(DocumentacionModel, {foreignKey: 'tipos_documentos_id', as: 'Documentacion'})
+
 
 
         SolicitudModel.belongsTo(ContribuyenteModel, { foreignKey: 'contribuyente_id', as: 'Contribuyente' })
