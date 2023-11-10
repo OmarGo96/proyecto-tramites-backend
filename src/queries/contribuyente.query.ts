@@ -109,6 +109,8 @@ export class ContribuyenteQueries {
                 fecha_alta: data.fecha_alta,
                 fecha_baja: null,
                 codigo_activacion: data.codigo_activacion,
+                aviso_privacidad: data.aviso_privacidad,
+                terms_condiciones: data.terms_condiciones,
                 activo: data.activo
             })
             return {ok: true, contribuyente}

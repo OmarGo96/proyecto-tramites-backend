@@ -125,13 +125,12 @@ export class PaseCajaController {
         /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
         const findDocumentacionBySolicitudId = await PaseCajaController.paseCajaQueries.findDocumentoBySolicitud({ solicitud_id: solicitudId })
 
-        console.log(findDocumentacionBySolicitudId.documento.fecha_vencimiento);
         if (!findDocumentacionBySolicitudId.ok) {
             errors.push({ message: 'Existen problemas al momento de validar la documentación proporcionada.' })
+        }  else if (findDocumentacionBySolicitudId.documento == null) {
+            errors.push({ message: 'La documentación proporcionada no existe.' })
         } else if(moment(findDocumentacionBySolicitudId.documento.fecha_vencimiento).format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')) {
             errors.push({ message: 'La pase a caja venció, favor de solicitar otro.' })
-        } else if (findDocumentacionBySolicitudId.documento == null) {
-            errors.push({ message: 'La documentación proporcionada no existe.' })
         }
 
         if (errors.length > 0) {

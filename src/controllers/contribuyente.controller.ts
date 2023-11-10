@@ -145,6 +145,12 @@ export class ContribuyenteController {
         const edad: string = body.edad == null || validator.isEmpty(body.edad) === true ?
             errors.push({ message: 'Favor de proporcionar su rango de edad.' }) : body.edad
 
+        const aviso_privacidad: string = body.aviso_privacidad == null || validator.isEmpty(body.aviso_privacidad+ '') === true ?
+            errors.push({ message: 'Favor de leer y aceptar el aviso de privacidad' }) :  body.aviso_privacidad
+
+        const terms_condiciones: string = body.terms_conditions == null || validator.isEmpty(body.terms_conditions + '') === true ?
+            errors.push({ message: 'Favor de proporcionar su teléfono.' }) :  body.terms_conditions
+
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
         if (errors.length > 0) {
@@ -174,7 +180,7 @@ export class ContribuyenteController {
         //     errors.push({ message: 'Favor de solo proporcionar números para el campo de teléfono referencia' })
         // }
 
-        if (genero !== "1" && genero !== "0") {
+        if (genero !== "2" && genero !== "1" && genero !== "0") {
             errors.push({ message: 'Favor de solo proporcionar un género valido' })
         }
 
@@ -228,6 +234,8 @@ export class ContribuyenteController {
             edad,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
             codigo_activacion,
+            aviso_privacidad,
+            terms_condiciones,
             activo: 0,
         })
 
@@ -651,7 +659,7 @@ export class ContribuyenteController {
         })
 
         if (!dropContribuyente.ok) {
-            errors.push({ message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.' })
+            errors.push({ message: 'Existen problemas al momento de dar de baja el contribuyente.' })
         }
         if (errors.length > 0) {
             return res.status(400).json({
@@ -678,7 +686,7 @@ export class ContribuyenteController {
         const findContribuyentesInactive = await ContribuyenteController.contribuyenteQueries.findContribuyentesInactive()
 
         if (findContribuyentesInactive.contribuyentes && findContribuyentesInactive.contribuyentes.length > 0) {
-            findContribuyentesInactive.contribuyentes.forEach(async (contribuyente) => {
+            for (const contribuyente of findContribuyentesInactive.contribuyentes) {
                 const options = {
                     data: {
                         'email': contribuyente.email,
@@ -689,7 +697,7 @@ export class ContribuyenteController {
                 }
 
                 const sendEmail = await ContribuyenteController.axios.getResponse(options)
-            });
+            }
         }
 
         return res.status(200).json({
