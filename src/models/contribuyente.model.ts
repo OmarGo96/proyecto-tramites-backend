@@ -18,6 +18,8 @@ export class ContribuyenteModel extends Model{
     public codigo_activacion!: string
     public restablecer_password!: string
     public cambio_password!: number
+    public aviso_privacidad!: number
+    public terms_condiciones!: number
     public activo!: number
 }
 
@@ -70,6 +72,12 @@ ContribuyenteModel.init({
         type: DataTypes.STRING
     },
     cambio_password: {
+        type: DataTypes.INTEGER
+    },
+    aviso_privacidad: {
+        type: DataTypes.INTEGER
+    },
+    terms_condiciones: {
         type: DataTypes.INTEGER
     },
     activo: {

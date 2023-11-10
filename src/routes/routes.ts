@@ -22,6 +22,7 @@ import {DocumentosAnuenciaController} from "../controllers/documentos-anuencia.c
 import {DocumentacionComplementariaController} from "../controllers/documentacion-complementaria.controller";
 import {PaseCajaController} from "../controllers/pase-caja.controller";
 import {ReportController} from "../controllers/report.controller";
+import {DocumentosLicenciaComercialController} from "../controllers/documentos-licencia_comercial.controller";
 import {TestController} from "../controllers/test.controller";
 
 /* Middlewares */
@@ -51,6 +52,7 @@ export class Routes {
     public documentacionPagoController: DocumentacionPagoController = new DocumentacionPagoController();
     public documentosSolicitudController: DocumentosSolicitudController = new DocumentosSolicitudController();
     public documentosAnuenciaController: DocumentosAnuenciaController = new DocumentosAnuenciaController();
+    public documentosLicenciaComercialController: DocumentosLicenciaComercialController = new DocumentosLicenciaComercialController();
     public documentacionComplementariaController: DocumentacionComplementariaController = new DocumentacionComplementariaController();
     public paseCajaController: PaseCajaController = new PaseCajaController();
     public reportController: ReportController = new ReportController();
@@ -167,6 +169,11 @@ export class Routes {
         app.route('/api/documento-complementaria/:documentacion_complementaria_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.updateDocumentacionComplementaria)
         app.route('/api/validar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTAdministrador, this.documentacionComplementariaController.validarDocComplementario)
         app.route('/api/eliminar-documento-complementario/:documentacion_complementaria_id').put(CheckHeaders.validateJWTContribuyente, this.documentacionComplementariaController.unlinkDocComplementario)
+        // Routes para documentacion-licencia-comercial
+        app.route('/api/documento-licencia-comercial').post(CheckHeaders.validateJWTContribuyente, this.documentosLicenciaComercialController.attachFile)
+        app.route('/api/documento-licencia-comercial/:documento_licencia_comercial_id').put(CheckHeaders.validateJWTByTypeUser, this.documentosLicenciaComercialController.updateDocumentacionLicenciaComercial)
+        app.route('/api/validar-documento-licencia-comercial/:documento_licencia_comercial_id').put(CheckHeaders.validateJWTAdministrador, this.documentosLicenciaComercialController.validarDocLicenciaComercial)
+        app.route('/api/eliminar-documentacion-licencia-comercial/:documento_licencia_comercial_id').put(CheckHeaders.validateJWTContribuyente, this.documentosLicenciaComercialController.unlinkDocLicenciaComercial)
         // Routes for tipo documentos methods
         app.route('/api/tipo_documentos').get(CheckHeaders.contentAuthorization, this.tiposDocumentosController.index)
         app.route('/api/tipo_documentos').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.tiposDocumentosController.store);

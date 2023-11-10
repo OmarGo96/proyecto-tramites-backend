@@ -17,6 +17,7 @@ import {DocumentacionComplementariaModel} from "../models/documentacion_compleme
 import {PaseCajaModel} from "../models/pase_caja.model";
 import {LicenciaModel} from "../models/licencia.model";
 import {AreaModel} from "../models/area.model";
+import {DocumentacionLicenciaComercialModel} from "../models/documentacion_licencia_comercial.model";
 
 export class SolicitudQueries {
     public async findSolicitudesByContribuyente(data: any) {
@@ -24,7 +25,7 @@ export class SolicitudQueries {
             const solicitudes = await SolicitudModel.findAll({
 
                 order: [
-                    ['fecha_alta', 'ASC']
+                    ['fecha_alta', 'DESC']
                 ],
                 where: {
                     contribuyente_id: data.contribuyente_id,
@@ -56,7 +57,7 @@ export class SolicitudQueries {
         try {
             const solicitudes = await SolicitudModel.findAll({
                 order: [
-                    ['fecha_alta', 'ASC']
+                    ['fecha_alta', 'DESC']
                 ],
                 where: {
                     estatus_solicitud_id: data.estatus,
@@ -221,6 +222,18 @@ export class SolicitudQueries {
                     },
                     {
                         model: DocumentacionAnuenciaModel, as: 'DocumentosAnuencia',
+                        where: {
+                            status: {
+                                [Op.in]: [-1,0,1,3]
+                            }
+                        },
+                        required: false,
+                        include: [
+                            {model: DocumentacionModel, as: 'Documentacion'}
+                        ]
+                    },
+                    {
+                        model: DocumentacionLicenciaComercialModel, as: 'DocumentosLicenciaComercial',
                         where: {
                             status: {
                                 [Op.in]: [-1,0,1,3]

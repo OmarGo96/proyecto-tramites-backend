@@ -23,7 +23,6 @@ export class MensajeController {
         } else if (getSolicitudesMessages.mensajes == null) {
             errors.push({ message: 'No se encontraron mensajes no leídos' })
         }
-        console.log(getSolicitudesMessages)
 
         return res.status(200).json({
             ok: true,

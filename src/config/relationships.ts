@@ -29,6 +29,7 @@ import {DocumentacionAnuenciaModel} from "../models/documentacion_anuencia.model
 import {DocumentacionComplementariaModel} from "../models/documentacion_complementaria.model";
 import {PaseCajaModel} from "../models/pase_caja.model";
 import {LicenciaModel} from "../models/licencia.model";
+import {DocumentacionLicenciaComercialModel} from "../models/documentacion_licencia_comercial.model";
 
 export default class Relationship {
     static init() {
@@ -78,6 +79,7 @@ export default class Relationship {
         DocumentacionPagoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionAnuenciaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionComplementariaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
+        DocumentacionLicenciaComercialModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
 
         TiposDocumentosModel.hasMany(DocumentacionModel, {foreignKey: 'tipos_documentos_id', as: 'Documentacion'})
 
@@ -89,6 +91,7 @@ export default class Relationship {
         SolicitudModel.hasMany(DocumentosSolicitudRequisitoModel, {foreignKey:'solicitudes_id', as: 'DocumentosSolicitudRequisito'})
         SolicitudModel.hasMany(DocumentacionPagoModel, {foreignKey:'solicitud_id', as: 'DocumentosPago'})
         SolicitudModel.hasMany(DocumentacionAnuenciaModel, {foreignKey:'solicitud_id', as: 'DocumentosAnuencia'})
+        SolicitudModel.hasMany(DocumentacionLicenciaComercialModel, {foreignKey:'solicitud_id', as: 'DocumentosLicenciaComercial'})
         SolicitudModel.hasOne(DocumentacionComplementariaModel, {foreignKey:'solicitud_id', as: 'DocumentosComplementarios'})
         SolicitudModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'Estatus' })
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
