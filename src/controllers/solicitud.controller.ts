@@ -649,7 +649,7 @@ export class SolicitudController {
         const errors = [];
 
         const fecha_visita: string = body.fecha_visita == null || validator.isEmpty(body.fecha_visita + '') ?
-            errors.push({message: 'Favor de proporcionar la fecha de visita'}) : body.fecha_visita
+           null : body.fecha_visita
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -659,7 +659,7 @@ export class SolicitudController {
         }
 
         const addVisitDate = await SolicitudController.solicitudQueries.addVisitDate({
-            fecha_visita: moment(fecha_visita).format(),
+            fecha_visita: (fecha_visita) ? moment(fecha_visita).format() : null,
             id: solicitud.id
         })
 
