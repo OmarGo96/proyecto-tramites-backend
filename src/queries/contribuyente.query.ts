@@ -51,6 +51,18 @@ export class ContribuyenteQueries {
         }
     }
 
+    public async findContribuyentes() {
+        try {
+            const contribuyentes = await ContribuyenteModel.findAll({
+
+            })
+            return {ok: true, contribuyentes}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async findContribuyenteByUUID(data: any) {
         try {
             const contribuyente = await ContribuyenteModel.findOne({

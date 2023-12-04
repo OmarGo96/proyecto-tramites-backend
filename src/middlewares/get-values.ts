@@ -2,9 +2,11 @@ import { Response, Request, NextFunction } from 'express'
 import { JsonResponse } from '../enums/json-response'
 import {SolicitudQueries} from "../queries/solicitud.query";
 import {AdministratorQueries} from "../queries/administrator.query";
+import {ContribuyenteQueries} from "../queries/contribuyente.query";
 
 export class GetValue {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
+    static contribuyenteQueries: ContribuyenteQueries = new ContribuyenteQueries()
 
     static administradorQueries: AdministratorQueries = new AdministratorQueries()
 
@@ -47,10 +49,9 @@ export class GetValue {
     static async contribuyente(req: Request, res: Response, next: NextFunction) {
         const errors = []
 
-        let solicitud_id: number = req.params.solicitud_id == null || (!req.params.solicitud_id)
-        || !Number.isInteger(+req.params.solicitud_id) ?
-            errors.push({ message: 'Favor de proporcionar la solicitud' }) :
-            +req.params.solicitud_id
+        let contribuyenteUuid: number | string = req.params.contribuyente_uuid == null || (!req.params.contribuyente_uuid) ?
+            errors.push({ message: 'Favor de proporcionar el contribuyente' }) :
+            req.params.contribuyente_uuid
 
         if(errors.length > 0){
             return res.status(JsonResponse.BAD_REQUEST).json({
@@ -59,23 +60,23 @@ export class GetValue {
             })
         }
 
-        const getSolicitudById = await GetValue.solicitudQueries.findSolicitudById({
-            id: solicitud_id
+        const getContribuyente = await GetValue.contribuyenteQueries.findContribuyenteByUUID({
+            uuid: contribuyenteUuid
         })
 
-        if (getSolicitudById.ok === false) {
+        if (getContribuyente.ok === false) {
             return res.status(JsonResponse.INTERNAL_SERVER_ERROR).json({
                 ok: false,
-                errors: [{ message: 'No es posible obtener la información de la solicitud en este momento.' }]
+                errors: [{ message: 'No es posible obtener la información del contribuyente en este momento.' }]
             })
-        }else if(getSolicitudById.solicitud === null){
+        }else if(getContribuyente.contribuyente === null){
             return res.status(JsonResponse.NOT_FOUND).json({
                 ok: false,
-                errors: [{ message: 'La solicitud proporcionada no existe.' }]
+                errors: [{ message: 'El contribuyente no existe.' }]
             })
         }
 
-        req.body.negotiation = getSolicitudById.solicitud
+        req.body.contribuyente = getContribuyente.contribuyente
         next()
     }
 

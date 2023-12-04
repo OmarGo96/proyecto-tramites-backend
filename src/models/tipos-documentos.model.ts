@@ -9,6 +9,7 @@ export class TiposDocumentosModel extends Model{
     public activo!: number;
     public fechaAlta!: string;
     public aprobacion!: number
+    public expediente_unico!: number;
 }
 
 TiposDocumentosModel.init({
@@ -30,6 +31,9 @@ TiposDocumentosModel.init({
         type: DataTypes.STRING
     },
     requiere_aprobacion: {
+        type: DataTypes.INTEGER
+    },
+    expediente_unico: {
         type: DataTypes.INTEGER
     },
 }, {

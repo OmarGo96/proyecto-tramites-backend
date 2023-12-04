@@ -68,14 +68,17 @@ export class Routes {
         app.route('/api/session/contribuyente').post(this.sessionController.contribuyente)
         app.route('/api/payload').get(CheckHeaders.validateJWTByTypeUser, this.sessionController.checkPayload)
         // Routes for contribuyentes methods
-        app.route('/api/contribuyentes').get(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.show)
-        app.route('/api/contribuyentes').post(this.contribuyenteController.store)
+        app.route('/api/contribuyentes').get(CheckHeaders.validateJWTAdministrador, this.contribuyenteController.getContribuyentes)
+        app.route('/api/contribuyente').get(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.show)
+        app.route('/api/contribuyente').post(this.contribuyenteController.store)
         app.route('/api/reenvio_activacion').post(this.contribuyenteController.forward)
         app.route('/api/solicitud_restauracion').post(this.contribuyenteController.restoreRequest)
         app.route('/api/restaurar_cuenta').post(this.contribuyenteController.restorePassword)
-        app.route('/api/contribuyentes/:contribuyente_uuid').put(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.update)
+        app.route('/api/contribuyente/:contribuyente_uuid').put(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.update)
         app.route('/api/activar_cuenta/:codigo_activacion').get(this.contribuyenteController.active)
-        app.route('/api/contribuyentes/:contribuyente_uuid').get(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.drop)
+        app.route('/api/contribuyentes_no_activos').get(this.contribuyenteController.resendActivationCode)
+        app.route('/api/contribuyente/:contribuyente_uuid').delete(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.drop)
+        app.route('/api/contribuyente/expediente/:contribuyente_uuid').get(CheckHeaders.validateJWTAdministrador,GetValue.contribuyente, this.documentacionController.getExpedienteDocs)
         // Routes for administradores methods
         app.route('/api/administradores').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.store)
         app.route('/api/administradores').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.administradorController.index)
@@ -187,7 +190,7 @@ export class Routes {
         app.route('/api/pago_banco').post(CheckHeaders.validateJWTContribuyente, this.claveController.linkToBank)
         app.route('/api/pase_caja/catastral').post(/* CheckHeaders.validateJWTContribuyente,  */this.claveController.generate)
         app.route('/api/simular_pago').post(/* CheckHeaders.validateJWTContribuyente,  */this.pagoController.simulate)
-        app.route('/api/contribuyentes_no_activos').get(this.contribuyenteController.resendActivationCode)
+
         // Routes for licencias funcionamiento
         app.route('/api/licencia-funcionamiento').get(CheckHeaders.validateJWTContribuyente, this.licenciaController.show)
         app.route('/api/licencia-funcionamiento').post(CheckHeaders.validateJWTContribuyente, this.licenciaController.store)

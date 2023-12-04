@@ -50,7 +50,8 @@ export class TiposDocumentosQueries {
                 clave: data.clave,
                 descripcion: data.descripcion,
                 fecha_Alta: data.fecha_alta,
-                requiere_aprobacion: data.aprobacion
+                requiere_aprobacion: data.aprobacion,
+                expediente_unico: data.expediente_unico
             })
             return {ok: true, documento}
         } catch (e) {

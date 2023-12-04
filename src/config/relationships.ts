@@ -68,7 +68,7 @@ export default class Relationship {
         DocumentacionServicioModel.belongsTo(ServicioModel, {foreignKey: 'servicio_id', as: 'Servicio'})
         ServicioModel.hasOne(DocumentacionServicioModel, {foreignKey: 'servicio_id', as: 'Documento'})
 
-        DocumentacionModel.belongsTo(TiposDocumentosModel, {foreignKey: 'tipos_documentos_id', as: 'Tipo'})
+        DocumentacionModel.belongsTo(TiposDocumentosModel, {foreignKey: 'tipos_documentos_id', as: 'TipoDocumentacion'})
 
         // EstatusServicioModel.belongsTo(ServicioModel, { foreignKey: 'servicio_id', as: 'Servicio' })
         EstatusServicioModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id', as: 'EstatusSolicitud' })

@@ -29,6 +29,28 @@ export class DocumentacionQueries {
         }
     }
 
+    public async findExpedienteDocsByContribuyente(data: any) {
+        try {
+            const documentacion = await DocumentacionModel.findAll({
+                where: {
+                    contribuyentes_id: data.contribuyente_id
+                },
+                include: [
+                    {
+                        model: TiposDocumentosModel, as: 'TipoDocumentacion',
+                        where: {
+                            expediente_unico: 1
+                        },
+                    }
+                ]
+            })
+            return { ok: true, documentacion }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
     public async findDocumentacionById(data: any) {
         try {
             const documentacion = await DocumentacionModel.findOne({
