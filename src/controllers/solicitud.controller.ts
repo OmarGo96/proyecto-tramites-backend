@@ -96,7 +96,7 @@ export class SolicitudController {
             area_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.area_id : false,
             servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
             licencia_id: (licencia) ? findSolicitudByLicenciaId.licencia.id : null,
-            folio: moment().unix(),
+            folio: contribuyente_id + '-' + moment().unix(),
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
 

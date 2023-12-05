@@ -57,6 +57,8 @@ export class TiposDocumentosController {
 
         const aprobacion: boolean = body.aprobacion
 
+        const expediente_unico: boolean = body.expediente
+
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
         if (errors.length > 0) {
@@ -98,7 +100,8 @@ export class TiposDocumentosController {
             clave,
             descripcion,
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
-            aprobacion
+            aprobacion,
+            expediente_unico
         })
 
         if (!createDocumentType.ok) {

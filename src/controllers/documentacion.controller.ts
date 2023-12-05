@@ -12,6 +12,7 @@ import {DocumentacionPagoQueries} from "../queries/documentacion-pago.query";
 import {DocumentacionAnuenciaQueries} from "../queries/documentacion_anuencia.query";
 import {DocumentacionComplementariaQueries} from "../queries/documentacion_complementaria.query";
 import fs from "fs";
+import AdmZip from "adm-zip";
 
 export class DocumentacionController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
@@ -269,6 +270,68 @@ export class DocumentacionController {
             message: 'Se ha eliminado el documento correctamente'
         })
 
+    }
+
+    public async getExpedienteDocs(req: Request, res: Response) {
+        const administradorId = req.body.administrador_id
+        const contribuyenteId: number = req.body.contribuyente.id
+
+        let errors = [];
+
+        const findExpedienteDocs = await DocumentacionController.documentacionQueries.findExpedienteDocsByContribuyente({
+            contribuyente_id: contribuyenteId,
+        });
+
+        if (!findExpedienteDocs.ok) {
+            errors.push({message: 'Existen problemas al momento de buscar los documentos del expediente'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+        try {
+            // @ts-ignore
+            const documentation = (findExpedienteDocs.documentacion.length > 0) ? findExpedienteDocs.documentacion : null;
+            const zip = new AdmZip();
+
+            if(documentation) {
+                for (const documento of documentation) {
+                    const path = process.env.DOCUMENTATION_PATH + documento.url
+                    zip.addLocalFile(path);
+                }
+                const outputFile =  'Documentos' + '_Expediente_' + contribuyenteId + '.zip'
+
+                fs.writeFileSync(outputFile, zip.toBuffer());
+
+                return res.download(outputFile, (err) => {
+                    if(err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: [{ message: 'No es posible generar zip en estos momentos.' }]
+                        })
+                    }
+                    fs.unlinkSync(outputFile)
+                });
+
+            } else {
+                return res.status(400).json({
+                    ok: false,
+                    message: [{ message: 'El contribuyente no tiene documentación para generar archivo.' }]
+                })
+            }
+
+        } catch (e) {
+            console.log(e)
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'No es posible generar zip en estos momentos.' }]
+            })
+        }
     }
 
 }

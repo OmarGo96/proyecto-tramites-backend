@@ -704,4 +704,24 @@ export class ContribuyenteController {
             ok: true
         })
     }
+
+    public async getContribuyentes(req: Request, res: Response) {
+        const errors = [];
+
+        let getContribuyentes = await ContribuyenteController.contribuyenteQueries.findContribuyentes()
+
+        if (!getContribuyentes.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas para obtener la lista de contribuyentes'}]
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Lista de contribuyentes',
+            contribuyentes: getContribuyentes.contribuyentes
+        })
+
+    }
 }
