@@ -149,7 +149,10 @@ export class ContribuyenteController {
             errors.push({ message: 'Favor de leer y aceptar el aviso de privacidad' }) :  body.aviso_privacidad
 
         const terms_condiciones: string = body.terms_conditions == null || validator.isEmpty(body.terms_conditions + '') === true ?
-            errors.push({ message: 'Favor de proporcionar su teléfono.' }) :  body.terms_conditions
+            errors.push({ message: 'Favor de aceptar los términos y condiciones.' }) :  body.terms_conditions
+
+        const tipo_persona: string = body.tipo_persona == null || validator.isEmpty(body.tipo_persona + '') === true ?
+            errors.push({ message: 'Favor de proporcionar el tipo de contribuyente.' }) :  body.tipo_persona
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
@@ -236,6 +239,7 @@ export class ContribuyenteController {
             codigo_activacion,
             aviso_privacidad,
             terms_condiciones,
+            tipo_persona,
             activo: 0,
         })
 

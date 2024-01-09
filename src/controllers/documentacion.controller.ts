@@ -164,6 +164,110 @@ export class DocumentacionController {
         })
     }
 
+    public async attachExpedienteFile(req: Request, res: Response) {
+        /* Get info from validateJWT middleware */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const tiposDocumentoId: string = body.tipos_documentos_id == null || validator.isEmpty(body.tipos_documentos_id) ?
+            errors.push({ message: 'Favor de proporcionar el id del documento' }) : body.tipos_documentos_id;
+
+        /*const contribuyentesId: string = body.contribuyentes_id == null || validator.isEmpty(body.contribuyentes_id) ?
+            errors.push({ message: 'Favor de proporcionar el contribuy' }) : body.contribuyentes_id;*/
+
+        const tipoDocumento: string = body.tipo_documento == null || validator.isEmpty(body.tipo_documento) ?
+            errors.push({ message: 'Favor de proporcionar el tipo de documento' }) : body.tipo_documento;
+
+        /*const vigenciaInicial: string = body.vigencia_inicial == null || validator.isEmpty(body.vigencia_inicial) ?
+            errors.push({ message: 'Favor de proporcionar la vigencia inicial' }) : body.vigencia_inicial;*/
+
+        const vigenciaFinal: string = body.vigencia_final == null || validator.isEmpty(body.vigencia_final + '') ?
+            null : body.vigencia_final;
+
+        const nombreDocumento: string = !body.nombre_documento || validator.isEmpty(body.nombre_documento) ?
+            null: body.nombre_documento;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        /*if (tipoDocumento !== '0' && tipoDocumento !== '1') {
+            errors.push({ message: 'Favor de proporcionar un tipo de documento valido' })
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }*/
+
+        /*const findDocumentacionById = await DocumentacionController.documentacionQueries.findDocumentacionById({
+            id: documentacionId
+        })
+
+        if (!findDocumentacionById.ok) {
+            errors.push({ message: 'Existen problemas al momento de validar el id de la documentacion proporcionada.' })
+        } else if (findDocumentacionById.documentacion == null) {
+            errors.push({ message: 'Actualmente no existe el registro de la documentacion proporcionada' })
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }*/
+
+        const uploadFile = await DocumentacionController.file.upload(req, null, 'documentacion')
+
+        if (!uploadFile.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: uploadFile.message }]
+            })
+        }
+
+        const updateDocumentacion = await DocumentacionController.documentacionQueries.attachFile({
+            tipos_documentos_id: Number(tiposDocumentoId),
+            contribuyente_id,
+            url: uploadFile.nameFile,
+            nombre_otro: nombreDocumento,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+            tipo_documento: tipoDocumento,
+            vigencia_final: (vigenciaFinal) ? moment(vigenciaFinal).format('YYYY-MM-DD HH:mm:ss') : null,
+            aprobado: 1,
+            status: 1
+        })
+
+        if (!updateDocumentacion.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'Existen problemas al momento de adjuntar el archivo y actualizar la información.' }]
+            })
+        }
+
+        /** Creamos el log del usuario */
+        const createLogContribuyente = await DocumentacionController.log.contribuyente({
+            contribuyente_id,
+            navegador: req.headers['user-agent'],
+            accion: 'El contribuyente a adjuntado un nuevo documento a su cuenta',
+            ip: req.socket.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha guardado el documento de forma exitosa'
+        })
+    }
+
     public async getFile(req: Request, res: Response) {
         /** Creamos un array que nos almacenará los errores que surjan en la función */
         const errors = []
@@ -273,6 +377,34 @@ export class DocumentacionController {
     }
 
     public async getExpedienteDocs(req: Request, res: Response) {
+        const administradorId = req.body.administrador_id
+        const contribuyenteId: number = req.body.contribuyente.id
+
+        let errors = [];
+
+        const findExpedienteDocs = await DocumentacionController.documentacionQueries.findExpedienteByContribuyente({
+            contribuyente_id: contribuyenteId,
+        });
+
+        if (!findExpedienteDocs.ok) {
+            errors.push({message: 'Existen problemas al momento de buscar los documentos del expediente'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            documentacionExpediente: findExpedienteDocs.documentacion
+        })
+
+    }
+
+    public async getExpedienteDocsZip(req: Request, res: Response) {
         const administradorId = req.body.administrador_id
         const contribuyenteId: number = req.body.contribuyente.id
 

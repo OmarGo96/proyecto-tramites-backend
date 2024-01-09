@@ -9,6 +9,9 @@ export class DocumentacionQueries {
     public async findDocumentosByContribuyente(data: any) {
         try {
             const documentacion = await TiposDocumentosModel.findAll({
+                where: {
+                    expediente_unico: 0
+                },
                 include: [
                     {
                         model: DocumentacionModel, as: 'Documentacion',
@@ -19,6 +22,34 @@ export class DocumentacionQueries {
                         order: [
                             ['fecha_alta','DESC']
                         ]
+                    }
+                ]
+            })
+            return { ok: true, documentacion }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
+    public async findExpedienteByContribuyente(data: any) {
+        try {
+            const documentacion = await TiposDocumentosModel.findAll({
+                where: {
+                    expediente_unico: 1
+                },
+                include: [
+                    {
+                        required: false,
+                        model: DocumentacionModel, as: 'Documentacion',
+                        where: {
+                            contribuyentes_id: data.contribuyente_id,
+                            status: 1
+                        },
+                        order: [
+                            ['fecha_alta','DESC']
+                        ],
+                        limit: 1
                     }
                 ]
             })
