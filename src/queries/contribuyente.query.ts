@@ -21,7 +21,7 @@ export class ContribuyenteQueries {
             const contribuyente = await ContribuyenteModel.findOne({
                 attributes: [
                     'uuid', 'rfc', 'nombre', 'apellidos', 'email', 'telefono', 'telefono_referencia',
-                    'genero'
+                    'genero','tipo_persona'
                 ],
                 where: {
                     id: data.id

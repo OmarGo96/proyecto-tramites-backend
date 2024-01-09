@@ -32,11 +32,40 @@ export class DocumentacionQueries {
         }
     }
 
-    public async findExpedienteByContribuyente(data: any) {
+    public async findExpedienteByContribuyenteFisica(data: any) {
         try {
             const documentacion = await TiposDocumentosModel.findAll({
                 where: {
-                    expediente_unico: 1
+                    expediente_unico: 1,
+                    id: { [Op.in]: [5,19,27] }
+                },
+                include: [
+                    {
+                        required: false,
+                        model: DocumentacionModel, as: 'Documentacion',
+                        where: {
+                            contribuyentes_id: data.contribuyente_id,
+                            status: 1
+                        },
+                        order: [
+                            ['fecha_alta','DESC']
+                        ],
+                        limit: 1
+                    }
+                ]
+            })
+            return { ok: true, documentacion }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
+    public async findExpedienteByContribuyenteMoral(data: any) {
+        try {
+            const documentacion = await TiposDocumentosModel.findAll({
+                where: {
+                    expediente_unico: 1,
                 },
                 include: [
                     {

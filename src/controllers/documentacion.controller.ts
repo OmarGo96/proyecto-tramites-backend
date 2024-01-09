@@ -379,12 +379,21 @@ export class DocumentacionController {
     public async getExpedienteDocs(req: Request, res: Response) {
         const administradorId = req.body.administrador_id
         const contribuyenteId: number = req.body.contribuyente.id
+        const contribuyente = req.body.contribuyente
 
         let errors = [];
 
-        const findExpedienteDocs = await DocumentacionController.documentacionQueries.findExpedienteByContribuyente({
-            contribuyente_id: contribuyenteId,
-        });
+        let findExpedienteDocs: any
+
+        if (contribuyente.tipo_persona == 1){
+            findExpedienteDocs = await DocumentacionController.documentacionQueries.findExpedienteByContribuyenteFisica({
+                contribuyente_id: contribuyenteId,
+            });
+        } else {
+            findExpedienteDocs = await DocumentacionController.documentacionQueries.findExpedienteByContribuyenteMoral({
+                contribuyente_id: contribuyenteId,
+            });
+        }
 
         if (!findExpedienteDocs.ok) {
             errors.push({message: 'Existen problemas al momento de buscar los documentos del expediente'})
