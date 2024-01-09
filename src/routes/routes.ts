@@ -78,7 +78,7 @@ export class Routes {
         app.route('/api/activar_cuenta/:codigo_activacion').get(this.contribuyenteController.active)
         app.route('/api/contribuyentes_no_activos').get(this.contribuyenteController.resendActivationCode)
         app.route('/api/contribuyente/:contribuyente_uuid').delete(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.drop)
-        app.route('/api/contribuyente/expediente/:contribuyente_uuid').get(CheckHeaders.validateJWTAdministrador,GetValue.contribuyente, this.documentacionController.getExpedienteDocs)
+        app.route('/api/contribuyente/expediente/:contribuyente_uuid').get(CheckHeaders.validateJWTAdministrador,GetValue.contribuyente, this.documentacionController.getExpedienteDocsZip)
         // Routes for administradores methods
         app.route('/api/administradores').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.store)
         app.route('/api/administradores').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.administradorController.index)
@@ -152,6 +152,8 @@ export class Routes {
         app.route('/api/documentacion').get(CheckHeaders.validateJWTContribuyente, this.documentacionController.index)
         app.route('/api/archivo_documentacion/:documentacion_id').get(/*CheckHeaders.validateJWTByTypeUser, */this.documentacionController.getFile)
         app.route('/api/documentacion/:documentacion_id').post(CheckHeaders.validateJWTContribuyente,this.documentacionController.deleteDocument)
+        app.route('/api/documentacion/expediente/:contribuyente_uuid').get(CheckHeaders.validateJWTContribuyente,GetValue.contribuyente, this.documentacionController.getExpedienteDocs)
+
         // Routes for documentos-solicitud-requisito
         app.route('/api/documentos-solcicitud').post(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.attachFile)
         app.route('/api/documentos-solicitud-requisito/:documento_solicitud_requisito_id').put(CheckHeaders.validateJWTContribuyente, this.documentosSolicitudRequisitoController.updateDocumentoSolicitudRequisito)

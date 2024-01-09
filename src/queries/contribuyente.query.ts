@@ -123,6 +123,7 @@ export class ContribuyenteQueries {
                 codigo_activacion: data.codigo_activacion,
                 aviso_privacidad: data.aviso_privacidad,
                 terms_condiciones: data.terms_condiciones,
+                tipo_persona: data.tipo_persona,
                 activo: data.activo
             })
             return {ok: true, contribuyente}
@@ -133,7 +134,6 @@ export class ContribuyenteQueries {
     }
 
     public async update(data: any) {
-        console.log(data);
         try {
             const contribuyente = await ContribuyenteModel.update({
                 nombre: data.nombre,

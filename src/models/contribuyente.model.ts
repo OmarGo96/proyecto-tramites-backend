@@ -20,6 +20,7 @@ export class ContribuyenteModel extends Model{
     public cambio_password!: number
     public aviso_privacidad!: number
     public terms_condiciones!: number
+    public tipo_persona!: number
     public activo!: number
 }
 
@@ -77,7 +78,7 @@ ContribuyenteModel.init({
     aviso_privacidad: {
         type: DataTypes.INTEGER
     },
-    terms_condiciones: {
+    tipo_persona: {
         type: DataTypes.INTEGER
     },
     activo: {
