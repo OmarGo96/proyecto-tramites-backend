@@ -30,6 +30,7 @@ export class HtmlPDF
 
         try {
             let createPDFHTML = await new Promise((resolve, reject) => {
+                // @ts-ignore
                 htmlPDF.create(html, opt).toFile(filePath+fileName, (err, res) => {
                     if (!err) {
                         resolve({ok: true, res})
