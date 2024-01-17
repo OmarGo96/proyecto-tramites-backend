@@ -25,7 +25,7 @@ export class HtmlPDF
             type: 'pdf',
             orientation: 'portrait',
             border: 0,
-            timeout: '10000'
+            timeout: 30000
         }
 
         try {
