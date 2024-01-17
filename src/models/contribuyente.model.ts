@@ -7,6 +7,8 @@ export class ContribuyenteModel extends Model{
     public rfc!: string
     public nombre!: string
     public apellidos!: string
+    public razon_social!: string
+    public representante_legal!: string
     public email!: string
     public password!: string
     public telefono!: string
@@ -43,6 +45,12 @@ ContribuyenteModel.init({
         type: DataTypes.STRING
     },
     email: {
+        type: DataTypes.STRING
+    },
+    razon_social: {
+        type: DataTypes.STRING
+    },
+    representante_legal: {
         type: DataTypes.STRING
     },
     password: {

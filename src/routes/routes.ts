@@ -79,6 +79,7 @@ export class Routes {
         app.route('/api/contribuyentes_no_activos').get(this.contribuyenteController.resendActivationCode)
         app.route('/api/contribuyente/:contribuyente_uuid').delete(CheckHeaders.validateJWTContribuyente, this.contribuyenteController.drop)
         app.route('/api/contribuyente/expediente/:contribuyente_uuid').get(CheckHeaders.validateJWTAdministrador,GetValue.contribuyente, this.documentacionController.getExpedienteDocsZip)
+        app.route('/api/contribuyente/acuse_expediente/:contribuyente_uuid').get(GetValue.contribuyente, this.documentacionController.generateAcuseExpediente)
         // Routes for administradores methods
         app.route('/api/administradores').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.store)
         app.route('/api/administradores').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.administradorController.index)
