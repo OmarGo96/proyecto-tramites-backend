@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import  handlebars from 'handlebars';
+import handlebars from 'handlebars';
 import moment from 'moment';
 import htmlPDF from 'html-pdf';
 
@@ -14,7 +14,7 @@ export class HtmlPDF
         
         let compileHTML = handlebars.compile(templateHTML);
 
-        let html = await compileHTML(params);
+        let html = compileHTML(params);
 
         
         let filePath = process.env.ACUSES_DOCS_PATH;
