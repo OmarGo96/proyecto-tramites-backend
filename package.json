@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/juanamayak/ja-node-backend-template#readme",
   "dependencies": {
+    "@types/html-pdf": "^3.0.3",
     "@types/qrcode": "^1.5.5",
     "adm-zip": "^0.5.10",
     "axios": "^1.3.4",

@@ -48,8 +48,7 @@ export class SessionController {
             errors.push({message: 'Existen problemas al momento de verificar si el contribuyente esta dado de alta.'})
         } else if (findContribuyenteByEmail.contribuyente == null) {
             errors.push({message: 'El email proporcionado no se encuentra dado de alta en el sistema.'})
-        } else if (findContribuyenteByEmail.contribuyente !== null &&
-            bcrypt.compareSync(password, findContribuyenteByEmail.contribuyente.password) === false) {
+        } else if (bcrypt.compareSync(password, findContribuyenteByEmail.contribuyente.password) === false) {
             errors.push({message: 'Las credenciales no coinciden, favor de proporcionarlas de nuevo.'})
         } else if (findContribuyenteByEmail.contribuyente.activo === 0) {
             errors.push({message: 'Su cuenta aún no ha sido verificada'})
