@@ -112,11 +112,29 @@ export class ContribuyenteController {
         const countryCode: string = '+52'
         const codigo_activacion = moment().unix()
 
-        const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) === true ?
-            errors.push({ message: 'Favor de proporcionar su nombre' }) : body.nombre
+        const tipo_persona: string = body.tipo_persona == null || validator.isEmpty(body.tipo_persona + '') === true ?
+            errors.push({ message: 'Favor de proporcionar el tipo de contribuyente.' }) :  body.tipo_persona
 
-        const apellidos: string = body.apellidos == null || validator.isEmpty(body.apellidos) === true ?
-            errors.push({ message: 'Favor de proporcionar su(s) apellidos.' }) : body.apellidos
+        const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) === true ?
+            errors.push({ message: 'Favor de proporcionar su nombre.' }) : body.nombre
+
+        let apellidos: string = null
+
+        if (tipo_persona == '1') {
+            apellidos = body.apellidos == null || validator.isEmpty(body.apellidos) === true ?
+                errors.push({ message: 'Favor de proporcionar su(s) apellidos.' }) : body.apellidos
+        }
+
+        let razon_social: string = null
+        let representante_legal: string = null
+
+        if (tipo_persona == '2') {
+            razon_social = body.nombre == null || validator.isEmpty(body.nombre) === true ?
+                errors.push({ message: 'Favor de proporcionar la razón social de la empresa' }) : body.nombre
+
+            representante_legal = body.representante_legal == null || validator.isEmpty(body.representante_legal) === true ?
+                errors.push({ message: 'Favor de proporcionar el representante legal.' }) : body.representante_legal
+        }
 
         const email: string = body.email == null || validator.isEmpty(body.email) === true ?
             errors.push({ message: 'Favor de proporcionar su email.' }) : body.email
@@ -151,8 +169,7 @@ export class ContribuyenteController {
         const terms_condiciones: string = body.terms_conditions == null || validator.isEmpty(body.terms_conditions + '') === true ?
             errors.push({ message: 'Favor de aceptar los términos y condiciones.' }) :  body.terms_conditions
 
-        const tipo_persona: string = body.tipo_persona == null || validator.isEmpty(body.tipo_persona + '') === true ?
-            errors.push({ message: 'Favor de proporcionar el tipo de contribuyente.' }) :  body.tipo_persona
+
 
         const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
 
@@ -229,6 +246,8 @@ export class ContribuyenteController {
             uuid: uuidv4(),
             nombre,
             apellidos,
+            razon_social,
+            representante_legal,
             email,
             password: bcrypt.hashSync(password, ContribuyenteController.salt),
             telefono: countryCode + telefono,

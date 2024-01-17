@@ -20,8 +20,8 @@ export class ContribuyenteQueries {
         try {
             const contribuyente = await ContribuyenteModel.findOne({
                 attributes: [
-                    'uuid', 'rfc', 'nombre', 'apellidos', 'email', 'telefono', 'telefono_referencia',
-                    'genero','tipo_persona'
+                    'uuid', 'rfc', 'nombre', 'apellidos', 'razon_social', 'representante_legal', 'email', 'telefono',
+                    'genero','edad', 'tipo_persona'
                 ],
                 where: {
                     id: data.id
@@ -112,6 +112,8 @@ export class ContribuyenteQueries {
                 rfc: data.rfc,
                 nombre: data.nombre,
                 apellidos: data.apellidos,
+                razon_social: data.razon_social,
+                representante_legal: data.representante_legal,
                 email: data.email,
                 password: data.password,
                 telefono: data.telefono,

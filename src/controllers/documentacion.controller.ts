@@ -13,6 +13,9 @@ import {DocumentacionAnuenciaQueries} from "../queries/documentacion_anuencia.qu
 import {DocumentacionComplementariaQueries} from "../queries/documentacion_complementaria.query";
 import fs from "fs";
 import AdmZip from "adm-zip";
+import {HtmlPDF} from '../helpers/html-pdf.helper'
+import QRCode from 'qrcode'
+import * as process from "process";
 
 export class DocumentacionController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
@@ -377,7 +380,6 @@ export class DocumentacionController {
     }
 
     public async getExpedienteDocs(req: Request, res: Response) {
-        const administradorId = req.body.administrador_id
         const contribuyenteId: number = req.body.contribuyente.id
         const contribuyente = req.body.contribuyente
 
@@ -413,6 +415,51 @@ export class DocumentacionController {
 
     }
 
+    public async generateAcuseExpediente(req: Request, res: Response) {
+        const contribuyente = req.body.contribuyente
+
+        if (!contribuyente) {
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'El contribuyente no tiene documentación para generar archivo.' }]
+            })
+        }
+
+        try {
+            const qr = await QRCode.toBuffer(process.env.URL+'api/contribuyente/acuse_expediente/'+contribuyente.uuid)
+            let qr64 = Buffer.from(qr).toString('base64')
+
+            let dataPDF = {
+                data: {
+                    nombre: (contribuyente.tipo_persona == 1) ? contribuyente.nombre + ' ' + contribuyente.apellidos : contribuyente.razon_social,
+                    rfc: contribuyente.rfc,
+                    representante: contribuyente.representante_legal,
+                    persona: (contribuyente.tipo_persona == 1) ? 'PERSONA FÍSICA': 'PERSONA MORAL',
+                    tipo_persona: (contribuyente.tipo_persona == 1),
+                    fecha_recepcion: moment().format('DD/MM/YYYY'),
+                    hora_recepcion: moment().format('LTS'),
+                    folio: contribuyente.id,
+                    qr: 'data:image/png;base64,'+qr64
+                }
+            }
+
+            let createResponsivePDF: any = await HtmlPDF.createAcusePdf(
+                dataPDF,
+                'acuse.hbs'
+            );
+
+            return res.status(200).contentType('application/pdf').send(createResponsivePDF.pdf)
+
+        } catch (e) {
+            console.log(e)
+            return res.status(400).json({
+                ok: false,
+                message: [{ message: 'Existen problemas para generar acuse, intente más tarde.' }]
+            })
+        }
+
+    }
+
     public async getExpedienteDocsZip(req: Request, res: Response) {
         const administradorId = req.body.administrador_id
         const contribuyenteId: number = req.body.contribuyente.id
@@ -433,7 +480,6 @@ export class DocumentacionController {
                 errors
             })
         }
-
 
         try {
             // @ts-ignore
