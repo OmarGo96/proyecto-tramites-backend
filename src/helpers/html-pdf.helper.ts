@@ -25,7 +25,9 @@ export class HtmlPDF
             type: 'pdf',
             orientation: 'portrait',
             border: 0,
-            timeout: 30000
+            localUrlAccess: true,
+            phantomPath: "/usr/local/bin/phantomjs",
+
         }
 
         try {
