@@ -34,18 +34,16 @@
 <div style="padding: 5%;">
     <table style="width:100%;border: 1px solid transparent; border-collapse: collapse;table-layout: fixed ;">
         <tr>
-            {{#if tipo_persona}}
-                <td style="width:60%;padding-bottom: 2px; font-size: 14px;">
-                    <span><b>NOMBRE:</b> {{data.nombre}}</span>
-                </td>
-            {{else}}
-                <td style="width:60%;padding-bottom: 2px; font-size: 14px;">
-                    <span><b>RAZÓN SOCIAL:</b> {{data.nombre}}</span>
-                </td>
-            {{/if}}
+            <td style="width:60%;padding-bottom: 2px; font-size: 14px;">
+                {{#if data.tipo_persona}}
+                    <span><b>NOMBRE:</b>{{data.nombre}}</span>
+                {{else}}
+                    <span><b>RAZÓN SOCIAL:</b>{{data.nombre}}</span>
+                {{/if}}
 
+            </td>
             <td rowspan="8">
-                <img src="{{data.qr}}" alt="">
+                <img src="{{data.qr}}" alt="QR">
             </td>
         </tr>
         <tr>
@@ -72,9 +70,10 @@
                 </td>
             {{else}}
                 <td style="padding-bottom: 2px; font-size: 14px;">
-                    <span><b>DOCUMENTOS:</b> IDENTIFICACIÓN OFICIAL, ACTA CONSTITUTIVA, COMPROBANTE DE DOMICILIO, CONSTANCIA DE SITUACIÓN FISCAL, PODERES LEGALES E IDENTIFICACIÓN DE LOS REPRESENTANTES LEGALES </span>
+                    <span><b>DOCUMENTOS:</b> CONSTANCIA DE SITUACIÓN FISCAL, COMPROBANTE DE DOMICILIO, IDENTIFICACIÓN OFICIAL, ACTA CONSTITUTIVA, PODERES LEGALES, IDENTIFICACIÓN DE LOS APODERADOS LEGALES</span>
                 </td>
             {{/if}}
+
         </tr>
         <tr>
             <td style="padding-bottom: 2px; font-size: 14px;">
