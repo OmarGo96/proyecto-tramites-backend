@@ -25,8 +25,6 @@ export class HtmlPDF
             type: 'pdf',
             orientation: 'portrait',
             border: 0,
-            localUrlAccess: true,
-            phantomPath: "/usr/local/bin/phantomjs",
 
         }
 

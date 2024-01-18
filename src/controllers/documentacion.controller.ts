@@ -16,6 +16,7 @@ import AdmZip from "adm-zip";
 import {HtmlPDF} from '../helpers/html-pdf.helper'
 import QRCode from 'qrcode'
 import * as process from "process";
+import path from "path";
 
 export class DocumentacionController {
     static servicioQueries: ServicioQueries = new ServicioQueries()
@@ -429,6 +430,9 @@ export class DocumentacionController {
             const qr = await QRCode.toBuffer(process.env.URL+'api/contribuyente/acuse_expediente/'+contribuyente.uuid)
             let qr64 = Buffer.from(qr).toString('base64')
 
+            let logo_path = path.join(__dirname, '../../assets/');
+            let logo = fs.readFileSync(logo_path+'logo.png').toString('base64')
+
             let dataPDF = {
                 data: {
                     nombre: (contribuyente.tipo_persona == 1) ? contribuyente.nombre + ' ' + contribuyente.apellidos : contribuyente.razon_social,
@@ -439,7 +443,8 @@ export class DocumentacionController {
                     fecha_recepcion: moment().format('DD/MM/YYYY'),
                     hora_recepcion: moment().format('LTS'),
                     folio: contribuyente.id,
-                    qr: 'data:image/png;base64,'+qr64
+                    qr: 'data:image/png;base64,'+qr64,
+                    logo: 'data:image/png;base64,'+logo
                 }
             }
 
