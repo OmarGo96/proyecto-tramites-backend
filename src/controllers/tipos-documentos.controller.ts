@@ -105,7 +105,7 @@ export class TiposDocumentosController {
         })
 
         if (!createDocumentType.ok) {
-            errors.push({message: 'Existen problemas al momento de dar de alta el área.'})
+            errors.push({message: 'Existen problemas al momento de dar de alta el tipo de documento.'})
         }
 
         const createLogAdministrador = await TiposDocumentosController.log.administrador({
@@ -119,6 +119,79 @@ export class TiposDocumentosController {
         return res.status(200).json({
             ok: true,
             message: 'Se ha dado de alta el tipo de documento'
+        })
+    }
+
+    public async updateTipoDocumento(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const id: number = body.id == null || validator.isEmpty(body.id + '') ?
+            errors.push({message: 'Favor de proporcionar el tipo de documento a editar'}) : body.id
+
+        const nombre: string = body.nombre == null || validator.isEmpty(body.nombre) ?
+            errors.push({message: 'Favor de proporcionar el nombre'}) : body.nombre
+
+        const regex = new RegExp('^[A-Za-zÀ-ú _]*[A-Za-zÀ-ú][A-Za-zÀ-ú _]*$');
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        if (!regex.test(nombre)) {
+            errors.push({message: 'Favor de solo proporcionar letras para el campo nombre'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
+        const findDocumentByid = await TiposDocumentosController.tiposDocumentoQueries.findDocumentById({
+            id
+        })
+
+        if (!findDocumentByid.ok) {
+            errors.push({message: 'Existen problemas al momento de validar el tipo de documento proporcionado.'})
+        } else if (findDocumentByid.document == null) {
+            errors.push({message: 'El tipo de documento proporcionado no existe.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const updateDocumentType = await TiposDocumentosController.tiposDocumentoQueries.update({
+            id,
+            nombre,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (!updateDocumentType.ok) {
+            errors.push({message: 'Existen problemas al momento de dar de modificar el tipo de documento.'})
+        }
+
+        const createLogAdministrador = await TiposDocumentosController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha modificado un tipo de documento con index: '+ id,
+            ip: req.socket.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha dado de modificado el tipo de documento'
         })
     }
 
