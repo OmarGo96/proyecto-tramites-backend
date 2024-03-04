@@ -138,4 +138,19 @@ export class RequerimientoQueries {
             return {ok: false}
         }
     }
+
+    public async delete(data: any, transaction?) {
+        try {
+            const requisito = await RequisitoModel.destroy( {
+                where: {
+                    uuid: data.uuid
+                },
+                transaction
+            })
+            return {ok: true, requisito}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
 }

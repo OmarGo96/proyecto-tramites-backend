@@ -108,6 +108,7 @@ export class Routes {
         app.route('/api/requerimientos').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.store)
         app.route('/api/requerimientos/:requerimiento_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.update)
         app.route('/api/requerimientos/:requerimiento_uuid').patch(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.changeAction)
+        app.route('/api/requerimientos/:requerimiento_uuid').delete(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.deleteRequirement)
         app.route('/api/requerimiento/assign').post(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.assignRequerimientoServicio)
         app.route('/api/requerimiento/edit/:requerimiento_servicio_id').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.editRequerimientoServicio)
         app.route('/api/requerimiento/unlink/:requerimiento_servicio_id').delete(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.requerimientoController.unlinkRequerimientoServicio)
