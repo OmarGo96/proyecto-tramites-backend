@@ -155,6 +155,21 @@ export class RequisitosServiciosQueries {
         }
     }
 
+    public async deleteByRequisitoId(data: any, transaction?) {
+        try {
+            const requisitoServicio = await RequisitoServiciosModel.destroy({
+                where: {
+                    requisito_id: data.requisito_id
+                },
+                transaction
+            })
+            return {ok: true, requisitoServicio}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
     public async update(data: any) {
         try {
             const requisitos = await RequisitoServiciosModel.update({

@@ -7,12 +7,16 @@ import {RequerimientoQueries} from '../queries/requerimiento.query';
 import {RequisitosServiciosQueries} from '../queries/requisitos-servicios.query';
 import {AreaQueries} from '../queries/area.query';
 import {Log} from '../helpers/logs';
+import {DocumentoSolicitudRequisitoQueries} from "../queries/documento-solicitud-requisito.query";
+import sequelize, {Sequelize} from "sequelize";
+import {database} from "../config/database";
 
 export class RequerimientoController {
     static areaQueries: AreaQueries = new AreaQueries()
     static servicioQueries: ServicioQueries = new ServicioQueries()
     static requerimientoQueries: RequerimientoQueries = new RequerimientoQueries()
     static requisitosServiciosQueries: RequisitosServiciosQueries = new RequisitosServiciosQueries()
+    static documentoSolicitudRequisitoQueries: DocumentoSolicitudRequisitoQueries = new DocumentoSolicitudRequisitoQueries()
     static log: Log = new Log()
 
     public async index(req: Request, res: Response) {
@@ -253,6 +257,96 @@ export class RequerimientoController {
         return res.status(200).json({
             ok: true,
             message: 'Se ha ' + actionString + ' el requerimiento correctamente'
+        })
+
+    }
+
+    public async deleteRequirement(req: Request, res: Response) {
+        const administratorId: number = req.body.administrador_id;
+        const body = req.body;
+        const errors = [];
+
+        const requerimientoUuid = req.params.requerimiento_uuid == null ? null : validator.isEmpty(req.params.requerimiento_uuid) ?
+            errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : req.params.requerimiento_uuid;
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            });
+        }
+
+        const findRequerimientoByUuid = await RequerimientoController.requerimientoQueries.findRequisitoByUUID({
+            uuid: requerimientoUuid
+        })
+
+        if (!findRequerimientoByUuid.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de realizar la acción al requerimiento proporcionado.'}]
+            });
+        }
+
+        let dbTransaction = await database.transaction({ autocommit: false})
+        try{
+            const deleteDocumentoRequisito = await RequerimientoController.documentoSolicitudRequisitoQueries.delete({
+                requisito_id: findRequerimientoByUuid.requisito.id
+            }, dbTransaction)
+
+            if (!deleteDocumentoRequisito.ok) {
+                await dbTransaction.rollback()
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{message: 'Existen problemas al momento de eliminar el requerimiento proporcionado.'}]
+                })
+            }
+
+
+            const deleteRequisitosServicio = await RequerimientoController.requisitosServiciosQueries.deleteByRequisitoId({
+                requisito_id: findRequerimientoByUuid.requisito.id
+            }, dbTransaction);
+
+            if (!deleteRequisitosServicio.ok) {
+                await dbTransaction.rollback()
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{message: 'Existen problemas al momento de eliminar el requerimiento proporcionado.'}]
+                });
+            }
+
+            const deleteRequerimiento = await RequerimientoController.requerimientoQueries.delete({
+                uuid: requerimientoUuid
+            },dbTransaction);
+
+            if (!deleteRequerimiento.ok) {
+                await dbTransaction.rollback()
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{message: 'Existen problemas al momento de eliminar el requerimiento proporcionado.'}]
+                });
+            }
+        } catch (e) {
+            console.log(e)
+            await dbTransaction.rollback()
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'Existen problemas al momento de eliminar el requerimiento proporcionado.'}]
+            });
+        }
+        await dbTransaction.commit()
+
+
+        const createLogAdministrador = await RequerimientoController.log.administrador({
+            administrador_id: administratorId,
+            navegador: req.headers['user-agent'],
+            accion: 'El administrador ha eliminado un requerimiento',
+            ip: req.socket.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha eliminado el requerimiento correctamente'
         })
 
     }

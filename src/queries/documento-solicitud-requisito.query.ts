@@ -38,6 +38,20 @@ export class DocumentoSolicitudRequisitoQueries {
             return {ok: false}
         }
     }
+    public async delete(data: any, transaction?) {
+        try {
+            const document = await DocumentosSolicitudRequisitoModel.destroy({
+                where: {
+                    requisito_id: data.requisito_id,
+                },
+                transaction
+            })
+            return {ok: true, document}
+        } catch (e) {
+            console.log(e);
+            return {ok: false}
+        }
+    }
 
     public async findDocumentacionById(data: any) {
         try {
