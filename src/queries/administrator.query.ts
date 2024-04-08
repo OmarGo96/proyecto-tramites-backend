@@ -8,7 +8,8 @@ export class AdministratorQueries {
         try {
             const administrator = await AdministratorModel.findOne({
                 where: {
-                    usuario: data.usuario
+                    usuario: data.usuario,
+                    activo: 1
                 },
                 include: [
                     {
@@ -32,13 +33,15 @@ export class AdministratorQueries {
                     id: {
                         [Op.ne]: data.id
                     },
-                    area_id: data.area_id
+                    area_id: data.area_id,
+                    activo: { [Op.in]: [0,1] }
                 }
             }else {
                 where = {
                     id: {
                         [Op.ne]: data.id
                     },
+                    activo: { [Op.in]: [0,1] }
                 }
             }
 
@@ -126,6 +129,22 @@ export class AdministratorQueries {
                 apellidos: data.apellidos,
                 rol: data.rol,
                 usuario: data.usuario,
+                activo: data.activo,
+            }, {
+                where: {
+                    id: data.id
+                }
+            })
+            return {ok: true, administrator}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
+    public async delete(data: any) {
+        try {
+            const administrator = await AdministratorModel.update({
                 activo: data.activo,
             }, {
                 where: {

@@ -373,4 +373,68 @@ export class AdministradorController {
             message: 'Se actualizo la información de forma exitosa'
         })
     }
+
+    public async delete(req: Request, res: Response) {
+        const body = req.body;
+        const errors = [];
+        const auth = (req.body.rol === Roles.SUPERADMIN);
+
+        const administradorUuid = req.params.administrador_uuid == null ? null : validator.isEmpty(req.params.administrador_uuid) ?
+            errors.push({message: 'Favor de proporcionar al administrador'}) :
+            req.params.administrador_uuid
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const findAdministradorByUUID = await AdministradorController.administradorQueries.findAdministradorByUUID({
+            uuid: administradorUuid
+        })
+
+        if (findAdministradorByUUID.ok === false) {
+            errors.push({message: 'Existen problemas al momento de verificar si el usuario esta dado de alta.'})
+        } else if (findAdministradorByUUID.administrator == null) {
+            errors.push({message: 'El usuario proporcionado no se encuentra dado de alta en el sistema.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+        const updateAdministrador = await AdministradorController.administradorQueries.delete({
+            activo: -1,
+            id:  findAdministradorByUUID.administrator.id
+        })
+
+        if (updateAdministrador.ok === false) {
+            errors.push({message: 'Existen problemas al momento de actualizar la información del usuario.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        const createLogAdministrador = await AdministradorController.log.administrador({
+            administrador_id: findAdministradorByUUID.administrator ? findAdministradorByUUID.administrator.id : false,
+            navegador: req.headers['user-agent'],
+            accion: 'Se ha eliminado el usuario',
+            ip: req.socket.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha eliminado el usuario de forma exitosa'
+        })
+    }
 }
