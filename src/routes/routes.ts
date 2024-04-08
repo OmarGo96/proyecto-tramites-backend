@@ -85,6 +85,7 @@ export class Routes {
         app.route('/api/administradores').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, GetValue.administrador, this.administradorController.index)
         app.route('/api/info_administrador').get(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.show)
         app.route('/api/administradores/:administrador_uuid').put(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.update)
+        app.route('/api/administradores/:administrador_uuid').delete(CheckHeaders.validateJWTAdministrador, CheckRoles.permisos, this.administradorController.delete)
         // Routes for areas methods
         app.route('/api/contribuyente/areas').get(CheckHeaders.validateJWTContribuyente, this.areaController.index)
         app.route('/api/areas').get(CheckHeaders.validateJWTAdministrador, GetValue.administrador, this.areaController.index)
