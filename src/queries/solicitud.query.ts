@@ -152,7 +152,7 @@ export class SolicitudQueries {
                         })
                     ],
                     estatus_solicitud_id: {
-                        [Op.notIn]: [13]
+                        [Op.notIn]: [1,13]
                     }
                 }
             } else {
