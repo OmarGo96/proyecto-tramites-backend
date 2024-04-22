@@ -19,7 +19,7 @@ export class File {
 
         const file: any = data.files.file
 
-        let allowed_ext = ['.pdf','.dwg','.dxf']
+        let allowed_ext = ['.pdf','.PDF','.dwg','.dxf']
 
         const ext = '.' + file.name.split(".").pop()
 
