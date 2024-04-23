@@ -164,7 +164,7 @@ export class SolicitudQueries {
                     ],
                     area_id: data.area_id,
                     estatus_solicitud_id: {
-                        [Op.notIn]: [13]
+                        [Op.notIn]: [1,13]
                     }
                 }
             }
