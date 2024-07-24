@@ -11,6 +11,7 @@ export class Axios {
             }
         })
         .catch(error => {
+            console.log(error)
             return {
                 ok: false,
                 result: error

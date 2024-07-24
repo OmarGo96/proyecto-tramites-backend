@@ -56,6 +56,23 @@ export class LicenciaQueries {
         }
     }
 
+    public async findLicenciaByLicenciaFolio(data: any) {
+        try {
+            const licencia = await LicenciaModel.findOne({
+                where: {
+                    [Op.and]: [
+                        { licencia_funcionamiento_id: data.licencia_funcionamiento_id },
+                        { licencia_funcionamiento_folio: data.licencia_funcionamiento_folio },
+                    ]
+                }
+            })
+            return { ok: true, licencia }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
     public async create(data: any) {
         try {
             const licencia = await LicenciaModel.create({

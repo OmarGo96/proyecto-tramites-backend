@@ -8,7 +8,6 @@ import {RequisitosServiciosQueries} from '../queries/requisitos-servicios.query'
 import {AreaQueries} from '../queries/area.query';
 import {Log} from '../helpers/logs';
 import {DocumentoSolicitudRequisitoQueries} from "../queries/documento-solicitud-requisito.query";
-import sequelize, {Sequelize} from "sequelize";
 import {database} from "../config/database";
 
 export class RequerimientoController {
@@ -428,6 +427,7 @@ export class RequerimientoController {
 
 
     }
+
     public async unlinkRequerimientoServicio(req: Request, res: Response) {
         const administratorId: number = req.body.administrador_id;
         const body = req.body;
@@ -520,8 +520,8 @@ export class RequerimientoController {
 
         const editRequisitoServicio = await RequerimientoController.requisitosServiciosQueries.update({
             id: findRequerimientoServicioById.requerimientoServicio.id,
-            requisito_id: findRequerimientoServicioById.requerimientoServicio.requisitoId,
-            servicio_id: findRequerimientoServicioById.requerimientoServicio.servicioId,
+            requisito_id: findRequerimientoServicioById.requerimientoServicio.requisito_id,
+            servicio_id: findRequerimientoServicioById.requerimientoServicio.servicio_id,
             original,
             noCopias,
             complementario: (obligatorio === '0') ? 1 : 0,

@@ -18,6 +18,9 @@ import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
 import fs from "fs";
 import AdmZip from "adm-zip";
 import {LicenciaQueries} from "../queries/licencia.query";
+import {ExpedientePaoQueries} from "../queries/expediente-pao.query";
+import https from "https";
+import {Axios} from "../helpers/axios";
 
 export class SolicitudController {
     static licenciaQueries: LicenciaQueries = new LicenciaQueries()
@@ -32,9 +35,11 @@ export class SolicitudController {
     static requisitosServiciosQueries: RequisitosServiciosQueries = new RequisitosServiciosQueries()
     static administradorAreaQueries: AdministradorAreaQueries = new AdministradorAreaQueries()
     static transaccionQueries: TransaccionQueries = new TransaccionQueries()
+    static expedientePaoQueries: ExpedientePaoQueries = new ExpedientePaoQueries()
     static log: Log = new Log()
     static file: File = new File()
     static soap: Soap = new Soap()
+    static axios: Axios = new Axios()
 
     /** Función que permite dar de alta a un administrador */
     public async store(req: Request, res: Response) {
@@ -50,6 +55,9 @@ export class SolicitudController {
 
         const licencia: string = body.licencia == null || validator.isEmpty(body.licencia + '') ?
             null : body.licencia
+
+        const expediente_id: string = body.expediente_id == null || validator.isEmpty(body.expediente_id + '') ?
+            null : body.expediente_id
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -89,13 +97,13 @@ export class SolicitudController {
             }
         }
 
-
         /** Creamos una nueva solicitud en la base de datos */
         const createSolicitud = await SolicitudController.solicitudQueries.create({
             contribuyente_id,
             area_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.area_id : false,
             servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
             licencia_id: (licencia) ? findSolicitudByLicenciaId.licencia.id : null,
+            expediente_id: (expediente_id) ? expediente_id : null,
             folio: contribuyente_id + '-' + moment().unix(),
             fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
         })
@@ -397,8 +405,8 @@ export class SolicitudController {
             });
         }
 
-        const findSolicitudById = await SolicitudController.solicitudQueries.findSolicitudById({
-            id: solicitud.id
+        const findSolicitudById = await SolicitudController.solicitudQueries.findSolicitudDetail({
+            solicitud_id: solicitud.id
         })
 
         if (!findSolicitudById.ok) {
@@ -414,123 +422,12 @@ export class SolicitudController {
             })
         }
 
-        // Se valida que el estatus que se esta proporcionando sea valido
-        // if (estatus !== "1" && estatus !== "2" && estatus !== "3" && estatus !== "4" && estatus !== "5" && estatus !== "6"
-        //     && estatus !== "7" && estatus !== "8" && estatus !== "9" && estatus !== "10" && estatus !== "11"
-        //     && estatus !== "12" && estatus !== "13") {
-        //     errors.push({message: 'El estatus proporcionado no es valido'})
-        // }
-
-        /*if (estatus !== '2' && contribuyenteId !== null) {
-            errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
-        }
-
-        if (estatus === '2' && contribuyenteId !== null) {
-            errors.push({ message: 'Usted no tiene permisos para usar este estatus' })
-        }*/
-
-        /*if (estatus === '5' && motivoRechazo == null ||
-            estatus === '6' && motivoRechazo == null ||
-            estatus === '7' && motivoRechazo == null) {
-            errors.push({ message: 'Es obligatorio el proporcionar el motivo por el cual esta enviando esta solicitud a dicha sección' })
-        }
-*/
         if (errors.length > 0) {
             return res.status(400).json({
                 ok: false,
                 errors
             })
         }
-
-        /*if (estatus === '2' || estatus === '4' || estatus === '5') {
-            let findDocumentacionBySolicitud = await SolicitudController.documentacionQueries.findDocumentacionBySolicitud({
-                solicitud_id
-            })
-
-            if (findDocumentacionBySolicitud.ok == false) {
-                errors.push({ message: 'Existen problemas al momento de extraer la soliictud de la documentacion.' })
-            }
-
-            if (errors.length > 0) {
-                return res.status(400).json({
-                    ok: false,
-                    errors
-                })
-            }
-
-            let total_documentation = findDocumentacionBySolicitud.documentacion.length
-            let real_documentation: number = 0
-
-            if (estatus == '2') {
-                findDocumentacionBySolicitud.documentacion.forEach(function (documentacion) {
-                    real_documentation + real_documentation
-
-                    if (documentacion.url != null) {
-                        real_documentation = real_documentation + 1
-                    }
-                })
-
-                if (total_documentation != real_documentation) {
-                    errors.push({ message: 'No es posible hacer uso de esta acción, ya que no ha completado los requisitos.' })
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-            }
-
-            if (estatus == '4') {
-                findDocumentacionBySolicitud.documentacion.forEach(function (documentacion) {
-                    real_documentation + real_documentation
-
-                    if (documentacion.estatus == 1) {
-                        real_documentation = real_documentation + 1
-                    }
-                })
-
-                if (total_documentation != real_documentation) {
-                    errors.push({ message: 'No es posible hacer uso de esta acción, ya que no todos los documentos han sido aceptados.' })
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-            }
-
-            if (estatus == '5') {
-                findDocumentacionBySolicitud.documentacion.forEach(function (documentacion) {
-                    real_documentation + real_documentation
-
-                    if (documentacion.estatus != -1) {
-                        console.log(documentacion.id)
-                        real_documentation = real_documentation + 1
-                    }
-                })
-
-                if (total_documentation == real_documentation) {
-                    errors.push({ message: 'No es posible hacer uso de esta acción, ya que todos los documentos han sido aceptados.' })
-                }
-
-                if (errors.length > 0) {
-                    return res.status(400).json({
-                        ok: false,
-                        errors
-                    })
-                }
-            }
-
-
-            /!* let changeStatusRevision = await SolicitudController.documentacionQueries.changeStatusRevision({
-                solicitud_id
-            }) *!/
-
-        }*/
 
         if (estatus === '3') {
             if (findSolicitudById.solicitud.estatus_solicitud_id !== 2) {
@@ -541,6 +438,34 @@ export class SolicitudController {
                 return res.status(400).json({
                     ok: false,
                     errors
+                })
+            }
+        }
+
+        if (findSolicitudById.solicitud.servicio_id == 10 && findSolicitudById.solicitud.estatus_solicitud_id == 1 && estatus != '1') {
+            let sendDocumentsPAO = await SolicitudController.sendDocumentsPAO({
+                solicitud: findSolicitudById.solicitud,
+                documentacionRequisitos: findSolicitudById.solicitud['DocumentosSolicitudRequisito'],
+                expediente: findSolicitudById.solicitud['ExpedientePao'],
+            })
+
+            if(!sendDocumentsPAO.ok) {
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{message: sendDocumentsPAO.errors}]
+                })
+            }
+
+            let saveTokenPao = await SolicitudController.expedientePaoQueries.saveTokenPao({
+                url_consulta: process.env.CONSULTAR_RENOVACION_PAO + sendDocumentsPAO.token_solicitud,
+                token_solicitud_api: sendDocumentsPAO.token_solicitud,
+                id: sendDocumentsPAO.expediente_id
+            })
+
+            if (!saveTokenPao.ok) {
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{message: "Existen problemas para actualizar el expediente. Por favor intente más tarde."}]
                 })
             }
         }
@@ -1156,6 +1081,207 @@ export class SolicitudController {
             ok: true,
             message: 'Se ha indicado que la solicitud tiene recibo de pago correctamente.'
         })
+    }
+
+    public async changeStatusApi(req: Request, res: Response) {
+
+        const errors = [];
+
+        let token_solicitud: number = req.params.token_solicitud == null || (!req.params.token_solicitud)
+        || !Number.isInteger(+req.params.token_solicitud) ?
+            errors.push({ message: 'Favor de proporcionar el token de la solicitud.' }) :
+            +req.params.token_solicitud
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            });
+        }
+
+        const findExpedienteByToken = await SolicitudController.expedientePaoQueries.findExpedienteByToken({
+            token_solicitud_api: token_solicitud
+        })
+
+        if (!findExpedienteByToken.ok) {
+            errors.push({message: 'Existen problemas al momento de obtener el expediente.'})
+        } else if (findExpedienteByToken.expedientePao === null) {
+            errors.push({message: 'Expediente el expediente no existe.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+
+        let findSolicitudById = await SolicitudController.solicitudQueries.findSolicitudByExpedienteId({
+            expediente_id: findExpedienteByToken.expedientePao.id
+        })
+
+        if(!findSolicitudById.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: 'La solicitud con el token proporcionado no existe.'}]
+            })
+        }
+
+        const changeStatus = await SolicitudController.solicitudQueries.changeStatus({
+            estatus_solicitud_id: 10,
+            id: findSolicitudById.solicitud.id,
+        })
+
+        if (!changeStatus.ok) {
+            errors.push({message: 'Existen problemas al momento de actualizar el estatus.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+
+        const createLogAdministrador = await SolicitudController.log.administrador({
+            administrador_id: req.body.administrador_id || null,
+            navegador: req.headers['user-agent'],
+            accion: 'La API cambio el estatus de la solicitud a ' + '10',
+            ip: req.socket.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+
+        const createLogSolicitud = await SolicitudController.log.solicitud({
+            solicitud_id: findSolicitudById.solicitud.id,
+            estatus_solicitud_id: 10,
+            administrador_id: req.body.administradorId || null,
+            contribuyente_id: null,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+            comentario: 'La solicitud fue cambiada a pendiente de pago.'
+        });
+
+        return res.status(200).json({
+            ok: true,
+            message: 'La solicitud se ha cambiado de estatus correctamente.'
+        })
+    }
+
+    private static async sendDocumentsPAO(data) {
+        let solicitud = data.solicitud;
+        let documentos = data.documentacionRequisitos;
+        let expediente = data.expediente;
+
+        try {
+            let requisitosApi = []
+            for (const documento of documentos) {
+                const getFile64 = await SolicitudController.file.getFileBase64(documento['Documentacion'].url, 'documentacion');
+
+                console.log({
+                    file: documento['Documentacion'].url,
+                    requisitoId: documento['Requisito'].id,
+                    idrequisito: documento['Requisito'].requisito_id_api
+
+                })
+
+                if (!getFile64.ok) {
+                    return {
+                        ok: false,
+                        errors: ["Hubo problemas al momento de procesar archivos."]
+                    }
+                }
+
+                let data = {
+                    idrequisito: String(documento['Requisito'].requisito_id_api),
+                    archivo: 'data:application/pdf;base64,'+ getFile64.file
+
+                }
+
+                requisitosApi.push(data)
+
+            }
+
+            let dataJson = {
+                requisitos: requisitosApi,
+                establecimiento: {
+                    claveCatastral: expediente.clave_catastral,
+                    telefono: expediente.telefono_contacto,
+                    correo: expediente.correo,
+                    nombreGestor: expediente.nombre_gestor,
+                    representanteLegal: expediente.representante_legal,
+                    idExpediente: Number(expediente.expediente_pao_id)
+
+                }
+
+            }
+
+            const agent = new https.Agent({
+                rejectUnauthorized: false
+            });
+
+            let headers = {
+                'Content-Type': 'application/json'
+            }
+
+            /** Proporcionamos esos datos y hacemos la solicitud al cliente */
+            let options = {
+                method: 'POST',
+                url: process.env.SOLICITAR_RENOVACION_PAO,
+                headers: headers,
+                httpsAgent: agent,
+                data: dataJson
+            }
+
+            /** Wait a response to Axios and validate the response */
+            let response = await SolicitudController.axios.getResponse(options)
+
+            console.log(response)
+
+            if (response.ok == true) {
+                if (response.result.respuesta === 'error-archivos-requisitos') {
+                    return {
+                        ok: false,
+                        errors: [ "Alguno de los archivos se encuentra dañado, favor de verificarlos."]
+                    }
+                }
+
+                if (response.result.respuesta === 'error-datos') {
+                    return {
+                        ok: false,
+                        errors: [ "Existen errores en los datos del expediente."]
+                    }
+                }
+
+                if (response.result.respuesta === 'registrado') {
+                    return {
+                        ok: true,
+                        token_solicitud: response.result['token-solicitud'],
+                        expediente_id: expediente.id
+                    }
+
+                }
+            } else {
+                return {
+                    ok: false,
+                    errors: ['Existen problemas para realizar la conectarse al servicio.']
+                }
+            }
+
+
+        } catch (e) {
+            console.log(e)
+            return {
+                ok: false,
+                errors: ['Existen problemas para procesar la información.']
+            }
+        }
+
+
+
+
     }
 
 }
