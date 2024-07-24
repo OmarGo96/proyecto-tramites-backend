@@ -211,7 +211,7 @@ export class LicenciaController {
             })
         }
 
-        /** Buscamos en la base d edatos si el contribuyente ya tiene adjunto esa clave catastral */
+        /** Buscamos en la base de datos si el contribuyente ya tiene adjunto esa licencia */
         const findLicenciaByContribuyente = await LicenciaController.licenciaQueries.findLicenciaByContribuyentev2({
             licencia_funcionamiento_id: licencia,
             contribuyente_id
@@ -224,7 +224,7 @@ export class LicenciaController {
             })
         }
 
-        // if (findLicenciaByContribuyente.licencia != null) {
+        // if (findLicenciaByContribuyente.licencia.contribuyentes_id != contribuyente_id) {
         //     return res.status(400).json({
         //         ok: false,
         //         errors: [{ message: 'La licencia proporcionada ya esta adjunta a su cuenta.' }]

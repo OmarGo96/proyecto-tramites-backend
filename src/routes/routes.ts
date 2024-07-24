@@ -24,11 +24,13 @@ import {PaseCajaController} from "../controllers/pase-caja.controller";
 import {ReportController} from "../controllers/report.controller";
 import {DocumentosLicenciaComercialController} from "../controllers/documentos-licencia_comercial.controller";
 import {TestController} from "../controllers/test.controller";
+import {ExpedientePaoController} from "../controllers/expediente-pao.controller";
 
 /* Middlewares */
 import { CheckHeaders } from '../middlewares/header';
 import { CheckRoles } from '../middlewares/roles'
 import { GetValue } from '../middlewares/get-values'
+
 
 
 
@@ -57,6 +59,7 @@ export class Routes {
     public paseCajaController: PaseCajaController = new PaseCajaController();
     public reportController: ReportController = new ReportController();
     public testController: TestController = new TestController();
+    public expedientePaoController: ExpedientePaoController = new ExpedientePaoController()
     /*
 
     public testController: TestController = new TestController();
@@ -211,6 +214,12 @@ export class Routes {
         // Routes for solicitudes history
         app.route('/api/solicitud/history/:id').get(this.solicitudController.history);
         app.route('/api/solicitud/messages/:id').get(this.solicitudController.messages);
+
+        // Routes for checar expediente de solicitud PAO
+        app.route('/api/solicitud/check-expediente-pao').post(CheckHeaders.validateJWTContribuyente, this.expedientePaoController.checkExpedientPAO)
+        app.route('/api/solicitud/add-expediente-information').post(CheckHeaders.validateJWTContribuyente, this.expedientePaoController.addExpedientInformation)
+        // Route Change status Api
+        app.route('/api/solicitud/status/token/:token_solicitud').post(CheckHeaders.validateJWTAdministrador, this.solicitudController.changeStatusApi)
 
         // Routes for reports
         app.route('/api/reportes/generateByDateRange')

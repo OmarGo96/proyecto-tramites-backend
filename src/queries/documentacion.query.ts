@@ -125,20 +125,6 @@ export class DocumentacionQueries {
         }
     }
 
-    public async findDocumentacionBySolicitud(data: any) {
-        try {
-            const documentacion = await DocumentacionModel.findAll({
-                where: {
-                    solicitud_id: data.solicitud_id
-                }
-            })
-            return { ok: true, documentacion }
-        } catch (e) {
-            console.log(e)
-            return { ok: false }
-        }
-    }
-
     public async create(data: any) {
         try {
             const documentacion = await DocumentacionModel.create({

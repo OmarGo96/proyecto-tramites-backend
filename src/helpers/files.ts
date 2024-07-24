@@ -127,6 +127,42 @@ export class File {
 
     }
 
+    public async getFileBase64(name: any, type: any) {
+
+        let path: any;
+
+        switch (type) {
+            case 'documentacion': {
+                path = process.env.DOCUMENTATION_PATH;
+                break;
+            }
+            case 'solicitud': {
+                path = process.env.SOLICITUD_DOCS_PATH;
+                break;
+            }
+            case 'servicio': {
+                path = process.env.SERVICES_DOCS_PATH;
+                break;
+            }
+            case 'message': {
+                path = process.env.MESSAGE_DOCS_PATH;
+                break;
+            }
+            case 'pase_caja': {
+                path = process.env.PASECAJA_DOCS_PATH;
+                break;
+            }
+        }
+
+        try {
+            return {ok: true, file: fs.readFileSync(path + name, {encoding: "base64"}), path: path + name, name}
+        } catch (e) {
+            console.log(e)
+            return {ok: false, message: 'Existen problemas al momento de obtener el pdf!'}
+        }
+
+    }
+
     public async destroy(name: any, type: any) {
         const path: any = (type === 'documentacion') ? process.env.DOCUMENTATION_PATH : null;
 

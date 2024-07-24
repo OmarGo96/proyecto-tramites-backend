@@ -18,8 +18,11 @@ import {PaseCajaModel} from "../models/pase_caja.model";
 import {LicenciaModel} from "../models/licencia.model";
 import {AreaModel} from "../models/area.model";
 import {DocumentacionLicenciaComercialModel} from "../models/documentacion_licencia_comercial.model";
+import {ExpedientePaoModel} from "../models/expediente_pao.model";
+import {RequisitoServiciosModel} from "../models/requisitos_servicios.model";
 
 export class SolicitudQueries {
+
     public async findSolicitudesByContribuyente(data: any) {
         try {
             const solicitudes = await SolicitudModel.findAll({
@@ -44,6 +47,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
             return {ok: true, solicitudes}
@@ -75,6 +79,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
             return {ok: true, solicitudes}
@@ -104,6 +109,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
             return {ok: true, solicitudes}
@@ -132,6 +138,20 @@ export class SolicitudQueries {
             const solicitud = await SolicitudModel.findOne({
                 where: {
                     licencia_id: data.licencia_id
+                }
+            })
+            return {ok: true, solicitud}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
+    public async findSolicitudByExpedienteId(data: any) {
+        try {
+            const solicitud = await SolicitudModel.findOne({
+                where: {
+                    expediente_id: data.expediente_id
                 }
             })
             return {ok: true, solicitud}
@@ -179,6 +199,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
             return {ok: true, solicitudes}
@@ -205,7 +226,8 @@ export class SolicitudQueries {
                         },
                         required: false,
                         include: [
-                            {model: DocumentacionModel, as: 'Documentacion'}
+                            {model: DocumentacionModel, as: 'Documentacion'},
+                            {model: RequisitoServiciosModel, as: 'Requisito'}
                         ]
                     },
                     {
@@ -260,6 +282,7 @@ export class SolicitudQueries {
                         model: PaseCajaModel, as: 'PaseCaja'
                     },
                     {model: LicenciaModel, as: 'LicenciaFuncionamiento'},
+                    { model: ExpedientePaoModel, as: 'ExpedientePao' },
                     {model: MensajeModel},
                     {model: ContribuyenteModel, as: 'Contribuyente'}
                 ]
@@ -278,6 +301,7 @@ export class SolicitudQueries {
                 area_id: data.area_id,
                 servicio_id: data.servicio_id,
                 licencia_id: data.licencia_id,
+                expediente_id: data.expediente_id,
                 fecha_alta: data.fecha_alta,
                 folio: data.folio,
                 estatus_solicitud_id: 1

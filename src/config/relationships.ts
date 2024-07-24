@@ -30,6 +30,7 @@ import {DocumentacionComplementariaModel} from "../models/documentacion_compleme
 import {PaseCajaModel} from "../models/pase_caja.model";
 import {LicenciaModel} from "../models/licencia.model";
 import {DocumentacionLicenciaComercialModel} from "../models/documentacion_licencia_comercial.model";
+import {ExpedientePaoModel} from "../models/expediente_pao.model";
 
 export default class Relationship {
     static init() {
@@ -76,6 +77,8 @@ export default class Relationship {
         CambiaEstatusModel.belongsTo(EstatusSolicitudModel, { foreignKey: 'estatus_solicitud_id_destino', as: 'EstatusSolicitud' })
 
         DocumentosSolicitudRequisitoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
+        DocumentosSolicitudRequisitoModel.hasOne(RequisitoServiciosModel, { sourceKey: 'requisito_id', foreignKey:'requisito_id', as: 'Requisito'})
+
         DocumentacionPagoModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionAnuenciaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
         DocumentacionComplementariaModel.belongsTo(DocumentacionModel, {foreignKey:'documentacion_id', as: 'Documentacion'})
@@ -97,6 +100,7 @@ export default class Relationship {
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
         SolicitudModel.hasOne(PaseCajaModel, { foreignKey: 'solicitud_id', as: 'PaseCaja' })
         SolicitudModel.belongsTo(LicenciaModel, { foreignKey: 'licencia_id', as: 'LicenciaFuncionamiento'})
+        SolicitudModel.belongsTo(ExpedientePaoModel, { foreignKey: 'expediente_id', as: 'ExpedientePao'})
 
         MensajeModel.belongsTo(SolicitudModel, {foreignKey: 'solicitud_id'});
 
