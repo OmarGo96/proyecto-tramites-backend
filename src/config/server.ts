@@ -1,6 +1,6 @@
 // tslint:disable-next-line:no-var-requires
-require('dotenv').config()
-// require('dotenv').config({ path: '/root/envs/proyecto-tramites-backend/.env' })
+//require('dotenv').config()
+require('dotenv').config({ path: '/root/envs/proyecto-tramites-backend/.env' })
 import express, { Application } from 'express';
 import https from 'https'
 import http from 'http'
@@ -13,6 +13,7 @@ import useragent from 'express-useragent'
 import Relationship from './relationships'
 import { Routes } from '../routes/routes'
 import { Database } from './database'
+
 
 class App {
     public app: Application;
@@ -53,10 +54,10 @@ class App {
         } else {
             var privateKey = fs.readFileSync(process.env.PRIVATE_SSL, 'utf8')
             var certificate = fs.readFileSync(process.env.CERTIFICATE_SSL, 'utf8')
-            var cabundle = fs.readFileSync(process.env.CABUNDLE_SSL, 'utf8')
+            //var cabundle = fs.readFileSync(process.env.CABUNDLE_SSL, 'utf8')
 
-            var credentials = { key: privateKey, cert: certificate, ca: cabundle }
-
+            //var credentials = { key: privateKey, cert: certificate, ca: cabundle }
+            var credentials = { key: privateKey, cert: certificate }
             this.server = https.createServer(credentials, this.app)
         }
     }
