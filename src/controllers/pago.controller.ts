@@ -7,6 +7,7 @@ import { Log } from '../helpers/logs'
 import {PaseCajaQueries} from "../queries/pase_caja.query";
 import {Soap} from "../helpers/soap";
 import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
+import * as process from "node:process";
 
 export class PagoController {
     static solicitudQueries: SolicitudQueries = new SolicitudQueries()
@@ -81,7 +82,7 @@ export class PagoController {
             function: 'daoGeneraIntenciondecobroGlobal',
             args: {
                 parStrPaseCaja: pase_caja.documento.folio_pase_caja,
-                parStrTokenValidate: 'token',
+                parStrTokenValidate: process.env.BANK_TOKEN,
 
             }
         }
@@ -94,8 +95,6 @@ export class PagoController {
                 errors: [{ message: soap.message }]
             })
         }
-
-        console.log(soap.result[0].daoGeneraIntenciondecobroGlobalResult)
 
         if (soap.result[0].daoGeneraIntenciondecobroGlobalResult.CodigoError && soap.result[0].daoGeneraIntenciondecobroGlobalResult.CodigoError !== '200') {
             return res.status(400).json({

@@ -20,6 +20,7 @@ import {AreaModel} from "../models/area.model";
 import {DocumentacionLicenciaComercialModel} from "../models/documentacion_licencia_comercial.model";
 import {ExpedientePaoModel} from "../models/expediente_pao.model";
 import {RequisitoServiciosModel} from "../models/requisitos_servicios.model";
+import {ClaveModel} from "../models/clave.model";
 
 export class SolicitudQueries {
 
@@ -47,6 +48,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ClaveModel, as: 'Clave' },
                     { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
@@ -79,6 +81,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ClaveModel, as: 'Clave' },
                     { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
@@ -109,6 +112,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ClaveModel, as: 'Clave' },
                     { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
@@ -138,6 +142,20 @@ export class SolicitudQueries {
             const solicitud = await SolicitudModel.findOne({
                 where: {
                     licencia_id: data.licencia_id
+                }
+            })
+            return {ok: true, solicitud}
+        } catch (e) {
+            console.log(e)
+            return {ok: false}
+        }
+    }
+
+    public async findSolicitudByClaveId(data: any) {
+        try {
+            const solicitud = await SolicitudModel.findOne({
+                where: {
+                    clave_id: data.clave
                 }
             })
             return {ok: true, solicitud}
@@ -199,6 +217,7 @@ export class SolicitudQueries {
                     { model: EstatusSolicitudModel, as: 'Estatus'},
                     { model: ContribuyenteModel, as: 'Contribuyente' },
                     { model: LicenciaModel, as: 'LicenciaFuncionamiento' },
+                    { model: ClaveModel, as: 'Clave' },
                     { model: ExpedientePaoModel, as: 'ExpedientePao' },
                 ]
             })
@@ -282,6 +301,7 @@ export class SolicitudQueries {
                         model: PaseCajaModel, as: 'PaseCaja'
                     },
                     {model: LicenciaModel, as: 'LicenciaFuncionamiento'},
+                    { model: ClaveModel, as: 'Clave' },
                     { model: ExpedientePaoModel, as: 'ExpedientePao' },
                     {model: MensajeModel},
                     {model: ContribuyenteModel, as: 'Contribuyente'}
@@ -300,11 +320,31 @@ export class SolicitudQueries {
                 contribuyente_id: data.contribuyente_id,
                 area_id: data.area_id,
                 servicio_id: data.servicio_id,
-                licencia_id: data.licencia_id,
-                expediente_id: data.expediente_id,
+                licencia_id: (data.licencia_id) ? data.licencia_id : null,
+                expediente_id: (data.expediente_id) ? data.expediente_id : null,
+                clave_id: (data.clave_id) ? data.clave_id : null,
                 fecha_alta: data.fecha_alta,
                 folio: data.folio,
                 estatus_solicitud_id: 1
+            })
+            return {ok: true, solicitud}
+        } catch (e) {
+            return {ok: false}
+        }
+    }
+
+    public async createPredial(data: any) {
+        try {
+            const solicitud = await SolicitudModel.create({
+                contribuyente_id: data.contribuyente_id,
+                area_id: data.area_id,
+                servicio_id: data.servicio_id,
+                licencia_id: (data.licencia_id) ? data.licencia_id : null,
+                expediente_id: (data.expediente_id) ? data.expediente_id : null,
+                clave_id: (data.clave_id) ? data.clave_id : null,
+                fecha_alta: data.fecha_alta,
+                folio: data.folio,
+                estatus_solicitud_id: 10
             })
             return {ok: true, solicitud}
         } catch (e) {

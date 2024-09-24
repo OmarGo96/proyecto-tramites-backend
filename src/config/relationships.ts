@@ -31,6 +31,7 @@ import {PaseCajaModel} from "../models/pase_caja.model";
 import {LicenciaModel} from "../models/licencia.model";
 import {DocumentacionLicenciaComercialModel} from "../models/documentacion_licencia_comercial.model";
 import {ExpedientePaoModel} from "../models/expediente_pao.model";
+import {ClaveModel} from "../models/clave.model";
 
 export default class Relationship {
     static init() {
@@ -100,6 +101,7 @@ export default class Relationship {
         SolicitudModel.hasMany(MensajeModel, { foreignKey: 'solicitud_id' })
         SolicitudModel.hasOne(PaseCajaModel, { foreignKey: 'solicitud_id', as: 'PaseCaja' })
         SolicitudModel.belongsTo(LicenciaModel, { foreignKey: 'licencia_id', as: 'LicenciaFuncionamiento'})
+        SolicitudModel.belongsTo(ClaveModel, { foreignKey: 'clave_id', as: 'Clave'})
         SolicitudModel.belongsTo(ExpedientePaoModel, { foreignKey: 'expediente_id', as: 'ExpedientePao'})
 
         MensajeModel.belongsTo(SolicitudModel, {foreignKey: 'solicitud_id'});

@@ -20,6 +20,7 @@ export class ClaveModel extends Model{
     public codigo_postal!: string
     public direccion!: string
     public predio_tipo!: string
+    public importe_adeudo!: string
     public fecha_alta!: string
     public activo!: number
 }
@@ -73,6 +74,9 @@ ClaveModel.init({
         type: DataTypes.STRING
     },
     predio_tipo: {
+        type: DataTypes.STRING
+    },
+    importe_adeudo: {
         type: DataTypes.STRING
     },
     fecha_alta: {
