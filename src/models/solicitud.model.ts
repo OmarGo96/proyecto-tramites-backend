@@ -10,6 +10,7 @@ export class SolicitudModel extends Model{
     public area_id!: number
     public servicio_id!: number
     public licencia_id!: number
+    public clave_id!: number
     public expediente_id!: number
     public estatus_solicitud_id!: number
     public folio!: string
@@ -42,6 +43,9 @@ SolicitudModel.init({
         type: DataTypes.INTEGER
     },
     servicio_id: {
+        type: DataTypes.INTEGER
+    },
+    clave_id: {
         type: DataTypes.INTEGER
     },
     licencia_id: {

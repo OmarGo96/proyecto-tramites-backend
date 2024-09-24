@@ -7,10 +7,14 @@ import { ClaveQueries } from '../queries/clave.query'
 import { Soap } from '../helpers/soap'
 import { Log } from '../helpers/logs'
 import {UrlIntencionCobroQueries} from "../queries/url_intencion_cobro.query";
+import {ServicioQueries} from "../queries/servicio.query";
+import {SolicitudQueries} from "../queries/solicitud.query";
 
 export class ClaveController {
     static areaQueries: AreaQueries = new AreaQueries()
     static claveQueries: ClaveQueries = new ClaveQueries()
+    static servicioQueries: ServicioQueries = new ServicioQueries()
+    static solicitudQueries: SolicitudQueries = new SolicitudQueries()
     static soap: Soap = new Soap()
     static log: Log = new Log()
     static urlIntencionCobroQueries: UrlIntencionCobroQueries = new UrlIntencionCobroQueries()
@@ -223,7 +227,7 @@ export class ClaveController {
         })
     }
 
-    public async statementaccount(req: Request, res: Response) {
+    public async statementAccount(req: Request, res: Response) {
         /** Obtenemos el id del administrador */
         const contribuyente_id: number = req.body.contribuyente_id
         /** Obtenemos toda la información que nos envia el cliente */
@@ -275,6 +279,8 @@ export class ClaveController {
             })
         }
 
+
+
         if (soap.result[0].daoObtienerEdoCuentaPredialResult && soap.result[0].daoObtienerEdoCuentaPredialResult.CodigoError !== '200') {
             return res.status(400).json({
                 ok: false,
@@ -286,14 +292,14 @@ export class ClaveController {
             return res.status(400).json({
                 ok: false,
                 soap,
-                errors: [{ message: 'La clave proporcionada no tiene ningun valor' }]
+                errors: [{ message: 'La clave proporcionada no tiene ningún valor' }]
             })
         }
 
         if (!soap.result[0].daoObtienerEdoCuentaPredialResult.proRFCPersona) {
             return res.status(400).json({
                 ok: true,
-                errors: [{ message: 'La clave proporcionada no tiene ningun valor' }]
+                errors: [{ message: 'La clave proporcionada no tiene ningún valor' }]
             })
         }
 
@@ -301,7 +307,7 @@ export class ClaveController {
             return res.status(400).json({
                 ok: false,
                 soap,
-                errors: [{ message: 'No es posible generar el estado de cuenta, favor de pasar a tesorería' }]
+                errors: [{ message: 'No es posible generar el estado de cuenta, favor de pasar a tesorería.' }]
             })
         }
 
@@ -310,7 +316,20 @@ export class ClaveController {
             return res.status(400).json({
                 ok: false,
                 soap,
-                errors: [{ message: 'No es posible generar el estado de cuenta, favor de pasar a tesorería' }]
+                errors: [{ message: 'No es posible generar el estado de cuenta, favor de pasar a tesorería.' }]
+            })
+        }
+
+        let updateImporteAdeudo = await ClaveController.claveQueries.updateImporteAdeudo({
+            id: findClaveByContribuyente.clave.id,
+            importe_adeudo: soap.result[0].daoObtienerEdoCuentaPredialResult.proImporteTotal.toString(),
+        })
+
+        if (updateImporteAdeudo.ok == false) {
+            return res.status(400).json({
+                ok: false,
+                soap,
+                errors: [{ message: 'Existen problemas para actualizar estado de cuenta, intente más tarde.' }]
             })
         }
 
@@ -468,7 +487,6 @@ export class ClaveController {
             })
         }
 
-
         if (soap.result[0].daoGeneraIntenciondecobroResult.CodigoError && soap.result[0].daoGeneraIntenciondecobroResult.CodigoError !== '200') {
             return res.status(400).json({
                 ok: false,
@@ -571,4 +589,110 @@ export class ClaveController {
             link: soap.result[0].daoCreaPaseCajaGenericoResult.UrlPaseImpresion
         })
     }
+
+    public async createSolicitud(req: Request, res: Response) {
+        /** Obtenemos el id del administrador */
+        const contribuyente_id: number = req.body.contribuyente_id
+        /** Obtenemos toda la información que nos envia el cliente */
+        const body = req.body
+        /** Creamos un array que nos almacenará los errores que surjan en la función */
+        const errors = []
+
+        const servicioUuid: string = body.servicio_uuid == null || validator.isEmpty(body.servicio_uuid) ?
+            errors.push({message: 'Favor de proporcionar el servicio/trámite'}) : body.servicio_uuid
+
+        const clave: string = body.clave == null || validator.isEmpty(body.clave + '') ?
+            errors.push({message: 'Favor de proporcionar la clave.'}) : body.clave
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        /** Buscamos en la base de datos si existe un contrato con el nombre proporcionado */
+        const findServicioByUUID = await ClaveController.servicioQueries.findServicioByUUID({uuid: servicioUuid})
+        if (!findServicioByUUID.ok) {
+            errors.push({message: 'Existen problemas al momento de validar el servicio proporcionado.'})
+        } else if (findServicioByUUID.servicio == null) {
+            errors.push({message: 'El servicio proporcionado no existe.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        let findSolicitudByClavePredial = await ClaveController.solicitudQueries.findSolicitudByClaveId({
+            clave
+        })
+
+        if (!findSolicitudByClavePredial.ok) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{message: "Existen problemas para crear la solicitud."}]
+            })
+        }
+
+        if (findSolicitudByClavePredial.solicitud != null ) {
+            if ( !(findSolicitudByClavePredial.solicitud.estatus_solicitud_id === 7 || findSolicitudByClavePredial.solicitud.estatus_solicitud_id === 13 || findSolicitudByClavePredial.solicitud.estatus_solicitud_id === 18)) {
+                return res.status(400).json({
+                    ok: false,
+                    errors: [{ message: 'La clave catastral proporcionada ya esta adjunta a una solicitud activa.' }]
+                })
+            }
+
+        }
+
+        /** Creamos una nueva solicitud en la base de datos */
+        const createSolicitud = await ClaveController.solicitudQueries.createPredial({
+            contribuyente_id,
+            area_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.area_id : false,
+            servicio_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.id : false,
+            clave_id: clave,
+            folio: contribuyente_id + '-' + moment().unix(),
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        if (!createSolicitud.ok) {
+            errors.push({message: 'Existen problemas al momento de dar de alta su solicitud.'})
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                errors
+            })
+        }
+
+        /** Creamos el log del usuario */
+        const createLogContribuyente = await ClaveController.log.contribuyente({
+            contribuyente_id,
+            navegador: req.headers['user-agent'],
+            accion: 'El contribuyente a iniciado una solicitud',
+            ip: req.socket.remoteAddress,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+        /** Creamos log de solicitud */
+        const createLogSolicitud = await ClaveController.log.solicitud({
+            solicitud_id: createSolicitud.solicitud ? createSolicitud.solicitud.id : false,
+            estatus_solicitud_id: 10,
+            administradores_id: findServicioByUUID.servicio ? findServicioByUUID.servicio.Area.administradores_id : false,
+            contribuyente_id,
+            fecha_alta: moment().format('YYYY-MM-DD HH:mm:ss'),
+            comentario: 'El contribuyente creo una nueva solicitud'
+        })
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Se ha creado la solicitud, favor de adjuntar los requisitos solicitados.',
+            solicitud_id: createSolicitud.solicitud ? createSolicitud.solicitud.id : false
+        })
+
+    }
+
 }

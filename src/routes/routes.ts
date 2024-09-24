@@ -121,8 +121,8 @@ export class Routes {
         app.route('/api/solicitudes').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.show)
         app.route('/api/solicitudes/:status').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.showByStatus)
         app.route('/api/solicitud/:id').get(CheckHeaders.validateJWTContribuyente, this.solicitudController.findOne)
-        app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.pasecaja)
-        app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkpago)
+        app.route('/api/solicitud/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.paseCaja)
+        app.route('/api/solicitud/link_pago').post(CheckHeaders.validateJWTContribuyente, this.solicitudController.linkPago)
 
         app.route('/api/cambiar_solicitud_estatus/:solicitud_id').post(CheckHeaders.validateJWTByTypeUser, GetValue.solicitud, this.solicitudController.changeStatus);
         app.route('/api/solicitud/fecha-visita/:solicitud_id').post(CheckHeaders.validateJWTAdministrador,GetValue.solicitud, this.solicitudController.addVisitDate)
@@ -194,11 +194,12 @@ export class Routes {
         app.route('/api/claves').post(CheckHeaders.validateJWTContribuyente, this.claveController.store)
         app.route('/api/claves').get(CheckHeaders.validateJWTContribuyente, this.claveController.show)
         app.route('/api/deslindar_clave').post(CheckHeaders.validateJWTContribuyente, this.claveController.demarcate)
-        app.route('/api/estado_cuenta').post(CheckHeaders.validateJWTContribuyente, this.claveController.statementaccount)
+        app.route('/api/estado_cuenta').post(CheckHeaders.validateJWTContribuyente, this.claveController.statementAccount)
         app.route('/api/pase_caja').post(CheckHeaders.validateJWTContribuyente, this.claveController.linkToPay)
         app.route('/api/pago_banco').post(CheckHeaders.validateJWTContribuyente, this.claveController.linkToBank)
         app.route('/api/pase_caja/catastral').post(/* CheckHeaders.validateJWTContribuyente,  */this.claveController.generate)
         app.route('/api/simular_pago').post(/* CheckHeaders.validateJWTContribuyente,  */this.pagoController.simulate)
+        app.route('/api/solicitud-predial').post(CheckHeaders.validateJWTContribuyente, this.claveController.createSolicitud)
 
         // Routes for licencias funcionamiento
         app.route('/api/licencia-funcionamiento').get(CheckHeaders.validateJWTContribuyente, this.licenciaController.show)

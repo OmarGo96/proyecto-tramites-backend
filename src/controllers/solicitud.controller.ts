@@ -41,7 +41,6 @@ export class SolicitudController {
     static soap: Soap = new Soap()
     static axios: Axios = new Axios()
 
-    /** Función que permite dar de alta a un administrador */
     public async store(req: Request, res: Response) {
         /** Obtenemos el id del administrador */
         const contribuyente_id: number = req.body.contribuyente_id
@@ -212,7 +211,8 @@ export class SolicitudController {
                 Area: solicitud['Area'],
                 Estatus: solicitud['Estatus'],
                 Contribuyente: solicitud['Contribuyente'],
-                LicenciaFuncionamiento: solicitud['LicenciaFuncionamiento']
+                LicenciaFuncionamiento: solicitud['LicenciaFuncionamiento'],
+                Clave: solicitud['Clave']
 
 
             }
@@ -757,7 +757,7 @@ export class SolicitudController {
         })
     }
 
-    public async pasecaja(req: Request, res: Response) {
+    public async paseCaja(req: Request, res: Response) {
         /** Obtenemos el id del contribuyente */
         const contribuyente_id: number = req.body.contribuyente_id
         /** Obtenemos toda la información que nos envia el cliente */
@@ -840,7 +840,7 @@ export class SolicitudController {
         })
     }
 
-    public async linkpago(req: Request, res: Response) {
+    public async linkPago(req: Request, res: Response) {
         /** Obtenemos el id del contribuyente */
         const contribuyente_id: number = req.body.contribuyente_id
         /** Obtenemos toda la información que nos envia el cliente */
@@ -1237,8 +1237,6 @@ export class SolicitudController {
 
             /** Wait a response to Axios and validate the response */
             let response = await SolicitudController.axios.getResponse(options)
-
-            console.log(response)
 
             if (response.ok == true) {
                 if (response.result.respuesta === 'error-archivos-requisitos') {

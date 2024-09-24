@@ -20,6 +20,24 @@ export class ClaveQueries {
         }
     }
 
+    public async findClaveByContribuyenteAndClaveId(data: any) {
+        try {
+            const clave = await ClaveModel.findOne({
+                where: {
+                    [Op.and]: [
+                        { contribuyente_id: data.contribuyente_id },
+                        { id: data.clave },
+                        { activo: 1 }
+                    ]
+                }
+            })
+            return { ok: true, clave }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
     public async findClavesByContribuyente(data: any) {
         try {
             const claves = await ClaveModel.findAll({
@@ -31,6 +49,22 @@ export class ClaveQueries {
                 }
             })
             return { ok: true, claves }
+        } catch (e) {
+            console.log(e)
+            return { ok: false }
+        }
+    }
+
+    public async updateImporteAdeudo(data) {
+        try {
+            const clave = await ClaveModel.update({
+                importe_adeudo: data.importe_adeudo
+            }, {
+                where: {
+                    id: data.id
+                }
+            })
+            return { ok: true, clave }
         } catch (e) {
             console.log(e)
             return { ok: false }
